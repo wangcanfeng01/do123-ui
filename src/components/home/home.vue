@@ -1,12 +1,12 @@
 <template>
-  <div id="login">
-    {{ message }}
+  <div id="home">
+    {{message}}
   </div>
 </template>
 
 <script>
 export default {
-  name: 'login',
+  name: 'home',
   data () {
     return {
       message: 'my name is wangcanfeng'

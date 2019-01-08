@@ -1,23 +1,40 @@
-<template>
+<template xmlns:el-col="http://www.w3.org/1999/html">
   <div id="app">
-    <img src="./assets/logo.png">
+    <el-menu
+      :default-active="activeIndex"
+      class="el-menu--horizontal"
+      background-color="#545c64"
+      text-color="#fff"
+      active-text-color="#ffd04b">
+      <el-col :span="2" offset="3">
+        <router-link id="logo" to="/home">
+          <img src="./assets/home.jpg" style="border-radius: 50%;margin-top: 0.8em">
+        </router-link>
+      </el-col>
+      <el-menu-item index="1">主页</el-menu-item>
+      <el-menu-item index="2">关于本站</el-menu-item>
+      <el-menu-item index="3">博客</el-menu-item>
+      <el-menu-item index="4">视频</el-menu-item>
+      <el-col :span="4" offset="2">
+        <el-input v-model="input" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
+      </el-col>
+      <el-col :span="2">
+        <el-button style="margin-left:0.3em; margin-top: 0.8em">搜索</el-button>
+      </el-col>
+      <el-col :span="2">
+        <el-button style="margin-left:0.3em; margin-top: 0.8em" type="success">登录</el-button>
+      </el-col>
+    </el-menu>
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  data () {
+    return {
+      activeIndex: '1'
+    }
+  }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
