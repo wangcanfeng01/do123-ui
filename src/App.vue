@@ -5,24 +5,25 @@
       class="el-menu--horizontal"
       background-color="#545c64"
       text-color="#fff"
-      active-text-color="#ffd04b">
-      <el-col :span="2" offset="3">
+      active-text-color="#ffd04b" style="margin-top: -8px;margin-left: -8px;margin-right: -8px">
+      <el-col :span="1" :offset="3">
         <router-link id="logo" to="/home">
           <img src="./assets/home.jpg" style="border-radius: 50%;margin-top: 0.8em">
         </router-link>
       </el-col>
       <el-menu-item index="1">主页</el-menu-item>
-      <el-menu-item index="2">关于本站</el-menu-item>
       <el-menu-item index="3">博客</el-menu-item>
       <el-menu-item index="4">视频</el-menu-item>
-      <el-col :span="4" offset="2">
-        <el-input v-model="input" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
+      <el-menu-item index="2">关于本站</el-menu-item>
+      <el-menu-item index="2">管理中心</el-menu-item>
+      <el-col :span="3" :offset="5">
+        <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
       </el-col>
       <el-col :span="2">
         <el-button style="margin-left:0.3em; margin-top: 0.8em">搜索</el-button>
       </el-col>
       <el-col :span="2">
-        <el-button style="margin-left:0.3em; margin-top: 0.8em" type="success">登录</el-button>
+        <el-button style="margin-left:0.3em; margin-top: 0.8em" type="success" @click="login">登录</el-button>
       </el-col>
     </el-menu>
     <router-view/>
@@ -33,7 +34,13 @@
 export default {
   data () {
     return {
-      activeIndex: '1'
+      activeIndex: '1',
+      search: ''
+    }
+  },
+  methods: {
+    login () {
+      this.$router.push('/login')
     }
   }
 }

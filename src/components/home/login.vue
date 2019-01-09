@@ -1,6 +1,42 @@
 <template>
   <div id="login">
-    {{ message }}
+    <el-col :span="5" :offset="10" style="margin-top: 5em">
+      <el-container>
+        <el-header class="loginHeader" :style="loginHeader">账户登录</el-header>
+        <el-main>
+          <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm">
+            <el-col :span="20" :offset="2">
+              <el-form-item prop="username" style="margin-top: 30px">
+                <el-input type="username" placeholder="请输入用户名" v-model="loginForm.username" autocomplete="off" >
+                  <template slot="prepend">
+                    <font-awesome-icon icon="user"/>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="20" :offset="2">
+              <el-form-item prop="password" style="margin-top: 15px">
+                <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" autocomplete="off">
+                  <template slot="prepend">
+                    <font-awesome-icon icon="lock"/>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="20" :offset="2">
+              <el-form-item style="margin-top: 25px">
+                <el-row>
+                  <el-button type="primary" @click="submitForm('loginForm')" class="loginButton">登录</el-button>
+                </el-row>
+                <el-row>
+                  <router-link id="register" to="/register" class="register">注册新账号</router-link>
+                </el-row>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </el-main>
+      </el-container>
+    </el-col>
   </div>
 </template>
 
@@ -8,13 +44,84 @@
 export default {
   name: 'login',
   data () {
-    return {
-      message: 'my name is wangcanfeng'
+    var checkName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('用户名不能为空'))
+      }
     }
+    var validatePass = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入密码'))
+      }
+    }
+    return {
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      rules: {
+        username: [{validator: checkName, trigger: 'blur'}],
+        password: [{validator: validatePass, trigger: 'blur'}]
+      },
+      loginHeader: {
+        background: 'url(' + require('../../assets/bg/loginbg2.png') + ')',
+        color: '#333',
+        textAlign: 'left',
+        lineHeight: '60px',
+        borderTopLeftRadius: '9px',
+        borderTopRightRadius: '9px',
+        height: '6em'
+      }
+    }
+  },
+  methods: {
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    }
+  },
+  mounted () {
+    document.querySelector('body').setAttribute('style', 'background:url(' + require('../../assets/bg/loginbg.png') + ');background-size: cover;')
+  },
+  beforeDestroy () {
+    document.querySelector('body').removeAttribute('style')
   }
 }
+
 </script>
 
 <style scoped>
+  .el-main {
+    background-color: #fefefe;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+    line-height: 60px;
+    border-bottom-left-radius: 9px;
+    border-bottom-right-radius: 9px;
+  }
 
+  .register {
+    text-decoration: none;
+    color: #2e87ff;
+    margin-top: 5px;
+  }
+
+  .loginButton {
+    width: 80%;
+    margin: auto;
+    height: 45px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .el-input__inner {
+    height: 100px !important;
+  }
 </style>
