@@ -6,8 +6,8 @@
         <el-main>
           <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm">
             <el-col :span="20" :offset="2">
-              <el-form-item prop="username" style="margin-top: 30px">
-                <el-input type="username" placeholder="请输入用户名" v-model="loginForm.username" autocomplete="off" >
+              <el-form-item prop="username" class="loginInput" style="margin-top: 30px">
+                <el-input type="username" placeholder="请输入用户名" v-model="loginForm.username" autocomplete="off">
                   <template slot="prepend">
                     <font-awesome-icon icon="user"/>
                   </template>
@@ -15,13 +15,16 @@
               </el-form-item>
             </el-col>
             <el-col :span="20" :offset="2">
-              <el-form-item prop="password" style="margin-top: 15px">
+              <el-form-item prop="password" class="loginInput" style="margin-top: 15px">
                 <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" autocomplete="off">
                   <template slot="prepend">
                     <font-awesome-icon icon="lock"/>
                   </template>
                 </el-input>
               </el-form-item>
+            </el-col>
+            <el-col :span="20" :offset="2">
+              <el-checkbox label="15天内免登陆" name="type"></el-checkbox>
             </el-col>
             <el-col :span="20" :offset="2">
               <el-form-item style="margin-top: 25px">
@@ -47,11 +50,15 @@ export default {
     var checkName = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('用户名不能为空'))
+      } else {
+        callback()
       }
     }
     var validatePass = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('请输入密码'))
+      } else {
+        callback()
       }
     }
     return {
@@ -78,7 +85,11 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.$http.get('http://localhost/test').then(response => {
+            alert(response.data.test)
+          })
+          // alert(this.loginForm.username)
+          // alert(this.loginForm.password)
         } else {
           console.log('error submit!!')
           return false
@@ -102,7 +113,6 @@ export default {
     color: #333;
     text-align: center;
     line-height: 60px;
-    line-height: 60px;
     border-bottom-left-radius: 9px;
     border-bottom-right-radius: 9px;
   }
@@ -113,15 +123,19 @@ export default {
     margin-top: 5px;
   }
 
-  .loginButton {
-    width: 80%;
-    margin: auto;
-    height: 45px;
-    display: block;
-    margin: 0 auto;
+  .register:hover {
+    text-decoration: underline;
   }
 
-  .el-input__inner {
-    height: 100px !important;
+  .loginButton {
+    width: 80%;
+    margin: 0 auto;
+    height: 45px;
+    display: block;
+  }
+</style>
+<style>
+  .loginInput input.el-input__inner {
+    height: 50px !important;
   }
 </style>
