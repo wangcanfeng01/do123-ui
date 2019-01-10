@@ -85,11 +85,20 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.get('http://localhost/test').then(response => {
-            alert(response.data.test)
+          this.$http.post('http://localhost/login?username=' + this.loginForm.username + '&password=' + this.loginForm.password).then(response => {
+            if (response && response.data) {
+              if (response.data.code === '0') {
+                // 跳转到登录成功的路径上
+                window.location.href = response.data.data
+              } else {
+                this.$emit('isLogin', 'none')
+                this.$emit('isLogout', 'block')
+                this.$message.error(response.data.msg)
+              }
+            } else {
+              this.$message.error(response.data.msg)
+            }
           })
-          // alert(this.loginForm.username)
-          // alert(this.loginForm.password)
         } else {
           console.log('error submit!!')
           return false

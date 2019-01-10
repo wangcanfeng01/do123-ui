@@ -23,24 +23,53 @@
         <el-button style="margin-left:0.3em; margin-top: 0.8em">搜索</el-button>
       </el-col>
       <el-col :span="2">
-        <el-button style="margin-left:0.3em; margin-top: 0.8em" type="success" @click="login">登录</el-button>
+        <el-button class="loginButton" :style="loginButton" type="success" @click="login" v-on:isLogin="isLogin">
+          登录
+        </el-button>
+        <el-button class="loginButton" :style="logoutButton" type="danger" @click="login" v-on:isLogout="isLogout">
+          退出
+        </el-button>
       </el-col>
+      <child v-bind:message="parentMsg" v-on:isLogin="isLogin"></child>
     </el-menu>
     <router-view/>
   </div>
 </template>
 
 <script>
+import child from './components/home/login'
+
 export default {
+  comments: {
+    child
+  },
   data () {
     return {
       activeIndex: '1',
-      search: ''
+      search: '',
+      loginButton: {
+        marginLeft: '0.3em',
+        marginTop: '0.8em',
+        display: 'block'
+      },
+      logoutButton: {
+        marginLeft: '0.3em',
+        marginTop: '0.8em',
+        display: 'none'
+      }
     }
   },
   methods: {
     login () {
       this.$router.push('/login')
+    },
+    isLogin (display) {
+      // 传递是否已经已经登录的值
+      alert('sdsdasdasd')
+      this.logoutButton.display = display
+    },
+    isLogout (display) {
+      this.loginButton.display = display
     }
   }
 }
