@@ -1,13 +1,13 @@
 <template>
-  <div id="login">
+  <div id="register">
     <el-col :span="5" :offset="10" style="margin-top: 5em">
       <el-container>
-        <el-header class="loginHeader" :style="loginHeader">账户登录</el-header>
+        <el-header class="registerHeader" :style="registerHeader">账户注册</el-header>
         <el-main>
-          <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm">
+          <el-form :model="registerForm" status-icon :rules="rules" ref="registerForm">
             <el-col :span="20" :offset="2">
-              <el-form-item prop="username" class="loginInput" style="margin-top: 30px">
-                <el-input type="username" placeholder="请输入用户名" v-model="loginForm.username" autocomplete="off">
+              <el-form-item prop="username" class="registerInput" style="margin-top: 30px">
+                <el-input type="username" placeholder="请输入用户名" v-model="registerForm.username" autocomplete="off">
                   <template slot="prepend">
                     <font-awesome-icon icon="user"/>
                   </template>
@@ -15,8 +15,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="20" :offset="2">
-              <el-form-item prop="password" class="loginInput" style="margin-top: 15px">
-                <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" autocomplete="off">
+              <el-form-item prop="password" class="registerInput" style="margin-top: 15px">
+                <el-input type="password" placeholder="请输入密码" v-model="registerForm.password" autocomplete="off">
                   <template slot="prepend">
                     <font-awesome-icon icon="lock"/>
                   </template>
@@ -24,15 +24,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="20" :offset="2">
-              <el-checkbox label="15天内免登陆" name="type"></el-checkbox>
+              <el-form-item prop="repassword" class="registerInput" style="margin-top: 15px">
+                <el-input type="password" placeholder="确认密码" v-model="registerForm.repassword" autocomplete="off">
+                  <template slot="prepend">
+                    <font-awesome-icon icon="lock"/>
+                  </template>
+                </el-input>
+              </el-form-item>
             </el-col>
             <el-col :span="20" :offset="2">
               <el-form-item style="margin-top: 25px">
                 <el-row>
-                  <el-button type="primary" @click="submitForm('loginForm')" class="loginButton">登录</el-button>
-                </el-row>
-                <el-row>
-                  <router-link id="register" to="/register" class="register">注册新账号</router-link>
+                  <el-button type="primary" @click="submitForm('registerForm')" class="registerButton">完成注册</el-button>
                 </el-row>
               </el-form-item>
             </el-col>
@@ -42,35 +45,43 @@
     </el-col>
   </div>
 </template>
-
 <script>
 export default {
-  name: 'login',
+  name: 'register',
   data () {
     var checkName = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('用户名不能为空'))
-      } else {
-        callback()
       }
+      callback()
     }
     var validatePass = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('请输入密码'))
+      }
+      callback()
+    }
+    var rePass = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请确认密码'))
+      } else if (value !== this.registerForm.password) {
+        return callback(new Error('两次输入密码不一致'))
       } else {
         callback()
       }
     }
     return {
-      loginForm: {
+      registerForm: {
         username: '',
-        password: ''
+        password: '',
+        repassword: ''
       },
       rules: {
         username: [{validator: checkName, trigger: 'blur'}],
-        password: [{validator: validatePass, trigger: 'blur'}]
+        password: [{validator: validatePass, trigger: 'blur'}],
+        repassword: [{validator: rePass, trigger: 'blur'}]
       },
-      loginHeader: {
+      registerHeader: {
         background: 'url(' + require('../../assets/bg/loginbg2.png') + ')',
         color: '#333',
         textAlign: 'left',
@@ -85,17 +96,22 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post('ui/login?username=' + this.loginForm.username + '&password=' + this.loginForm.password).then(response => {
+          this.$http.post('ui/register?username=' + this.registerForm.username + '&password=' + this.registerForm.password).then(response => {
             if (response && response.data) {
               if (response.data.code === '0') {
-                this.$emit('listenLogin', 'true')
-                // 跳转到登录成功的路径上
-                window.location.href = response.data.data
+                // 注册成功跳转到登陆页面
+                setTimeout(function () {
+                  window.location.href = '/login'
+                }, 1000)
+                this.$message({
+                  message: '注册成功',
+                  type: 'success'
+                })
               } else {
-                this.$message.error(response.data)
+                this.$message.error(response.data.msg)
               }
             } else {
-              this.$message.error('用户名或密码输入错误')
+              this.$message.error('注册失败，请联系管理员')
             }
           })
         } else {
@@ -112,7 +128,6 @@ export default {
     document.querySelector('body').removeAttribute('style')
   }
 }
-
 </script>
 
 <style scoped>
@@ -121,29 +136,26 @@ export default {
     color: #333;
     text-align: center;
     line-height: 60px;
+    line-height: 60px;
     border-bottom-left-radius: 9px;
     border-bottom-right-radius: 9px;
   }
 
-  .register {
-    text-decoration: none;
-    color: #2e87ff;
-    margin-top: 5px;
-  }
-
-  .register:hover {
-    text-decoration: underline;
-  }
-
-  .loginButton {
+  .registerButton {
     width: 80%;
-    margin: 0 auto;
+    margin: auto;
     height: 45px;
     display: block;
+    margin: 0 auto;
+  }
+
+  .el-input__inner {
+    height: 100px !important;
   }
 </style>
+
 <style>
-  .loginInput input.el-input__inner {
+  .registerInput input.el-input__inner {
     height: 50px !important;
   }
 </style>

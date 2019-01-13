@@ -19,58 +19,53 @@
       <el-col :span="3" :offset="5">
         <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="1">
         <el-button style="margin-left:0.3em; margin-top: 0.8em">搜索</el-button>
       </el-col>
-      <el-col :span="2">
-        <el-button class="loginButton" :style="loginButton" type="success" @click="login" v-on:isLogin="isLogin">
-          登录
+      <el-col :span="1">
+        <el-button style="margin-left: 0.3em;margin-top: 0.8em;" type="success" @click="login"
+                   v-show="isLogin === 'false'">登录
         </el-button>
-        <el-button class="loginButton" :style="logoutButton" type="danger" @click="login" v-on:isLogout="isLogout">
-          退出
+        <el-button style="margin-left: 0.3em;margin-top: 0.8em;" type="danger" @click="logout"
+                   v-show="isLogin==='true'">退出
         </el-button>
       </el-col>
-      <child v-bind:message="parentMsg" v-on:isLogin="isLogin"></child>
     </el-menu>
-    <router-view/>
+    <router-view v-on:listenLogin="changeStatus"></router-view>
   </div>
 </template>
 
 <script>
-import child from './components/home/login'
-
 export default {
-  comments: {
-    child
-  },
   data () {
     return {
       activeIndex: '1',
       search: '',
-      loginButton: {
-        marginLeft: '0.3em',
-        marginTop: '0.8em',
-        display: 'block'
-      },
-      logoutButton: {
-        marginLeft: '0.3em',
-        marginTop: '0.8em',
-        display: 'none'
-      }
+      isLogin: 'false'
     }
   },
   methods: {
     login () {
       this.$router.push('/login')
     },
-    isLogin (display) {
-      // 传递是否已经已经登录的值
-      alert('sdsdasdasd')
-      this.logoutButton.display = display
+    logout () {
+      this.$http.get('/logout')
+      this.isLogin = 'false'
+      this.$router.push('/home')
     },
-    isLogout (display) {
-      this.loginButton.display = display
+    changeStatus (isIn) {
+      // 传递是否已经已经登录的值
+      this.isLogin = isIn
     }
+  },
+  mounted () {
+    this.$http.get('ui/get/login').then(response => {
+      if (response && response.data && response.data.code === '0') {
+        if (response.data.data) {
+          this.isLogin = 'true'
+        }
+      }
+    })
   }
 }
 </script>

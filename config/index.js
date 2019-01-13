@@ -10,7 +10,15 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/ui': {
+        target: 'http://localhost',
+        changeOrigin: true,
+        pathReWrite: {
+          '^/ui': ''
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -45,10 +53,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/'),
     assetsSubDirectory: 'static',
     assetsPublicPath: './',
 
