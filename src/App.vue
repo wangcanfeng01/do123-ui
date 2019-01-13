@@ -5,7 +5,8 @@
       class="el-menu--horizontal"
       background-color="#545c64"
       text-color="#fff"
-      active-text-color="#ffd04b" style="margin-top: -8px;margin-left: -8px;margin-right: -8px">
+      active-text-color="#ffd04b" >
+      <!--style="margin-top: -8px;margin-left: -8px;margin-right: -8px"-->
       <el-col :span="1" :offset="3">
         <router-link id="logo" to="/home">
           <img src="./assets/home.jpg" style="border-radius: 50%;margin-top: 0.8em">

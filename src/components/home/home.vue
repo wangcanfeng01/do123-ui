@@ -1,16 +1,16 @@
 <template>
   <div id="home">
-    {{message}}
+    <my-footer></my-footer>
   </div>
 </template>
 
 <script>
+import myFooter from '@/components/common/common_footer'
+
 export default {
   name: 'home',
-  data () {
-    return {
-      message: 'my name is wangcanfeng'
-    }
+  components: {
+    'myFooter': myFooter
   }
 }
 </script>
