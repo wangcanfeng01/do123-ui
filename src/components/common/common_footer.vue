@@ -27,5 +27,6 @@ export default {
   .footer_font {
     font-family: "微软雅黑 Light";
     text-align: center;
+    margin-top: 0px;
   }
 </style>
