@@ -7,20 +7,30 @@
       </el-carousel-item>
     </el-carousel>
     <el-container>
-      <el-col :span="12">
-        <el-aside width="50%">Aside</el-aside>
-      </el-col>
-      <el-col :span="12">
-        <el-aside width="50%">Aside</el-aside>
-      </el-col>
+      <el-aside width="50%">
+        <img src="../../assets/home/blog.jpg" style="width: 60%;margin-left: 40%"/>
+        <a class="icon_left" href="/baidu.com">
+          <font-awesome-icon icon="book"/>
+        </a>
+      </el-aside>
+      <el-aside width="50%">
+        <h3>博客分享</h3>
+        <p>（1）在网络上收获了无数知识，因此在自己获得帮助的同时，想到了回报社会</p>
+        <p>（2）写博客可以记录自己当前所学，方便回顾 ，利人利己</p>
+      </el-aside>
     </el-container>
     <el-container>
-      <el-col :span="12">
-        <el-aside width="50%">Aside</el-aside>
-      </el-col>
-      <el-col :span="12">
-        <el-aside width="50%">Aside</el-aside>
-      </el-col>
+      <el-aside width="50%">
+        <div style="text-align: right">
+          <h3>视频搜索</h3>
+          <p>（1）通过机器学习算法，智能推荐用户平时浏览量最高的视频</p>
+          <p>（2）提供智能搜索方法，方便中老年用户查找视频</p>
+        </div>
+      </el-aside>
+      <el-aside width="50%">
+        <img src="../../assets/home/video.jpg" style="width: 60%"/>
+        <font-awesome-icon class="icon_right" icon="play-circle"/>
+      </el-aside>
     </el-container>
     <my-footer style="margin-top: 0px"></my-footer>
   </div>
@@ -92,5 +102,32 @@ export default {
 
   .home_img {
     height: 900px;
+  }
+
+  .icon_left {
+    color: #ffffff;
+    font-size: 6em;
+    height: 1em;
+    line-height: 1em;
+    /*margin: -2.5em 0 0 6.5em;*/
+    left: 25%;
+    position: absolute;
+    text-align: center;
+    width: 1em;
+    z-index: 1;
+    float: right;
+  }
+
+  .icon_right {
+    transition: transform 0.1s ease-in-out, font-size 0.1s ease-in-out;
+    color: #fff;
+    font-size: 6em;
+    height: 1em;
+    line-height: 1em;
+    margin: 1.75em 0 0 -3.5em;
+    position: absolute;
+    text-align: center;
+    width: 1em;
+    z-index: 1;
   }
 </style>
