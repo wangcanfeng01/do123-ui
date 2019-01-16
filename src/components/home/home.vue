@@ -8,30 +8,47 @@
     </el-carousel>
     <el-container>
       <el-aside width="50%">
-        <img src="../../assets/home/blog.jpg" style="width: 60%;margin-left: 40%"/>
-        <a class="icon_left" href="/baidu.com">
-          <font-awesome-icon icon="book"/>
-        </a>
+        <div style="position: relative;width: 30%;height: 366px;left: 42%">
+          <div style="position:absolute;">
+            <img src="../../assets/home/blog.jpg"/>
+          </div>
+          <div style="position: absolute;font-size: 6em;z-index: 1;top:100px;left: 85%">
+            <a href="/baidu.com" style="color: white;">
+              <font-awesome-icon icon="book"/>
+            </a>
+          </div>
+        </div>
       </el-aside>
       <el-aside width="50%">
-        <h3>博客分享</h3>
-        <p>（1）在网络上收获了无数知识，因此在自己获得帮助的同时，想到了回报社会</p>
-        <p>（2）写博客可以记录自己当前所学，方便回顾 ，利人利己</p>
+        <div style="text-align: left;height: 369px">
+          <h3 style="margin-top: 0px">博客分享</h3>
+          <p>（1）在网络上收获了无数知识，因此在自己获得帮助的同时，想到了回报社会</p>
+          <p>（2）写博客可以记录自己当前所学，方便回顾 ，利人利己</p>
+        </div>
       </el-aside>
     </el-container>
     <el-container>
       <el-aside width="50%">
-        <div style="text-align: right">
-          <h3>视频搜索</h3>
+        <div style="text-align: right;height: 366px;">
+          <h3 style="margin-top: 0px">视频搜索</h3>
           <p>（1）通过机器学习算法，智能推荐用户平时浏览量最高的视频</p>
           <p>（2）提供智能搜索方法，方便中老年用户查找视频</p>
         </div>
       </el-aside>
       <el-aside width="50%">
-        <img src="../../assets/home/video.jpg" style="width: 60%"/>
-        <font-awesome-icon class="icon_right" icon="play-circle"/>
+        <div style="position: relative;">
+          <div style="position:absolute;width: 100%;">
+            <img src="../../assets/home/video.jpg"/>
+          </div>
+          <div style="position: absolute;font-size: 6em;z-index: 1;top: 100px;left: 2em">
+            <a href="/baidu.com" style="color: white">
+              <font-awesome-icon icon="play-circle"/>
+            </a>
+          </div>
+        </div>
       </el-aside>
     </el-container>
+    <div class="clearfix"></div>
     <my-footer style="margin-top: 0px"></my-footer>
   </div>
 </template>
@@ -129,5 +146,19 @@ export default {
     text-align: center;
     width: 1em;
     z-index: 1;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    content: " ";
+    display: table;
+  }
+
+  .clearfix:after {
+    clear: both;
+  }
+
+  .clearfix {
+    *zoom: 1;
   }
 </style>
