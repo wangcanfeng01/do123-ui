@@ -22,10 +22,13 @@ export default {
 <style scoped>
   .footer_background {
     background: #e1e1e8;
+    padding-top: 80px;
+    padding-bottom: 100px;
   }
 
   .footer_font {
     font-family: "微软雅黑 Light";
+    font-size: 3px;
     text-align: center;
     margin-top: 0px;
   }
