@@ -158,4 +158,8 @@ export default {
   .registerInput input.el-input__inner {
     height: 50px !important;
   }
+</style><style>
+  .registerInput input.el-input__inner {
+    height: 50px !important;
+  }
 </style>

@@ -3,6 +3,10 @@ import Router from 'vue-router'
 import login from '@/components/home/login'
 import home from '@/components/home/home'
 import register from '@/components/home/register'
+import video from '@/components/video/video'
+import blog from '@/components/blog/blog'
+import about from '@/components/about/about'
+import admin from '@/components/admin/admin'
 
 Vue.use(Router)
 
@@ -27,6 +31,26 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: register
+    },
+    {
+      path: '/video',
+      name: 'video',
+      component: video
+    },
+    {
+      path: '/blog',
+      name: 'blog',
+      component: blog
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: about
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: admin
     }
   ]
 })

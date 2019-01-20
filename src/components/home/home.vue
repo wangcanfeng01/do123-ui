@@ -16,9 +16,9 @@
             <img src="../../assets/home/blog.jpg"/>
           </div>
           <div class="left_icon">
-            <a href="/baidu.com" class="icon_link">
+            <router-link to="/blog" class="icon_link">
               <font-awesome-icon icon="book"/>
-            </a>
+            </router-link>
           </div>
         </div>
       </el-aside>
@@ -44,9 +44,9 @@
             <img src="../../assets/home/video.jpg" style="width: 547px;height: 365px"/>
           </div>
           <div class="right_icon">
-            <a href="/baidu.com" class="icon_link">
+            <router-link to="/video" class="icon_link">
               <font-awesome-icon icon="play-circle"/>
-            </a>
+            </router-link>
           </div>
         </div>
       </el-aside>
