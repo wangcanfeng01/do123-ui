@@ -1,11 +1,12 @@
 <template>
   <div id="admin_left">
     <el-col :span="leftCol">
-      <el-menu default-active="1"
+      <el-menu default-active="/admin/center"
                active-text-color="#ffd04b"
                :unique-opened="true"
                :collapse="isCollapse"
-               class="nav_height">
+               :router="true"
+               class="nav_height" :style="leftHeight">
         <el-row style="margin-bottom: 20px">
           <el-col :span="16" :offset="2">
             <span v-show="!isCollapse" style="line-height: 40px;">Hello VIP WCF</span>
@@ -27,7 +28,7 @@
             <span style="display:block;">WCF</span>
           </el-col>
         </el-row>
-        <el-menu-item index="1">
+        <el-menu-item index="/admin/center">
           <font-awesome-icon icon="desktop"/>
           <span slot="title">监控中心</span>
         </el-menu-item>
@@ -47,7 +48,7 @@
             <span slot="title">日志中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="3-1">操作记录</el-menu-item>
+            <el-menu-item index="/admin/opsLog">操作记录</el-menu-item>
             <el-menu-item index="3-2">评论记录</el-menu-item>
             <el-menu-item index="3-3">系统日志</el-menu-item>
           </el-menu-item-group>
@@ -81,6 +82,7 @@
 
 <script>
 export default {
+  props: ['leftHeight'],
   data () {
     return {
       isCollapse: false,
@@ -111,8 +113,4 @@ export default {
 </script>
 
 <style scoped>
-  .nav_height {
-    min-height: 900px;
-    height: auto;
-  }
 </style>
