@@ -50,7 +50,20 @@ export default new Router({
     {
       path: '/admin',
       name: 'admin',
-      component: admin
+      component: admin,
+      children: [{
+        path: '/',
+        redirect: '/admin/center'
+      }, {
+        path: '/admin/center',
+        name: 'adminCenter',
+        component: adminCenter
+      }, {
+        path: '/admin/opsLog',
+        name: 'opsLog',
+        component: adminOpsLog
+      }
+      ]
     }
   ]
 })
