@@ -7,6 +7,8 @@ import video from '@/components/video/video'
 import blog from '@/components/blog/blog'
 import about from '@/components/about/about'
 import admin from '@/components/admin/admin'
+import adminCenter from '@/components/admin/admin_center'
+import adminOpsLog from '@/components/admin/admin_ops_log'
 
 Vue.use(Router)
 
