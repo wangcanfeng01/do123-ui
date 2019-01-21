@@ -9,6 +9,9 @@ import about from '@/components/about/about'
 import admin from '@/components/admin/admin'
 import adminCenter from '@/components/admin/admin_center'
 import adminOpsLog from '@/components/admin/admin_ops_log'
+import adminSysLog from '@/components/admin/admin_sys_log'
+import adminComment from '@/components/admin/admin_comment'
+import userInfo from '@/components/admin/admin_user'
 
 Vue.use(Router)
 
@@ -64,6 +67,18 @@ export default new Router({
         path: '/admin/opsLog',
         name: 'opsLog',
         component: adminOpsLog
+      }, {
+        path: '/admin/comment',
+        name: 'adminComment',
+        component: adminComment
+      }, {
+        path: '/admin/sysLog',
+        name: 'sysLog',
+        component: adminSysLog
+      }, {
+        path: '/admin/user',
+        name: 'userInfo',
+        component: userInfo
       }
       ]
     }

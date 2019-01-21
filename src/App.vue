@@ -5,6 +5,7 @@
       class="el-menu--horizontal"
       background-color="#545c64"
       text-color="#fff"
+      :router="true"
       active-text-color="#ffd04b">
       <!--style="margin-top: -8px;margin-left: -8px;margin-right: -8px"-->
       <el-col :span="1" :offset="3">
@@ -12,11 +13,11 @@
           <img src="./assets/home.jpg" style="border-radius: 50%;margin-top: 0.8em">
         </router-link>
       </el-col>
-      <el-menu-item index="1" @click="home">主页</el-menu-item>
-      <el-menu-item index="2" @click="blog">博客</el-menu-item>
-      <el-menu-item index="3" @click="video">视频</el-menu-item>
-      <el-menu-item index="4" @click="about">关于本站</el-menu-item>
-      <el-menu-item index="5" @click="admin">管理中心</el-menu-item>
+      <el-menu-item index="/home">主页</el-menu-item>
+      <el-menu-item index="/blog">博客</el-menu-item>
+      <el-menu-item index="/video">视频</el-menu-item>
+      <el-menu-item index="/about">关于本站</el-menu-item>
+      <el-menu-item index="/admin">管理中心</el-menu-item>
       <el-col :span="3" :offset="5">
         <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
       </el-col>
@@ -40,7 +41,7 @@
 export default {
   data () {
     return {
-      activeIndex: '1',
+      activeIndex: '/home',
       search: '',
       isLogin: 'false'
     }
@@ -57,26 +58,6 @@ export default {
     changeStatus (isIn) {
       // 传递是否已经已经登录的值
       this.isLogin = isIn
-    },
-    home () {
-      this.$router.push('/home')
-      this.activeIndex = '1'
-    },
-    blog () {
-      this.$router.push('/blog')
-      this.activeIndex = '2'
-    },
-    video () {
-      this.$router.push('/video')
-      this.activeIndex = '3'
-    },
-    about () {
-      this.$router.push('/about')
-      this.activeIndex = '4'
-    },
-    admin () {
-      this.$router.push('/admin')
-      this.activeIndex = '5'
     }
   },
   mounted () {

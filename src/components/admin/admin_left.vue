@@ -38,8 +38,8 @@
             <span slot="title">数据中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="2-1">视频中心</el-menu-item>
-            <el-menu-item index="2-2">博客中心</el-menu-item>
+            <el-menu-item index="/admin/video">视频管理</el-menu-item>
+            <el-menu-item index="/admin/blog">博客管理</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="3">
@@ -49,8 +49,8 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="/admin/opsLog">操作记录</el-menu-item>
-            <el-menu-item index="3-2">评论记录</el-menu-item>
-            <el-menu-item index="3-3">系统日志</el-menu-item>
+            <el-menu-item index="/admin/comment">评论记录</el-menu-item>
+            <el-menu-item index="/admin/sysLog">系统日志</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="4">
@@ -59,9 +59,9 @@
             <span slot="title">用户中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="4-1">角色管理</el-menu-item>
-            <el-menu-item index="4-2">菜单管理</el-menu-item>
-            <el-menu-item index="4-3">用户管理</el-menu-item>
+            <el-menu-item index="/admin/role">角色管理</el-menu-item>
+            <el-menu-item index="/admin/menu">菜单管理</el-menu-item>
+            <el-menu-item index="/admin/user">用户管理</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="5">
@@ -70,9 +70,9 @@
             <span slot="title">安全管理</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="5-1">访客记录</el-menu-item>
-            <el-menu-item index="5-2">数据库连接状态</el-menu-item>
-            <el-menu-item index="5-3">后台任务数</el-menu-item>
+            <el-menu-item index="/admin/visitor">访客记录</el-menu-item>
+            <el-menu-item index="/admin/dbLink">数据库连接状态</el-menu-item>
+            <el-menu-item index="/admin/tasks">后台任务数</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>

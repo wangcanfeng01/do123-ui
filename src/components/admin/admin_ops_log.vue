@@ -45,7 +45,7 @@
             label="操作结果">
             <template slot-scope="scope">
               <el-tag :type="scope.row.actionResult === '成功' ? 'success' : 'danger'"
-                disable-transitions>{{scope.row.actionResult}}
+                      disable-transitions>{{scope.row.actionResult}}
               </el-tag>
             </template>
           </el-table-column>
@@ -54,6 +54,17 @@
             label="操作内容详情">
           </el-table-column>
         </el-table>
+        <div class="block" style="margin-top: 20px">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[20, 40, 50, 100]"
+            :page-size="20"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="100">
+          </el-pagination>
+        </div>
       </el-card>
     </el-col>
   </div>
@@ -100,7 +111,16 @@ export default {
         actionObject: '博客',
         actionResult: '成功',
         details: '无'
-      }]
+      }],
+      currentPage: 1
+    }
+  },
+  methods: {
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
     }
   }
 }
