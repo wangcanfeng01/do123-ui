@@ -12,6 +12,13 @@ import adminOpsLog from '@/components/admin/admin_ops_log'
 import adminSysLog from '@/components/admin/admin_sys_log'
 import adminComment from '@/components/admin/admin_comment'
 import userInfo from '@/components/admin/admin_user'
+import visitorInfo from '@/components/admin/admin_visitor'
+import dbInfo from '@/components/admin/admin_db'
+import tasksInfo from '@/components/admin/admin_tasks'
+import roleInfo from '@/components/admin/admin_role'
+import menuInfo from '@/components/admin/admin_menu'
+import adminVideo from '@/components/admin/admin_video'
+import adminBlog from '@/components/admin/admin_blog'
 
 Vue.use(Router)
 
@@ -79,6 +86,34 @@ export default new Router({
         path: '/admin/user',
         name: 'userInfo',
         component: userInfo
+      }, {
+        path: '/admin/visitor',
+        name: 'visitorInfo',
+        component: visitorInfo
+      }, {
+        path: '/admin/dbInfo',
+        name: 'dbInfo',
+        component: dbInfo
+      }, {
+        path: '/admin/tasks',
+        name: 'tasksInfo',
+        component: tasksInfo
+      }, {
+        path: '/admin/role',
+        name: 'roleInfo',
+        component: roleInfo
+      }, {
+        path: '/admin/menu',
+        name: 'menuInfo',
+        component: menuInfo
+      }, {
+        path: '/admin/video',
+        name: 'adminVideo',
+        component: adminVideo
+      }, {
+        path: '/admin/blog',
+        name: 'adminBlog',
+        component: adminBlog
       }
       ]
     }

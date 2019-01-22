@@ -1,10 +1,10 @@
 <template>
-  <div id="admin_user">
+  <div id="admin_role">
     <el-col :span="20" class="admin_content">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <el-col :span="5">
-            <span style="line-height: 40px">用户信息列表</span>
+            <span style="line-height: 40px">角色信息列表</span>
           </el-col>
           <el-col :span="8" :offset="8">
             <el-input></el-input>
@@ -17,32 +17,24 @@
           :data="tableData"
           style="width: 100%">
           <el-table-column
-            prop="username"
-            label="用户名称">
+            prop="roleName"
+            label="角色名称">
           </el-table-column>
           <el-table-column
-            prop="face"
-            label="头像">
+            prop="roleType"
+            label="角色类型">
           </el-table-column>
           <el-table-column
-            prop="role"
-            label="角色">
+            prop="creator"
+            label="创建用户">
           </el-table-column>
           <el-table-column
-            prop="level"
-            label="用户等级">
-          </el-table-column>
-          <el-table-column
-            prop="registerTime"
-            label="注册时间">
+            prop="createTime"
+            label="创建时间">
           </el-table-column>
           <el-table-column
             prop="updateTime"
             label="修改时间">
-          </el-table-column>
-          <el-table-column
-            prop="mark"
-            label="备注">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -75,41 +67,37 @@
 
 <script>
 export default {
-  name: 'admin_user',
+  name: 'admin_role',
   data () {
     return {
       tableData: [{
-        username: '王小虎',
-        face: 'sssss',
-        role: '上海市普陀区金沙江路 1518 弄',
-        level: '2016-05-04 00:00:00',
-        registerTime: '删除',
-        updateTime: '博客',
-        mark: '成功'
+        roleName: '王小虎',
+        roleType: 'sssss',
+        creator: '上海市普陀区金沙江路 1518 弄',
+        createTime: '2016-05-04 00:00:00',
+        updateTime: '2016-05-04 00:00:00',
+        description: '博客'
       }, {
-        username: '王小虎',
-        face: 'sssss',
-        role: '上海市普陀区金沙江路 1518 弄',
-        level: '2016-05-04 00:00:00',
-        registerTime: '删除',
-        updateTime: '博客',
-        mark: '成功'
+        roleName: '王小虎',
+        roleType: 'sssss',
+        creator: '上海市普陀区金沙江路 1518 弄',
+        createTime: '2016-05-04 00:00:00',
+        updateTime: '2016-05-04 00:00:00',
+        description: '博客'
       }, {
-        username: '王小虎',
-        face: 'sssss',
-        role: '上海市普陀区金沙江路 1518 弄',
-        level: '2016-05-04 00:00:00',
-        registerTime: '删除',
-        updateTime: '博客',
-        mark: '成功'
+        roleName: '王小虎',
+        roleType: 'sssss',
+        creator: '上海市普陀区金沙江路 1518 弄',
+        createTime: '2016-05-04 00:00:00',
+        updateTime: '2016-05-04 00:00:00',
+        description: '博客'
       }, {
-        username: '王小虎',
-        face: 'sssss',
-        role: '上海市普陀区金沙江路 1518 弄',
-        level: '2016-05-04 00:00:00',
-        registerTime: '删除',
-        updateTime: '博客',
-        mark: '成功'
+        roleName: '王小虎',
+        roleType: 'sssss',
+        creator: '上海市普陀区金沙江路 1518 弄',
+        createTime: '2016-05-04 00:00:00',
+        updateTime: '2016-05-04 00:00:00',
+        description: '博客'
       }],
       currentPage: 1
     }

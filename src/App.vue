@@ -17,7 +17,7 @@
       <el-menu-item index="/blog">博客</el-menu-item>
       <el-menu-item index="/video">视频</el-menu-item>
       <el-menu-item index="/about">关于本站</el-menu-item>
-      <el-menu-item index="/admin">管理中心</el-menu-item>
+      <el-menu-item index="/admin/center">管理中心</el-menu-item>
       <el-col :span="3" :offset="5">
         <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
       </el-col>
@@ -61,6 +61,7 @@ export default {
     }
   },
   mounted () {
+    this.activeIndex = this.$route.path
     this.$http.get('ui/get/login').then(response => {
       if (response && response.data && response.data.code === '0') {
         if (response.data.data) {

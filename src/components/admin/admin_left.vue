@@ -1,7 +1,7 @@
 <template>
   <div id="admin_left">
     <el-col :span="leftCol">
-      <el-menu default-active="/admin/center"
+      <el-menu :default-active="currentIndex"
                active-text-color="#ffd04b"
                :unique-opened="true"
                :collapse="isCollapse"
@@ -38,8 +38,8 @@
             <span slot="title">数据中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/admin/video">视频管理</el-menu-item>
-            <el-menu-item index="/admin/blog">博客管理</el-menu-item>
+            <el-menu-item index="/admin/video">视频监控</el-menu-item>
+            <el-menu-item index="/admin/blog">博客监控</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="3">
@@ -71,7 +71,7 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="/admin/visitor">访客记录</el-menu-item>
-            <el-menu-item index="/admin/dbLink">数据库连接状态</el-menu-item>
+            <el-menu-item index="/admin/dbInfo">数据库连接状态</el-menu-item>
             <el-menu-item index="/admin/tasks">后台任务数</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
@@ -88,7 +88,8 @@ export default {
       isCollapse: false,
       pictureOffset: 2,
       collapseOffset: 0,
-      leftCol: 3
+      leftCol: 3,
+      currentIndex: '/admin/center'
     }
   },
   methods: {
@@ -108,6 +109,9 @@ export default {
         this.isCollapse = true
       }
     }
+  },
+  mounted () {
+    this.currentIndex = this.$route.path
   }
 }
 </script>
