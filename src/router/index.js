@@ -19,6 +19,12 @@ import roleInfo from '@/components/admin/admin_role'
 import menuInfo from '@/components/admin/admin_menu'
 import adminVideo from '@/components/admin/admin_video'
 import adminBlog from '@/components/admin/admin_blog'
+import aboutMind from '@/components/about/about_mind'
+import blogCenter from '@/components/blog/blog_center'
+import blogKeyword from '@/components/blog/blog_keyword'
+import blogList from '@/components/blog/blog_list'
+import blogManage from '@/components/blog/blog_manage'
+import blogWriter from '@/components/blog/blog_writer'
 
 Vue.use(Router)
 
@@ -52,12 +58,41 @@ export default new Router({
     {
       path: '/blog',
       name: 'blog',
-      component: blog
+      component: blog,
+      children: [{
+        path: '/',
+        redirect: '/blog/center'
+      }, {
+        path: '/blog/center',
+        name: 'blogCenter',
+        component: blogCenter
+      }, {
+        path: '/blog/keyword',
+        name: 'blogKeyword',
+        component: blogKeyword
+      }, {
+        path: '/blog/list',
+        name: 'blogList',
+        component: blogList
+      }, {
+        path: '/blog/manage',
+        name: 'blogManage',
+        component: blogManage
+      }, {
+        path: '/blog/writer',
+        name: 'blogWriter',
+        component: blogWriter
+      }]
     },
     {
       path: '/about',
       name: 'about',
       component: about
+    },
+    {
+      path: '/about/mind',
+      name: 'aboutMind',
+      component: aboutMind
     },
     {
       path: '/admin',

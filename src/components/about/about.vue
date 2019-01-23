@@ -10,7 +10,7 @@
             <el-tab-pane label="王灿锋">
               <el-container>
                 <el-aside width="20%" class="tab_left">
-                  <!--<img src="../../assets/face/wcf.jpg" class="person_img"/>-->
+                  <img src="../../assets/face/wcf.jpg" class="person_img"/>
                   <el-card style="width: 80%;margin-left: 10%">
                     <div slot="header" class="clearfix" style="text-align: center">
                       <span>基本信息</span>
@@ -69,7 +69,7 @@ export default {
         email: '373811598@qq.com',
         workArea: '杭州',
         telephone: '18768147151',
-        mind: '/admin',
+        mind: '/about/mind',
         tags: [
           {name: 'jdk源码', type: 'success'},
           {name: 'spring相关', type: 'success'},
@@ -113,13 +113,13 @@ export default {
   .tab_left {
     background-color: #D3DCE6;
     color: #333;
-    min-height: 700px;
+    height: 750px;
   }
 
   .tab_main {
     background-color: #FFFFFF;
     padding-left: 0px;
-    height: 700px;
+    height: 750px;
     overflow: auto;
   }
 
@@ -163,4 +163,3 @@ export default {
     background: #EDEDED;
   }
 </style>
-
