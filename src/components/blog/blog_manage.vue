@@ -24,6 +24,20 @@
           <el-table-column
             prop="coverPic"
             label="封面图片">
+            <template slot-scope="scope">
+              <el-upload
+                class="upload_style"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove">
+                <img v-if="scope.row.coverPic" :src="scope.row.coverPic" style="width: 100%;height: auto">
+                <i v-else class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
+            </template>
           </el-table-column>
           <el-table-column
             prop="publishTime"
@@ -104,7 +118,7 @@ export default {
     return {
       tableData: [{
         articleName: '王小虎',
-        coverPic: 'sssss',
+        coverPic: '',
         publishTime: '上海市普陀区金沙江路 1518 弄',
         hitTimes: '33',
         categories: '2016-05-04 00:00:00',
@@ -139,7 +153,9 @@ export default {
         publishStatus: '发布',
         allowComment: '允许'
       }],
-      currentPage: 1
+      currentPage: 1,
+      dialogImageUrl: '',
+      dialogVisible: false
     }
   },
   methods: {
@@ -151,10 +167,30 @@ export default {
     },
     deleteComment () {
       console.log('ss')
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePictureCardPreview (file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     }
   }
 }
 </script>
 
 <style scoped>
+</style>
+<style>
+  .upload_style .el-upload--picture-card {
+    background-color: #fbfdff;
+    border: 1px dashed #c0ccda;
+    border-radius: 6px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 60px;
+    width: 130px;
+    line-height: 60px;
+    vertical-align: top;
+  }
 </style>
