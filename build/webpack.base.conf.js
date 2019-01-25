@@ -18,7 +18,7 @@ const createLintingRule = () => ({
     emitWarning: !config.dev.showEslintErrorsInOverlay
   }
 })
-
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
@@ -88,5 +88,17 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  plugins: [
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, '../node_modules/mavon-editor/dist/highlightjs'),
+      to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/highlightjs')
+    }, {
+      from: path.resolve(__dirname, '../node_modules/mavon-editor/dist/markdown'),
+      to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/markdown')
+    }, {
+      from: path.resolve(__dirname, '../node_modules/mavon-editor/dist/katex'),
+      to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/katex')
+    }])
+  ]
 }
