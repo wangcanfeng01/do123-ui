@@ -1,6 +1,5 @@
 <template>
   <div id="blog_manage">
-    <el-col :span="20" class="about_content">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <el-col :span="5">
@@ -107,7 +106,6 @@
           </el-pagination>
         </div>
       </el-card>
-    </el-col>
   </div>
 </template>
 

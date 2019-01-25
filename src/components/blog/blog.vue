@@ -1,9 +1,11 @@
 <template>
   <div id="blog">
     <blog-left :left-height="leftHeight"></blog-left>
-    <div ref="about_right" id="about_right">
-      <router-view></router-view>
-    </div>
+    <el-col :span="20" class="about_content">
+      <div ref="about_right" id="about_right">
+        <router-view></router-view>
+      </div>
+    </el-col>
   </div>
 </template>
 
@@ -33,15 +35,13 @@ export default {
 </script>
 
 <style scoped>
-  #about_right {
-    min-height: 800px;
-  }
 </style>
 
 <style>
   .about_content {
     margin-left: 20px;
     margin-top: 20px;
+    min-height: 800px;
   }
 
   .clearfix:before,

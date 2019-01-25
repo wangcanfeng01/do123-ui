@@ -1,6 +1,5 @@
 <template>
   <div id="blog_keyword">
-    <el-col :span="20" class="about_content">
       <el-col :span="10" :offset="1">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
@@ -21,7 +20,6 @@
           </span>
         </el-card>
       </el-col>
-    </el-col>
   </div>
 </template>
 

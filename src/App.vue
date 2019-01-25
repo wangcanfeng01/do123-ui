@@ -14,7 +14,7 @@
         </router-link>
       </el-col>
       <el-menu-item index="/home">主页</el-menu-item>
-      <el-menu-item index="/blog">博客</el-menu-item>
+      <el-menu-item index="/blog/center">博客</el-menu-item>
       <el-menu-item index="/video">视频</el-menu-item>
       <el-menu-item index="/about">关于本站</el-menu-item>
       <el-menu-item index="/admin/center">管理中心</el-menu-item>

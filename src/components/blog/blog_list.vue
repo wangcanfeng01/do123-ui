@@ -1,18 +1,16 @@
 <template>
   <div id="blog_list">
-    <el-col :span="20" class="about_content">
-      <el-col :span="5" v-for="(o) in 6" :key="o" :offset="1">
-        <el-card :body-style="{ padding: '0px' }">
-          <img src="../../assets/article/cover/default.jpg" class="image">
-          <div style="padding: 14px;">
-            <span>好吃的汉堡</span>
-            <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button">操作按钮</el-button>
-            </div>
+    <el-col :span="5" v-for="(o) in 6" :key="o">
+      <el-card :body-style="{ padding: '0px' }" style="margin-right: 20px;margin-bottom: 20px">
+        <img src="../../assets/article/cover/default.jpg" class="image">
+        <div style="padding: 14px;">
+          <span>好吃的汉堡</span>
+          <div class="bottom clearfix">
+            <time class="time">{{ currentDate }}</time>
+            <el-button type="text" class="button">操作按钮</el-button>
           </div>
-        </el-card>
-      </el-col>
+        </div>
+      </el-card>
     </el-col>
   </div>
 </template>
