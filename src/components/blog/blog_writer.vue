@@ -1,81 +1,83 @@
 <template>
   <div id="blog_writer">
-    <el-row>
-      <el-col :span="12">
-        <el-input
-          placeholder="请输入标题"
-          v-model="articleTitle"
-          clearable>
-        </el-input>
-      </el-col>
-      <el-col :span="6" :offset="2">
-        <el-select v-model="category" clearable placeholder="请选择文章分类">
-          <el-option
-            v-for="item in categories"
-            :key="item.value"
-            :label="item.value"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-col>
-    </el-row>
-    <el-row style="margin-top: 20px">
-      <el-col :span="18">
-        <fieldset class="fieldset-border">
-          <legend class="legend-font">关键字</legend>
-          <el-tag
-            :key="tag"
-            v-for="tag in dynamicTags"
-            closable
-            :disable-transitions="false"
-            @close="handleClose(tag)">
-            {{tag}}
-          </el-tag>
+    <el-col :span="20" id="blog-content">
+      <el-row>
+        <el-col :span="12">
           <el-input
-            class="input-new-tag"
-            v-if="inputVisible"
-            v-model="inputValue"
-            ref="saveTagInput"
-            @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm">
+            placeholder="请输入标题"
+            v-model="articleTitle"
+            clearable>
           </el-input>
-        </fieldset>
-      </el-col>
-    </el-row>
-    <el-row style="margin-top: 20px">
-      <el-col :span="18">
-        <mavon-editor
-          :subfield="subfield"
-          :code_style="code_style"
-          :ishljs="true"
-          :externalLink="externalLink">
-        </mavon-editor>
-      </el-col>
-    </el-row>
-    <el-row style="margin-top: 20px">
-      <el-col :span="4" :offset="1">
-        <el-switch
-          v-model="allowComment"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-          active-text="允许评论"
-          inactive-text="不可评论">
-        </el-switch>
-      </el-col>
-      <el-col :span="4">
-        <el-switch
-          v-model="allowSee"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-          active-text="所有人可见"
-          inactive-text="仅自己可见">
-        </el-switch>
-      </el-col>
-      <el-col :span="5" :offset="5">
-        <el-button>返回列表</el-button>
-        <el-button type="success">文章发布</el-button>
-      </el-col>
-    </el-row>
+        </el-col>
+        <el-col :span="6" :offset="2">
+          <el-select v-model="category" clearable placeholder="请选择文章分类">
+            <el-option
+              v-for="item in categories"
+              :key="item.value"
+              :label="item.value"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 20px">
+        <el-col :span="18">
+          <fieldset class="fieldset-border">
+            <legend class="legend-font">关键字</legend>
+            <el-tag
+              :key="tag"
+              v-for="tag in dynamicTags"
+              closable
+              :disable-transitions="false"
+              @close="handleClose(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="inputVisible"
+              v-model="inputValue"
+              ref="saveTagInput"
+              @keyup.enter.native="handleInputConfirm"
+              @blur="handleInputConfirm">
+            </el-input>
+          </fieldset>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 20px">
+        <el-col :span="18">
+          <mavon-editor
+            :subfield="subfield"
+            :code_style="code_style"
+            :ishljs="true"
+            :externalLink="externalLink">
+          </mavon-editor>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 20px">
+        <el-col :span="4" :offset="1">
+          <el-switch
+            v-model="allowComment"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-text="允许评论"
+            inactive-text="不可评论">
+          </el-switch>
+        </el-col>
+        <el-col :span="4">
+          <el-switch
+            v-model="allowSee"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-text="所有人可见"
+            inactive-text="仅自己可见">
+          </el-switch>
+        </el-col>
+        <el-col :span="5" :offset="5">
+          <el-button>返回列表</el-button>
+          <el-button type="success">文章发布</el-button>
+        </el-col>
+      </el-row>
+    </el-col>
   </div>
 </template>
 
@@ -142,7 +144,20 @@ export default {
         this.dynamicTags.push(inputValue)
       }
       this.inputValue = ''
+    },
+    getHeight () {
+      this.$nextTick(() => {
+        // 获取到右侧内容的真实高度
+        var right = document.getElementById('blog-content')
+        var rightHeight = right.offsetHeight
+        this.$emit('listenHeight', rightHeight)
+      })
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.getHeight()
+    })
   }
 }
 </script>

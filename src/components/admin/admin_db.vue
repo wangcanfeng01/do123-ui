@@ -1,6 +1,6 @@
 <template>
   <div id="admin_db">
-    <el-col :span="20" class="admin_content">
+    <el-col :span="20" id="admin-content">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <el-col :span="5">

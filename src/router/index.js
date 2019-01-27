@@ -25,6 +25,7 @@ import blogKeyword from '@/components/blog/blog_keyword'
 import blogList from '@/components/blog/blog_list'
 import blogManage from '@/components/blog/blog_manage'
 import blogWriter from '@/components/blog/blog_writer'
+import blogArticle from '@/components/blog/blog_article'
 
 Vue.use(Router)
 
@@ -83,6 +84,11 @@ export default new Router({
         name: 'blogWriter',
         component: blogWriter
       }]
+    },
+    {
+      path: '/blog/article',
+      name: 'blogArticle',
+      component: blogArticle
     },
     {
       path: '/about',

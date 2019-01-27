@@ -1,6 +1,6 @@
 <template>
   <div id="admin_video">
-    <el-col :span="20" class="admin_content">
+    <el-col :span="20" id="admin-content">
       {{message}}
     </el-col>
   </div>

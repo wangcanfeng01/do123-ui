@@ -1,5 +1,6 @@
 <template>
   <div id="blog_manage">
+    <el-col :span="20" id="blog-content">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <el-col :span="5">
@@ -106,6 +107,7 @@
           </el-pagination>
         </div>
       </el-card>
+    </el-col>
   </div>
 </template>
 
@@ -172,7 +174,20 @@ export default {
     handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
+    },
+    getHeight () {
+      this.$nextTick(() => {
+        // 获取到右侧内容的真实高度
+        var right = document.getElementById('blog-content')
+        var rightHeight = right.offsetHeight
+        this.$emit('listenHeight', rightHeight)
+      })
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.getHeight()
+    })
   }
 }
 </script>

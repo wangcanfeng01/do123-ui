@@ -1,16 +1,18 @@
 <template>
   <div id="blog_list">
-    <el-col :span="5" v-for="(o) in 6" :key="o">
-      <el-card :body-style="{ padding: '0px' }" style="margin-right: 20px;margin-bottom: 20px">
-        <img src="../../assets/article/cover/default.jpg" class="image">
-        <div style="padding: 14px;">
-          <span>好吃的汉堡</span>
-          <div class="bottom clearfix">
-            <time class="time">{{ currentDate }}</time>
-            <el-button type="text" class="button">操作按钮</el-button>
+    <el-col :span="20" id="blog-content">
+      <el-col :span="5" v-for="(o) in 6" :key="o">
+        <el-card :body-style="{ padding: '0px' }" style="margin-right: 20px;margin-bottom: 20px">
+          <img src="../../assets/article/cover/default.jpg" class="image">
+          <div style="padding: 14px;">
+            <span>好吃的汉堡</span>
+            <div class="bottom clearfix">
+              <time class="time">{{ currentDate }}</time>
+              <el-button type="text" class="button">操作按钮</el-button>
+            </div>
           </div>
-        </div>
-      </el-card>
+        </el-card>
+      </el-col>
     </el-col>
   </div>
 </template>
@@ -21,6 +23,21 @@ export default {
   data () {
     return {
       currentDate: new Date()
+    }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.getHeight()
+    })
+  },
+  methods: {
+    getHeight () {
+      this.$nextTick(() => {
+        // 获取到右侧内容的真实高度
+        var right = document.getElementById('blog-content')
+        var rightHeight = right.offsetHeight
+        this.$emit('listenHeight', rightHeight)
+      })
     }
   }
 }

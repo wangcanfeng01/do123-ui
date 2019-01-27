@@ -1,9 +1,7 @@
 <template>
   <div id="admin">
     <admin-left :left-height="leftHeight"></admin-left>
-    <div ref="admin_right" id="admin_right">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -18,27 +16,18 @@ export default {
   data () {
     return {
       leftHeight: {
-        minHeight: '500px',
+        minHeight: '900px',
         height: ''
       }
     }
-  },
-  mounted () {
-    // 获取到右侧内容的真实高度
-    var right = document.getElementById('admin_right')
-    var rightHeight = right.offsetHeight
-    this.leftHeight.height = rightHeight + 'px'
   }
 }
 </script>
 
 <style scoped>
-  #admin_right {
-    min-height: 800px;
-  }
 </style>
 <style>
-  .admin_content {
+  #admin-content {
     margin-left: 20px;
     margin-top: 20px;
   }

@@ -1,11 +1,9 @@
 <template>
   <div id="blog">
+    <!--// 插入左侧导航-->
     <blog-left :left-height="leftHeight"></blog-left>
-    <el-col :span="20" class="about_content">
-      <div ref="about_right" id="about_right">
-        <router-view></router-view>
-      </div>
-    </el-col>
+    <!--//载入右侧数据-->
+    <router-view v-on:listenHeight="changeHeight"></router-view>
   </div>
 </template>
 
@@ -20,16 +18,16 @@ export default {
   data () {
     return {
       leftHeight: {
-        minHeight: '800px',
+        minHeight: '900px',
         height: ''
       }
     }
   },
-  mounted () {
-    // 获取到右侧内容的真实高度
-    var right = document.getElementById('about_right')
-    var rightHeight = right.offsetHeight
-    this.leftHeight.height = rightHeight + 'px'
+  methods: {
+    // 监听右侧数据的真实高度，从而改变左侧导航栏的高度
+    changeHeight (height) {
+      this.leftHeight.height = height + 'px'
+    }
   }
 }
 </script>
@@ -38,7 +36,7 @@ export default {
 </style>
 
 <style>
-  .about_content {
+  #blog-content {
     margin-left: 20px;
     margin-top: 20px;
     min-height: 800px;
