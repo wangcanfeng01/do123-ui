@@ -11,11 +11,11 @@
           </el-col>
           <el-col :span="6">
             <el-button type="primary" style="margin-left: 15px">查询</el-button>
-            <el-button type="success" style="margin-left: 15px" @click="dialogFormVisible = true">新增角色</el-button>
+            <el-button type="success" style="margin-left: 15px" @click="addFormVisible = true">新增角色</el-button>
           </el-col>
         </div>
         <!--新增角色弹出框-->
-        <el-dialog title="新增角色" :visible.sync="dialogFormVisible" width="400px">
+        <el-dialog title="新增角色" :visible.sync="addFormVisible" width="400px">
           <el-form :model="roleForm">
             <el-form-item label="角色名称" label-width="80px">
               <el-input v-model="roleForm.name" autocomplete="off" placeholder="请输入角色名称"></el-input>
@@ -35,15 +35,15 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            <el-button @click="addFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addFormVisible = false">确 定</el-button>
           </div>
         </el-dialog>
         <el-table
           :data="tableData"
           style="width: 100%">
-          <el-table-column prop="roleName" label="角色名称"></el-table-column>
-          <el-table-column prop="roleType" label="角色类型">
+          <el-table-column prop="roleName" label="角色名称" width="120"></el-table-column>
+          <el-table-column prop="roleType" label="角色类型" width="120">
             <template slot-scope="scope">
               <el-popover placement="right" width="230" trigger="hover">
                 <el-table :data="scope.row.roleAuth">
@@ -54,11 +54,11 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="creator" label="创建用户"></el-table-column>
-          <el-table-column prop="createTime" label="创建时间"></el-table-column>
-          <el-table-column prop="updateTime" label="修改时间"></el-table-column>
+          <el-table-column prop="creator" label="创建用户" width="120"></el-table-column>
+          <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
+          <el-table-column prop="updateTime" label="修改时间" width="180"></el-table-column>
           <el-table-column prop="description" label="描述"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="200">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -130,8 +130,9 @@ export default {
         description: '博客'
       }],
       currentPage: 1,
-      dialogFormVisible: false,
+      addFormVisible: false,
       roleForm: {
+        id: '',
         name: '',
         type: '',
         auth: '',
@@ -140,17 +141,27 @@ export default {
     }
   },
   methods: {
+    menuList (pageSize, currentPage) {
+      console.log(pageSize)
+    },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     },
-    updateComment () {
+    updateComment (role) {
+      this.roleForm.id = role.id
+      this.roleForm.name = role.id
+      this.roleForm.id = role.id
+      this.roleForm.id = role.id
+      this.roleForm.id = role.id
     },
     deleteComment () {
       console.log('ss')
     }
+  },
+  mounted () {
   }
 }
 </script>
