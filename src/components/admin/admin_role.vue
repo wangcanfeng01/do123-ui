@@ -39,9 +39,7 @@
             <el-button type="primary" @click="addFormVisible = false">确 定</el-button>
           </div>
         </el-dialog>
-        <el-table
-          :data="tableData"
-          style="width: 100%">
+        <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="roleName" label="角色名称" width="120"></el-table-column>
           <el-table-column prop="roleType" label="角色类型" width="120">
             <template slot-scope="scope">
@@ -60,14 +58,8 @@
           <el-table-column prop="description" label="描述"></el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="warning" @click="updateComment">修改
-              </el-button>
-              <el-button
-                size="mini"
-                type="danger" @click="deleteComment">删除
-              </el-button>
+              <el-button size="mini" type="warning" @click="updateComment">修改</el-button>
+              <el-button size="mini" type="danger" @click="deleteComment">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

@@ -11,7 +11,7 @@
           </el-col>
           <el-col :span="6">
             <el-button type="primary" style="margin-left: 15px">查询</el-button>
-            <el-button type="success" style="margin-left: 15px" @click="addFormVisible = true">新增菜单</el-button>
+            <el-button type="success" style="margin-left: 15px" @click="openAdd">新增菜单</el-button>
           </el-col>
         </div>
         <!--新增菜单弹出框-->
@@ -41,36 +41,36 @@
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="menuName" label="菜单名称" width="120"></el-table-column>
           <el-table-column prop="menuLevel" label="菜单层级" width="100"></el-table-column>
-          <el-table-column prop="menuPath" label="菜单路径" width="300"></el-table-column>
           <el-table-column prop="creator" label="创建用户" width="120"></el-table-column>
+          <el-table-column prop="menuPath" label="菜单路径" width="200"></el-table-column>
           <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
           <el-table-column prop="updateTime" label="修改时间" width="180"></el-table-column>
           <el-table-column prop="mark" label="备注"></el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <el-button size="mini" type="warning" @click="modifyFormVisible = true">修改</el-button>
+              <el-button size="mini" type="warning" @click="openUpdateDialog(scope.row)">修改</el-button>
               <!--编辑菜单弹出框-->
               <el-dialog title="编辑菜单" :visible.sync="modifyFormVisible" width="400px">
-                <el-form :model="scope.row">
+                <el-form :model="menuForm">
                   <el-form-item label="菜单名称" label-width="80px">
-                    <el-input v-model="scope.row.menuName" autocomplete="off" placeholder="请输入菜单名称"></el-input>
+                    <el-input v-model="menuForm.name" autocomplete="off" placeholder="请输入菜单名称"></el-input>
                   </el-form-item>
                   <el-form-item label="菜单路径" label-width="80px">
-                    <el-input v-model="scope.row.menuPath" autocomplete="off" placeholder="请输入菜单路径"></el-input>
+                    <el-input v-model="menuForm.path" autocomplete="off" placeholder="请输入菜单路径"></el-input>
                   </el-form-item>
                   <el-form-item label="菜单层级" label-width="80px">
-                    <el-select v-model="scope.row.menuLevel" placeholder="请选择菜单层级">
+                    <el-select v-model="menuForm.level" placeholder="请选择菜单层级">
                       <el-option v-for="(o) in 4" :key="o" :label="o" :value="o"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="备注" label-width="80px">
-                    <el-input v-model="scope.row.mark" autocomplete="off" placeholder="写点什么..."
+                    <el-input v-model="menuForm.mark" autocomplete="off" placeholder="写点什么..."
                               type="textarea" :rows="3"></el-input>
                   </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                   <el-button @click="modifyFormVisible = false">取 消</el-button>
-                  <el-button type="primary" @click="updateMenu(scope.row)">确 定</el-button>
+                  <el-button type="primary" @click="updateMenu">确 定</el-button>
                 </div>
               </el-dialog>
               <el-button size="mini" type="danger" @click="deleteMenu(scope.row.id)">删除</el-button>
@@ -99,44 +99,17 @@ export default {
   data () {
     return {
       tableData: [{
-        id: '1',
-        menuName: '王小虎',
-        menuLevel: 'sssss',
-        menuPath: '上海市普陀区金沙江路 1518 弄',
-        creator: '',
-        createTime: '2016-05-04 00:00:00',
-        updateTime: '2016-05-04 00:00:00',
-        mark: '博客'
-      }, {
-        id: '2',
-        menuName: '王小虎',
-        menuLevel: 'sssss',
-        menuPath: '上海市普陀区金沙江路 1518 弄',
-        creator: '',
-        createTime: '2016-05-04 00:00:00',
-        updateTime: '2016-05-04 00:00:00',
-        mark: '博客'
-      }, {
-        id: '3',
-        menuName: '王小虎',
-        menuLevel: 'sssss',
-        menuPath: '上海市普陀区金沙江路 1518 弄',
-        creator: '',
-        createTime: '2016-05-04 00:00:00',
-        updateTime: '2016-05-04 00:00:00',
-        mark: '博客'
-      }, {
-        id: '4',
-        menuName: '王小虎',
-        menuLevel: 'sssss',
-        menuPath: '上海市普陀区金沙江路 1518 弄',
-        creator: '',
-        createTime: '2016-05-04 00:00:00',
-        updateTime: '2016-05-04 00:00:00',
-        mark: '博客'
+        id: '',
+        menuName: '1',
+        menuLevel: 2,
+        creator: '3',
+        menuPath: '4',
+        createTime: '5',
+        updateTime: '6',
+        mark: ''
       }],
-      currentPage: 1,
       total: 0,
+      currentPage: 1,
       pageSize: 10,
       addFormVisible: false,
       modifyFormVisible: false,
@@ -150,6 +123,13 @@ export default {
     }
   },
   methods: {
+    openAdd () {
+      this.addFormVisible = true
+      this.menuForm.name = ''
+      this.menuForm.path = ''
+      this.menuForm.level = null
+      this.menuForm.mark = ''
+    },
     handleAddMenu () {
       this.addFormVisible = false
       this.$http.post('/ui/menu/add', this.menuForm).then(response => {
@@ -173,9 +153,10 @@ export default {
     },
     // 初始化加载菜单列表信息
     menuList (pageSize, currentPage) {
-      this.$http.get('/ui/menuList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+      this.$http.get('/ui/menu/menuList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
+            this.total = response.data.total
             this.tableData = response.data.data
           } else {
             this.$message.error(response.data)
@@ -204,10 +185,7 @@ export default {
         if (response && response.data) {
           if (response.data.code === '0') {
             // 删除菜单成功后刷新列表
-            this.$message({
-              message: '删除菜单成功',
-              type: 'success'
-            })
+            this.$message.success('删除菜单成功')
             this.menuList(this.pageSize, this.currentPage)
           } else {
             this.$message.error(response.data)
@@ -218,29 +196,25 @@ export default {
       }).catch(error => {
         console.log(error)
       })
-      setTimeout(function () {
-        window.location.reload()
-      }, 1000)
     },
-    updateMenu (menu) {
-      this.modifyFormVisible = false
+    openUpdateDialog (menu) {
+      this.modifyFormVisible = true
       this.menuForm.id = menu.id
       this.menuForm.name = menu.menuName
       this.menuForm.path = menu.menuPath
       this.menuForm.level = menu.menuLevel
       this.menuForm.mark = menu.mark
-      alert(menu.menuName)
+    },
+    updateMenu () {
+      this.modifyFormVisible = false
       this.$http.post('/ui/menu/modify', this.menuForm).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             // 创建菜单成功后刷新当前页面，进行重新展示列表
             this.menuList(this.pageSize, this.currentPage)
-            this.$message({
-              message: '菜单编辑成功',
-              type: 'success'
-            })
+            this.$message.success('菜单编辑成功')
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('菜单编辑异常')
