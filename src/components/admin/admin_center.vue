@@ -94,6 +94,9 @@
               <small>cpu使用量</small>
             </h3>
           </div>
+          <el-col :span="12" :offset="2">
+            <cpu-status></cpu-status>
+          </el-col>
           <el-col :span="6">
             <h3>服务器指标</h3>
             <span>CPU</span>
@@ -134,8 +137,13 @@
 </template>
 
 <script>
+import cpuStatus from '@/components/chart/cpu_status'
+
 export default {
   name: 'admin_center',
+  components: {
+    'cpuStatus': cpuStatus
+  },
   data () {
     return {
       tableData: [{

@@ -11,7 +11,7 @@
           </el-col>
           <el-col :span="6">
             <el-button type="primary" style="margin-left: 15px">查询</el-button>
-            <el-button type="success" style="margin-left: 15px" @click="addFormVisible = true">新增角色</el-button>
+            <el-button type="success" style="margin-left: 15px" @click="openAdd">新增角色</el-button>
           </el-col>
         </div>
         <!--新增角色弹出框-->
@@ -24,9 +24,9 @@
               <el-input v-model="roleForm.type" autocomplete="off" placeholder="请输入角色类型"></el-input>
             </el-form-item>
             <el-form-item label="权限菜单" label-width="80px">
-              <el-select v-model="roleForm.auth" placeholder="请选择有权限的菜单">
-                <el-option label="菜单1" value="shanghai"></el-option>
-                <el-option label="菜单2" value="beijing"></el-option>
+              <el-select v-model="roleForm.auth" multiple collapse-tags placeholder="请选择有权限的菜单">
+                <el-option v-for="menu in menuList" :key="menu.id" :label="menu.menuName"
+                           :value="menu.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="描述" label-width="80px">
@@ -36,12 +36,12 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="addFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addFormVisible = false">确 定</el-button>
+            <el-button type="primary" @click="addRole">确 定</el-button>
           </div>
         </el-dialog>
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="roleName" label="角色名称" width="120"></el-table-column>
-          <el-table-column prop="roleType" label="角色类型" width="120">
+          <el-table-column prop="roleName" label="角色名称" width="160"></el-table-column>
+          <el-table-column prop="roleType" label="角色类型" width="160">
             <template slot-scope="scope">
               <el-popover placement="right" width="230" trigger="hover">
                 <el-table :data="scope.row.roleAuth">
@@ -52,14 +52,39 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="creator" label="创建用户" width="120"></el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
-          <el-table-column prop="updateTime" label="修改时间" width="180"></el-table-column>
+          <el-table-column prop="creator" label="创建用户" width="180"></el-table-column>
+          <el-table-column prop="createTime" label="创建时间" width="240"></el-table-column>
+          <el-table-column prop="updateTime" label="修改时间" width="240"></el-table-column>
           <el-table-column prop="description" label="描述"></el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <el-button size="mini" type="warning" @click="updateComment">修改</el-button>
-              <el-button size="mini" type="danger" @click="deleteComment">删除</el-button>
+              <el-button size="mini" type="warning" @click="openUpdate(scope.row)">修改</el-button>
+              <!--新增角色弹出框-->
+              <el-dialog title="编辑角色" :visible.sync="updateFormVisible" width="400px">
+                <el-form :model="roleForm">
+                  <el-form-item label="角色名称" label-width="80px">
+                    <el-input v-model="roleForm.name" autocomplete="off" placeholder="请输入角色名称"></el-input>
+                  </el-form-item>
+                  <el-form-item label="角色类型" label-width="80px">
+                    <el-input v-model="roleForm.type" autocomplete="off" placeholder="请输入角色类型"></el-input>
+                  </el-form-item>
+                  <el-form-item label="权限菜单" label-width="80px">
+                    <el-select v-model="roleForm.auth" multiple collapse-tags placeholder="请选择有权限的菜单">
+                      <el-option v-for="menu in roleForm.auth" :key="menu.id" :label="menu.menuName"
+                                 :value="menu.id"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="描述" label-width="80px">
+                    <el-input v-model="roleForm.desc" autocomplete="off" placeholder="写点什么..."
+                              type="textarea" :rows="3"></el-input>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="addFormVisible = false">取 消</el-button>
+                  <el-button type="primary" @click="updateRole">确 定</el-button>
+                </div>
+              </el-dialog>
+              <el-button size="mini" type="danger" @click="deleteRole(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -69,9 +94,9 @@
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-sizes="[10, 20, 30, 50]"
-            :page-size="10"
+            :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="100">
+            :total="total">
           </el-pagination>
         </div>
       </el-card>
@@ -85,75 +110,134 @@ export default {
   data () {
     return {
       tableData: [{
+        id: '1',
         roleName: '王小虎',
         roleType: 'sssss',
         roleAuth: [{
-          menuName: '1',
-          menuPath: '323'
+          id: '1',
+          menuName: '主页',
+          menuPath: '/home'
         }, {
-          menuName: '2',
-          menuPath: '424'
+          id: '2',
+          menuName: '管理中心',
+          menuPath: '/admin/center'
         }],
         description: '博客',
         creator: '上海市普陀区金沙江路 1518 弄',
         createTime: '2016-05-04 00:00:00',
         updateTime: '2016-05-04 00:00:00'
 
-      }, {
-        roleName: '王小虎',
-        roleType: 'sssss',
-        creator: '上海市普陀区金沙江路 1518 弄',
-        createTime: '2016-05-04 00:00:00',
-        updateTime: '2016-05-04 00:00:00',
-        description: '博客'
-      }, {
-        roleName: '王小虎',
-        roleType: 'sssss',
-        creator: '上海市普陀区金沙江路 1518 弄',
-        createTime: '2016-05-04 00:00:00',
-        updateTime: '2016-05-04 00:00:00',
-        description: '博客'
-      }, {
-        roleName: '王小虎',
-        roleType: 'sssss',
-        creator: '上海市普陀区金沙江路 1518 弄',
-        createTime: '2016-05-04 00:00:00',
-        updateTime: '2016-05-04 00:00:00',
-        description: '博客'
       }],
+      menuList: [{
+        id: '1',
+        menuName: '主页',
+        menuPath: '/home'
+      }, {
+        id: '2',
+        menuName: '管理中心',
+        menuPath: '/admin/center'
+      }],
+      total: 0,
       currentPage: 1,
+      pageSize: 10,
       addFormVisible: false,
+      updateFormVisible: false,
       roleForm: {
         id: '',
         name: '',
         type: '',
-        auth: '',
+        auth: [],
         desc: ''
       }
     }
   },
   methods: {
-    menuList (pageSize, currentPage) {
+    openAdd () {
+      this.addFormVisible = true
+      this.roleForm.name = ''
+      this.roleForm.type = ''
+      this.roleForm.desc = ''
+      this.roleForm.auth = []
+    },
+    openUpdate (role) {
+      this.updateFormVisible = true
+      this.roleForm.id = role.id
+      this.roleForm.name = role.roleName
+      this.roleForm.type = role.roleType
+      this.roleForm.auth = role.roleAuth
+      this.roleForm.desc = role.description
+    },
+    addRole () {
+      this.addFormVisible = false
+      this.$http.post('/ui/role/add', this.roleForm).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 创建角色成功后刷新当前页面，进行重新展示列表
+            this.$message.success('添加角色成功')
+            this.roleList(this.pageSize, this.currentPage)
+          } else {
+            this.$message.error(response.data)
+          }
+        } else {
+          this.$message.error('添加角色异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    updateRole () {
+      this.updateFormVisible = false
+      this.$http.post('/ui/role/modify', this.roleForm).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 创建角色成功后刷新当前页面，进行重新展示列表
+            this.menuList(this.pageSize, this.currentPage)
+            this.$message.success('角色编辑成功')
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('角色编辑异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    deleteRole (roleId) {
+      this.$http.delete('/ui/role/delete/' + roleId).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 删除角色成功后刷新列表
+            this.$message.success('删除角色成功')
+            this.menuList(this.pageSize, this.currentPage)
+          } else {
+            this.$message.error(response.data)
+          }
+        } else {
+          this.$message.error('删除角色异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    roleList (pageSize, currentPage) {
       console.log(pageSize)
     },
+    // 修改角色列表的单页大小
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.pageSize = val
+      // 重新查询菜单信息，刷新列表
+      this.roleList(this.pageSize, this.currentPage)
     },
+    // 修改当前页码
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
-    },
-    updateComment (role) {
-      this.roleForm.id = role.id
-      this.roleForm.name = role.id
-      this.roleForm.id = role.id
-      this.roleForm.id = role.id
-      this.roleForm.id = role.id
-    },
-    deleteComment () {
-      console.log('ss')
+      this.currentPage = val
+      // 重新查询菜单信息，刷新列表
+      this.roleList(this.pageSize, this.currentPage)
     }
   },
   mounted () {
+    this.roleList(this.pageSize, this.currentPage)
   }
 }
 </script>

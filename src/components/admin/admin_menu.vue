@@ -168,18 +168,6 @@ export default {
         console.log(error)
       })
     },
-    // 修改菜单查询的分页大小
-    handleSizeChange (val) {
-      this.pageSize = val
-      // 重新查询菜单信息，刷新列表
-      this.menuList(this.pageSize, this.currentPage)
-    },
-    // 更新当前页码
-    handleCurrentChange (val) {
-      this.currentPage = val
-      // 重新查询菜单信息，刷新列表
-      this.menuList(this.pageSize, this.currentPage)
-    },
     deleteMenu (menuId) {
       this.$http.delete('/ui/menu/delete/' + menuId).then(response => {
         if (response && response.data) {
@@ -222,6 +210,18 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    // 修改菜单查询的分页大小
+    handleSizeChange (val) {
+      this.pageSize = val
+      // 重新查询菜单信息，刷新列表
+      this.menuList(this.pageSize, this.currentPage)
+    },
+    // 更新当前页码
+    handleCurrentChange (val) {
+      this.currentPage = val
+      // 重新查询菜单信息，刷新列表
+      this.menuList(this.pageSize, this.currentPage)
     }
   },
   // 初始化加载菜单列表
