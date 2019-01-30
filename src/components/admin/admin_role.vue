@@ -24,7 +24,7 @@
               <el-input v-model="roleForm.type" autocomplete="off" placeholder="请输入角色类型"></el-input>
             </el-form-item>
             <el-form-item label="权限菜单" label-width="80px">
-              <el-select v-model="roleForm.auth" multiple collapse-tags placeholder="请选择有权限的菜单">
+              <el-select v-model="roleForm.auth" multiple collapse-tags filterable placeholder="请选择有权限的菜单">
                 <el-option v-for="menu in menuList" :key="menu.id" :label="menu.menuName"
                            :value="menu.id"></el-option>
               </el-select>
@@ -69,8 +69,8 @@
                     <el-input v-model="roleForm.type" autocomplete="off" placeholder="请输入角色类型"></el-input>
                   </el-form-item>
                   <el-form-item label="权限菜单" label-width="80px">
-                    <el-select v-model="roleForm.auth" multiple collapse-tags placeholder="请选择有权限的菜单">
-                      <el-option v-for="menu in roleForm.auth" :key="menu.id" :label="menu.menuName"
+                    <el-select v-model="roleForm.auth" multiple collapse-tags filterable placeholder="请选择有权限的菜单">
+                      <el-option v-for="menu in menuList" :key="menu.id" :label="menu.menuName"
                                  :value="menu.id"></el-option>
                     </el-select>
                   </el-form-item>
@@ -110,15 +110,15 @@ export default {
   data () {
     return {
       tableData: [{
-        id: '1',
+        id: 1,
         roleName: '王小虎',
         roleType: 'sssss',
         roleAuth: [{
-          id: '1',
+          id: 1,
           menuName: '主页',
           menuPath: '/home'
         }, {
-          id: '2',
+          id: 2,
           menuName: '管理中心',
           menuPath: '/admin/center'
         }],
@@ -126,14 +126,13 @@ export default {
         creator: '上海市普陀区金沙江路 1518 弄',
         createTime: '2016-05-04 00:00:00',
         updateTime: '2016-05-04 00:00:00'
-
       }],
       menuList: [{
-        id: '1',
+        id: 1,
         menuName: '主页',
         menuPath: '/home'
       }, {
-        id: '2',
+        id: 2,
         menuName: '管理中心',
         menuPath: '/admin/center'
       }],
@@ -143,7 +142,7 @@ export default {
       addFormVisible: false,
       updateFormVisible: false,
       roleForm: {
-        id: '',
+        id: 0,
         name: '',
         type: '',
         auth: [],
@@ -191,8 +190,8 @@ export default {
         if (response && response.data) {
           if (response.data.code === '0') {
             // 创建角色成功后刷新当前页面，进行重新展示列表
-            this.menuList(this.pageSize, this.currentPage)
             this.$message.success('角色编辑成功')
+            this.roleList(this.pageSize, this.currentPage)
           } else {
             this.$message.error(response.data.msg)
           }
@@ -209,7 +208,7 @@ export default {
           if (response.data.code === '0') {
             // 删除角色成功后刷新列表
             this.$message.success('删除角色成功')
-            this.menuList(this.pageSize, this.currentPage)
+            this.roleList(this.pageSize, this.currentPage)
           } else {
             this.$message.error(response.data)
           }
@@ -221,7 +220,35 @@ export default {
       })
     },
     roleList (pageSize, currentPage) {
-      console.log(pageSize)
+      this.$http.get('/ui/menu/roleList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.total = response.data.total
+            this.tableData = response.data.data
+          } else {
+            this.$message.error(response.data)
+          }
+        } else {
+          this.$message.error('角色查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    simpleMenuList () {
+      this.$http.get('/ui/menu/menuList/simple').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.menuList = response.data.data
+          } else {
+            this.$message.error(response.data)
+          }
+        } else {
+          this.$message.error('菜单查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     },
     // 修改角色列表的单页大小
     handleSizeChange (val) {
@@ -238,10 +265,11 @@ export default {
   },
   mounted () {
     this.roleList(this.pageSize, this.currentPage)
+    this.simpleMenuList()
   }
 }
 </script>
 
 <style scoped>
-
 </style>
+
