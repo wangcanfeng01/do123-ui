@@ -59,8 +59,8 @@
             <span slot="title">用户中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/admin/role">角色管理</el-menu-item>
             <el-menu-item index="/admin/menu">菜单管理</el-menu-item>
+            <el-menu-item index="/admin/role">角色管理</el-menu-item>
             <el-menu-item index="/admin/user">用户管理</el-menu-item>
           </el-menu-item-group>
         </el-submenu>

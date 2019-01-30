@@ -28,6 +28,12 @@
                 <el-option v-for="(o) in 4" :key="o" :label="o" :value="o"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="父菜单" label-width="80px">
+              <el-select v-model="menuForm.parent" filterable placeholder="请选择父菜单">
+                <el-option v-for="menu in simpleList" :key="menu.id" :label="menu.menuName"
+                           :value="menu.id"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="备注" label-width="80px">
               <el-input v-model="menuForm.mark" autocomplete="off" placeholder="写点什么..."
                         type="textarea" :rows="3"></el-input>
@@ -42,6 +48,7 @@
           <el-table-column prop="menuName" label="菜单名称" width="120"></el-table-column>
           <el-table-column prop="menuLevel" label="菜单层级" width="100"></el-table-column>
           <el-table-column prop="creator" label="创建用户" width="120"></el-table-column>
+          <el-table-column prop="parentName" label="父菜单" width="120"></el-table-column>
           <el-table-column prop="menuPath" label="菜单路径" width="200"></el-table-column>
           <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
           <el-table-column prop="updateTime" label="修改时间" width="180"></el-table-column>
@@ -61,6 +68,12 @@
                   <el-form-item label="菜单层级" label-width="80px">
                     <el-select v-model="menuForm.level" placeholder="请选择菜单层级">
                       <el-option v-for="(o) in 4" :key="o" :label="o" :value="o"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="父菜单" label-width="80px">
+                    <el-select v-model="menuForm.parent" filterable placeholder="请选择父菜单">
+                      <el-option v-for="menu in simpleList" :key="menu.id" :label="menu.menuName"
+                                 :value="menu.id"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="备注" label-width="80px">
@@ -103,6 +116,7 @@ export default {
         menuName: '1',
         menuLevel: 2,
         creator: '3',
+        parentName: '测试',
         menuPath: '4',
         createTime: '5',
         updateTime: '6',
@@ -114,12 +128,22 @@ export default {
       addFormVisible: false,
       modifyFormVisible: false,
       menuForm: {
-        id: '',
+        id: null,
         name: '',
-        level: '',
+        level: null,
         path: '',
-        mark: ''
-      }
+        mark: '',
+        parent: null
+      },
+      simpleList: [{
+        id: 1,
+        menuName: '主页',
+        menuPath: '/home'
+      }, {
+        id: 2,
+        menuName: '管理中心',
+        menuPath: '/admin/center'
+      }]
     }
   },
   methods: {
@@ -129,6 +153,16 @@ export default {
       this.menuForm.path = ''
       this.menuForm.level = null
       this.menuForm.mark = ''
+      this.menuForm.parent = null
+    },
+    openUpdateDialog (menu) {
+      this.modifyFormVisible = true
+      this.menuForm.id = menu.id
+      this.menuForm.name = menu.menuName
+      this.menuForm.path = menu.menuPath
+      this.menuForm.level = menu.menuLevel
+      this.menuForm.mark = menu.mark
+      this.menuForm.parent = menu.parentNode
     },
     handleAddMenu () {
       this.addFormVisible = false
@@ -136,11 +170,9 @@ export default {
         if (response && response.data) {
           if (response.data.code === '0') {
             // 创建菜单成功后刷新当前页面，进行重新展示列表
-            this.$message({
-              message: '添加菜单成功',
-              type: 'success'
-            })
+            this.$message.success('添加菜单成功')
             this.menuList(this.pageSize, this.currentPage)
+            this.simpleMenuList()
           } else {
             this.$message.error(response.data)
           }
@@ -168,6 +200,21 @@ export default {
         console.log(error)
       })
     },
+    simpleMenuList () {
+      this.$http.get('/ui/menu/menuList/simple').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.simpleList = response.data.data
+          } else {
+            this.$message.error(response.data)
+          }
+        } else {
+          this.$message.error('菜单查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     deleteMenu (menuId) {
       this.$http.delete('/ui/menu/delete/' + menuId).then(response => {
         if (response && response.data) {
@@ -175,6 +222,7 @@ export default {
             // 删除菜单成功后刷新列表
             this.$message.success('删除菜单成功')
             this.menuList(this.pageSize, this.currentPage)
+            this.simpleMenuList()
           } else {
             this.$message.error(response.data)
           }
@@ -185,14 +233,6 @@ export default {
         console.log(error)
       })
     },
-    openUpdateDialog (menu) {
-      this.modifyFormVisible = true
-      this.menuForm.id = menu.id
-      this.menuForm.name = menu.menuName
-      this.menuForm.path = menu.menuPath
-      this.menuForm.level = menu.menuLevel
-      this.menuForm.mark = menu.mark
-    },
     updateMenu () {
       this.modifyFormVisible = false
       this.$http.post('/ui/menu/modify', this.menuForm).then(response => {
@@ -200,6 +240,7 @@ export default {
           if (response.data.code === '0') {
             // 创建菜单成功后刷新当前页面，进行重新展示列表
             this.menuList(this.pageSize, this.currentPage)
+            this.simpleMenuList()
             this.$message.success('菜单编辑成功')
           } else {
             this.$message.error(response.data.msg)
@@ -227,6 +268,7 @@ export default {
   // 初始化加载菜单列表
   mounted () {
     this.menuList(this.pageSize, this.currentPage)
+    this.simpleMenuList()
   }
 }
 </script>

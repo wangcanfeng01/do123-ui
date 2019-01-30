@@ -220,7 +220,7 @@ export default {
       })
     },
     roleList (pageSize, currentPage) {
-      this.$http.get('/ui/menu/roleList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+      this.$http.get('/ui/role/roleList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.total = response.data.total
@@ -272,4 +272,3 @@ export default {
 
 <style scoped>
 </style>
-

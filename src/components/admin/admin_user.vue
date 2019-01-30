@@ -6,10 +6,10 @@
           <el-col :span="5">
             <span style="line-height: 40px">用户信息列表</span>
           </el-col>
-          <el-col :span="8" :offset="8">
+          <el-col :span="4" :offset="8">
             <el-input></el-input>
           </el-col>
-          <el-col :span="3">
+          <el-col :span="6">
             <el-button type="primary" style="margin-left: 15px">查询</el-button>
             <el-button type="success" style="margin-left: 15px" @click="openAdd">新增用户</el-button>
           </el-col>
@@ -22,8 +22,8 @@
             </el-form-item>
             <el-form-item label="用户头像" label-width="80px">
               <el-upload
-                class="upload_face"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                class="upload-face"
+                action="/ui/user/uploadFace"
                 list-type="picture-card"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
@@ -80,7 +80,17 @@
                     <el-input v-model="userForm.username" autocomplete="off" placeholder="请输入角色名称"></el-input>
                   </el-form-item>
                   <el-form-item label="用户头像" label-width="80px">
-                    <el-input v-model="userForm.face" autocomplete="off" placeholder="请输入角色类型"></el-input>
+                    <el-upload
+                      class="upload-face"
+                      action="https://jsonplaceholder.typicode.com/posts/"
+                      list-type="picture-card"
+                      :show-file-list="false"
+                      :on-success="handleAvatarSuccess"
+                      :on-remove="handleRemove"
+                      :before-upload="beforeAvatarUpload">
+                      <img v-if="userForm.face" :src="userForm.face" class="img-circle">
+                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
                   </el-form-item>
                   <el-form-item label="用户角色" label-width="80px">
                     <el-select v-model="userForm.role" multiple collapse-tags filterable placeholder="请选择用户角色">
@@ -310,7 +320,7 @@ export default {
   }
 </style>
 <style>
-  .upload_face .el-upload--picture-card {
+  .upload-face .el-upload--picture-card {
     height: 148px;
     width: 148px;
     line-height: 148px;
