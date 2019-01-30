@@ -21,7 +21,17 @@
               <el-input v-model="userForm.username" autocomplete="off" placeholder="请输入角色名称"></el-input>
             </el-form-item>
             <el-form-item label="用户头像" label-width="80px">
-              <el-input v-model="userForm.face" autocomplete="off" placeholder="请输入角色类型"></el-input>
+              <el-upload
+                class="upload_face"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                list-type="picture-card"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :on-remove="handleRemove"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="userForm.face" :src="userForm.face" class="img-circle">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
             </el-form-item>
             <el-form-item label="用户角色" label-width="80px">
               <el-select v-model="userForm.role" multiple collapse-tags filterable placeholder="请选择用户角色">
@@ -42,8 +52,10 @@
         <!--展示用户信息的表格-->
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="username" label="用户名称" width="160"></el-table-column>
-          <el-table-column prop="face" label="头像" width="160"></el-table-column>
-          <el-table-column prop="level" label="用户等级" width="230">
+          <el-table-column prop="face" label="头像" width="160">
+            <template slot-scope="scope"><img :src="scope.row.face" class="img-circle"/></template>
+          </el-table-column>
+          <el-table-column label="用户等级" width="160">
             <template slot-scope="scope">
               <el-popover placement="right" width="230" trigger="hover">
                 <el-table :data="scope.row.role">
@@ -114,7 +126,7 @@ export default {
       tableData: [{
         id: 1,
         username: '王小虎',
-        face: 'sssss',
+        face: require('../../assets/face/face1.jpg'),
         role: [{
           id: 1,
           roleName: '王小虎',
@@ -125,7 +137,7 @@ export default {
           roleType: 'guest'
         }],
         level: 1,
-        creator: '',
+        creator: '我自己',
         registerTime: '2016-05-04 00:00:00',
         updateTime: '2016-05-04 00:00:00',
         mark: '成功'
@@ -263,6 +275,24 @@ export default {
     handleCurrentChange (val) {
       this.currentPage = val
       this.userList(this.pageSize, this.currentPage)
+    },
+    handleAvatarSuccess (res, file) {
+      this.userForm.face = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
     }
   },
   mounted () {
@@ -273,6 +303,17 @@ export default {
 </script>
 
 <style scoped>
-
+  .img-circle {
+    border-radius: 50%;
+    height: 148px;
+    width: 148px;
+  }
 </style>
-
+<style>
+  .upload_face .el-upload--picture-card {
+    height: 148px;
+    width: 148px;
+    line-height: 148px;
+    border-radius: 50%;
+  }
+</style>
