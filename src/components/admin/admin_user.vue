@@ -267,6 +267,7 @@ export default {
   },
   mounted () {
     this.userList(this.pageSize, this.currentPage)
+    this.simpleRoleList()
   }
 }
 </script>
