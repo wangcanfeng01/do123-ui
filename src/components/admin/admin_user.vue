@@ -315,8 +315,8 @@ export default {
 <style scoped>
   .img-circle {
     border-radius: 50%;
-    height: 148px;
-    width: 148px;
+    height: 100px;
+    width: 100px;
   }
 </style>
 <style>

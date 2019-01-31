@@ -235,7 +235,7 @@ export default {
     },
     updateMenu () {
       this.modifyFormVisible = false
-      this.$http.post('/ui/menu/modify', this.menuForm).then(response => {
+      this.$http.put('/ui/menu/modify', this.menuForm).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             // 创建菜单成功后刷新当前页面，进行重新展示列表

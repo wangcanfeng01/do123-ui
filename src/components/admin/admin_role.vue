@@ -43,8 +43,8 @@
           <el-table-column prop="roleName" label="角色名称" width="160"></el-table-column>
           <el-table-column prop="roleType" label="角色类型" width="160">
             <template slot-scope="scope">
-              <el-popover placement="right" width="230" trigger="hover">
-                <el-table :data="scope.row.roleAuth">
+              <el-popover placement="right" width="260" trigger="hover">
+                <el-table :data="scope.row.menuInfos">
                   <el-table-column width="100" property="menuName" label="菜单名称"></el-table-column>
                   <el-table-column width="120" property="menuPath" label="菜单路径"></el-table-column>
                 </el-table>
@@ -113,7 +113,8 @@ export default {
         id: 1,
         roleName: '王小虎',
         roleType: 'sssss',
-        roleAuth: [{
+        roleAuth: [],
+        menuInfos: [{
           id: 1,
           menuName: '主页',
           menuPath: '/home'
@@ -175,7 +176,7 @@ export default {
             this.$message.success('添加角色成功')
             this.roleList(this.pageSize, this.currentPage)
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('添加角色异常')
@@ -186,7 +187,7 @@ export default {
     },
     updateRole () {
       this.updateFormVisible = false
-      this.$http.post('/ui/role/modify', this.roleForm).then(response => {
+      this.$http.put('/ui/role/modify', this.roleForm).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             // 创建角色成功后刷新当前页面，进行重新展示列表
@@ -210,7 +211,7 @@ export default {
             this.$message.success('删除角色成功')
             this.roleList(this.pageSize, this.currentPage)
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('删除角色异常')
@@ -226,7 +227,7 @@ export default {
             this.total = response.data.total
             this.tableData = response.data.data
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('角色查询异常')
@@ -241,7 +242,7 @@ export default {
           if (response.data.code === '0') {
             this.menuList = response.data.data
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('菜单查询异常')
@@ -271,4 +272,10 @@ export default {
 </script>
 
 <style scoped>
+</style>
+<style>
+  .menuInfos.el-popover.el-popper {
+    height: 250px;
+    overflow: auto;
+  }
 </style>
