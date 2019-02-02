@@ -8,27 +8,21 @@
             <el-col :span="20" :offset="2">
               <el-form-item prop="username" class="registerInput" style="margin-top: 30px">
                 <el-input type="username" placeholder="请输入用户名" v-model="registerForm.username" autocomplete="off">
-                  <template slot="prepend">
-                    <font-awesome-icon icon="user"/>
-                  </template>
+                  <template slot="prepend"><font-awesome-icon icon="user"/></template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="20" :offset="2">
               <el-form-item prop="password" class="registerInput" style="margin-top: 15px">
                 <el-input type="password" placeholder="请输入密码" v-model="registerForm.password" autocomplete="off">
-                  <template slot="prepend">
-                    <font-awesome-icon icon="lock"/>
-                  </template>
+                  <template slot="prepend"><font-awesome-icon icon="lock"/></template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="20" :offset="2">
               <el-form-item prop="repassword" class="registerInput" style="margin-top: 15px">
                 <el-input type="password" placeholder="确认密码" v-model="registerForm.repassword" autocomplete="off">
-                  <template slot="prepend">
-                    <font-awesome-icon icon="lock"/>
-                  </template>
+                  <template slot="prepend"><font-awesome-icon icon="lock"/></template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -96,7 +90,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post('ui/register?username=' + this.registerForm.username + '&password=' + this.registerForm.password).then(response => {
+          this.$http.post('ui/user/register?username=' + this.registerForm.username + '&password=' + this.registerForm.password).then(response => {
             if (response && response.data) {
               if (response.data.code === '0') {
                 // 注册成功跳转到登陆页面
@@ -115,7 +109,7 @@ export default {
             }
           })
         } else {
-          console.log('error submit!!')
+          this.$message.error('请输入正确的信息后再进行注册')
           return false
         }
       })

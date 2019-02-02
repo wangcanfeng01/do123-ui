@@ -62,7 +62,7 @@ export default {
   },
   mounted () {
     this.activeIndex = this.$route.path
-    this.$http.get('/ui/get/login').then(response => {
+    this.$http.get('/ui/user/get/login').then(response => {
       if (response && response.data && response.data.code === '0') {
         if (response.data.data) {
           this.isLogin = 'true'

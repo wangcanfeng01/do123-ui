@@ -16,44 +16,40 @@
         </div>
         <!--新增用户弹出框-->
         <el-dialog title="新增用户" :visible.sync="addFormVisible" width="400px">
-          <el-form :model="userForm">
-            <el-form-item label="用户名称" label-width="80px">
+          <el-form :model="userForm" status-icon :rules="rules" ref="addUserForm">
+            <el-form-item prop="username" label="用户名称" label-width="80px" required>
               <el-input v-model="userForm.username" autocomplete="off" placeholder="请输入角色名称"></el-input>
             </el-form-item>
-            <el-form-item label="用户头像" label-width="80px">
-              <el-upload
-                class="upload-face"
-                action="/ui/user/uploadFace"
-                list-type="picture-card"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :on-remove="handleRemove"
-                :before-upload="beforeAvatarUpload">
-                <img v-if="userForm.face" :src="userForm.face" class="img-circle">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
-            </el-form-item>
-            <el-form-item label="用户角色" label-width="80px">
+            <el-form-item  label="用户角色" label-width="80px">
               <el-select v-model="userForm.role" multiple collapse-tags filterable placeholder="请选择用户角色">
                 <el-option v-for="role in roleList" :key="role.id" :label="role.roleName"
                            :value="role.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="描述" label-width="80px">
-              <el-input v-model="userForm.mark" autocomplete="off" placeholder="写点什么..." type="textarea"
+            <el-form-item prop="password" label="用户密码" label-width="80px" required>
+              <el-input v-model="userForm.password" autocomplete="off" placeholder="请输入密码" type="password"></el-input>
+            </el-form-item>
+            <el-form-item prop="rePass" label="确认密码" label-width="80px" required>
+              <el-input v-model="userForm.rePass" autocomplete="off" placeholder="请确认密码" type="password"></el-input>
+            </el-form-item>
+            <el-form-item label="签名档" label-width="80px">
+              <el-input v-model="userForm.introduce" autocomplete="off" placeholder="写点什么..." type="textarea"
                         :rows="3"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="addFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addUser">确 定</el-button>
+            <el-button type="primary" @click="addUser('addUserForm')">确 定</el-button>
           </div>
         </el-dialog>
         <!--展示用户信息的表格-->
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="username" label="用户名称" width="160"></el-table-column>
           <el-table-column prop="face" label="头像" width="160">
-            <template slot-scope="scope"><img :src="scope.row.face" class="img-circle"/></template>
+            <template slot-scope="scope">
+              <img v-if="scope.row.face" :src="scope.row.face" class="img-circle"/>
+              <img v-else :src="defaultFace" class="img-circle"/>
+            </template>
           </el-table-column>
           <el-table-column label="用户等级" width="160">
             <template slot-scope="scope">
@@ -69,12 +65,12 @@
           <el-table-column prop="creator" label="创建用户" width="180"></el-table-column>
           <el-table-column prop="registerTime" label="注册时间" width="240"></el-table-column>
           <el-table-column prop="updateTime" label="修改时间" width="240"></el-table-column>
-          <el-table-column prop="mark" label="备注"></el-table-column>
+          <el-table-column prop="introduce" label="备注"></el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
               <el-button size="mini" type="warning" @click="openUpdate(scope.row)">修改</el-button>
               <!--编辑用户弹出框-->
-              <el-dialog title="新增用户" :visible.sync="updateFormVisible" width="400px">
+              <el-dialog title="编辑用户信息" :visible.sync="updateFormVisible" width="400px">
                 <el-form :model="userForm">
                   <el-form-item label="用户名称" label-width="80px">
                     <el-input v-model="userForm.username" autocomplete="off" placeholder="请输入角色名称"></el-input>
@@ -82,12 +78,11 @@
                   <el-form-item label="用户头像" label-width="80px">
                     <el-upload
                       class="upload-face"
-                      action="https://jsonplaceholder.typicode.com/posts/"
+                      action="/ui/user/uploadFace"
                       list-type="picture-card"
                       :show-file-list="false"
-                      :on-success="handleAvatarSuccess"
-                      :on-remove="handleRemove"
-                      :before-upload="beforeAvatarUpload">
+                      :on-success="afterSuccess"
+                      :before-upload="beforeUpload">
                       <img v-if="userForm.face" :src="userForm.face" class="img-circle">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
@@ -99,7 +94,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="描述" label-width="80px">
-                    <el-input v-model="userForm.mark" autocomplete="off" placeholder="写点什么..." type="textarea"
+                    <el-input v-model="userForm.introduce" autocomplete="off" placeholder="写点什么..." type="textarea"
                               :rows="3"></el-input>
                   </el-form-item>
                 </el-form>
@@ -132,11 +127,38 @@
 export default {
   name: 'admin_user',
   data () {
+    var checkName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('用户名不能为空'))
+      }
+      callback()
+    }
+    var validatePass = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入密码'))
+      }
+      callback()
+    }
+    var validateRePass = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请确认密码'))
+      } else if (value !== this.userForm.password) {
+        return callback(new Error('两次输入密码不一致'))
+      } else {
+        callback()
+      }
+    }
     return {
+      rules: {
+        username: [{validator: checkName, trigger: 'blur'}],
+        password: [{validator: validatePass, trigger: 'blur'}],
+        rePass: [{validator: validateRePass, trigger: 'blur'}]
+      },
+      defaultFace: require('../../assets/face/default.jpg'),
       tableData: [{
         id: 1,
         username: '王小虎',
-        face: require('../../assets/face/face1.jpg'),
+        face: '',
         role: [{
           id: 1,
           roleName: '王小虎',
@@ -150,7 +172,7 @@ export default {
         creator: '我自己',
         registerTime: '2016-05-04 00:00:00',
         updateTime: '2016-05-04 00:00:00',
-        mark: '成功'
+        introduce: '成功'
       }],
       addFormVisible: false,
       updateFormVisible: false,
@@ -169,10 +191,12 @@ export default {
       userForm: {
         id: 1,
         username: '',
+        password: '',
+        rePass: '',
         face: '',
         role: [],
         level: 1,
-        mark: ''
+        introduce: ''
       }
     }
   },
@@ -181,18 +205,22 @@ export default {
       this.addFormVisible = true
       this.userForm.username = ''
       this.userForm.face = ''
-      this.userForm.role = ''
-      this.userForm.level = 1
-      this.userForm.mark = ''
+      this.userForm.role = []
+      this.userForm.password = ''
+      this.userForm.rePass = ''
+      this.userForm.level = 0
+      this.userForm.introduce = ''
     },
+    // 编辑用户只能修改用户的基本信息，但是不能修改密码
     openUpdate (user) {
       this.updateFormVisible = true
       this.userForm.id = user.id
       this.userForm.username = user.username
+      this.userForm.password = user.password
       this.userForm.face = user.face
       this.userForm.role = user.role
       this.userForm.level = user.level
-      this.userForm.mark = user.mark
+      this.userForm.introduce = user.introduce
     },
     userList (pageSize, currentPage) {
       this.$http.get('/ui/user/userList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
@@ -210,22 +238,31 @@ export default {
         console.log(error)
       })
     },
-    addUser () {
+    addUser (formName) {
       this.addFormVisible = false
-      this.$http.post('/ui/user/add', this.userForm).then(response => {
-        if (response && response.data) {
-          if (response.data.code === '0') {
-            // 创建角色成功后刷新当前页面，进行重新展示列表
-            this.$message.success('添加用户成功')
-            this.userList(this.pageSize, this.currentPage)
-          } else {
-            this.$message.error(response.data)
-          }
+      // 先校验表单参数
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$http.post('/ui/user/add', this.userForm).then(response => {
+            if (response && response.data) {
+              if (response.data.code === '0') {
+                // 创建用户成功后刷新当前页面，进行重新展示列表
+                this.$message.success('添加用户成功')
+                this.userList(this.pageSize, this.currentPage)
+              } else {
+                console.log(response)
+                this.$message.error(response.data.msg)
+              }
+            } else {
+              this.$message.error('添加用户异常')
+            }
+          }).catch(error => {
+            console.log(error)
+          })
         } else {
-          this.$message.error('添加用户异常')
+          this.$message.error('请输入正确的用户信息')
         }
-      }).catch(error => {
-        console.log(error)
+        this.$refs[formName].clearValidate()
       })
     },
     updateUser () {
@@ -286,23 +323,20 @@ export default {
       this.currentPage = val
       this.userList(this.pageSize, this.currentPage)
     },
-    handleAvatarSuccess (res, file) {
-      this.userForm.face = URL.createObjectURL(file.raw)
+    afterSuccess (response) {
+      this.userForm.face = response.data
     },
-    beforeAvatarUpload (file) {
+    // 限制只能上传图片，且图片大小不能超过1MB
+    beforeUpload (file) {
       const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-
+      const isLt1M = file.size / 1024 / 1024 < 1
       if (!isJPG) {
         this.$message.error('上传头像图片只能是 JPG 格式!')
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+      if (!isLt1M) {
+        this.$message.error('上传头像图片大小不能超过 1MB!')
       }
-      return isJPG && isLt2M
-    },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
+      return isJPG && isLt1M
     }
   },
   mounted () {
@@ -315,15 +349,15 @@ export default {
 <style scoped>
   .img-circle {
     border-radius: 50%;
-    height: 100px;
-    width: 100px;
+    height: 98px;
+    width: 98px;
   }
 </style>
 <style>
   .upload-face .el-upload--picture-card {
-    height: 148px;
-    width: 148px;
-    line-height: 148px;
+    height: 100px;
+    width: 100px;
+    line-height: 100px;
     border-radius: 50%;
   }
 </style>

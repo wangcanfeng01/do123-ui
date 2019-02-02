@@ -17,6 +17,13 @@ module.exports = {
         pathReWrite: {
           '^/ui': ''
         }
+      },
+      '/upload': {
+        target: 'http://localhost/',
+        changeOrigin: true,
+        pathReWrite: {
+          '^/upload': ''
+        }
       }
     },
 
