@@ -20,7 +20,7 @@
             <el-form-item prop="username" label="用户名称" label-width="80px" required>
               <el-input v-model="userForm.username" autocomplete="off" placeholder="请输入角色名称"></el-input>
             </el-form-item>
-            <el-form-item  label="用户角色" label-width="80px">
+            <el-form-item label="用户角色" label-width="80px">
               <el-select v-model="userForm.role" multiple collapse-tags filterable placeholder="请选择用户角色">
                 <el-option v-for="role in roleList" :key="role.id" :label="role.roleName"
                            :value="role.id"></el-option>
@@ -45,24 +45,29 @@
         <!--展示用户信息的表格-->
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="username" label="用户名称" width="160"></el-table-column>
-          <el-table-column prop="face" label="头像" width="160">
+          <el-table-column prop="facePath" label="头像" width="160">
             <template slot-scope="scope">
-              <img v-if="scope.row.face" :src="scope.row.face" class="img-circle"/>
-              <img v-else :src="defaultFace" class="img-circle"/>
+              <el-upload class="upload-face" action="/ui/user/uploadFace"
+                         list-type="picture-card"
+                         :show-file-list="false"
+                         :on-success="afterSuccess"
+                         :before-upload="beforeUpload">
+                <img v-if="scope.row.facePath" :src="scope.row.facePath" class="img-circle"/>
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
             </template>
           </el-table-column>
           <el-table-column label="用户等级" width="160">
             <template slot-scope="scope">
               <el-popover placement="right" width="230" trigger="hover">
-                <el-table :data="scope.row.role">
+                <el-table :data="scope.row.roleInfos">
                   <el-table-column width="100" property="roleName" label="角色名称"></el-table-column>
                   <el-table-column width="120" property="roleType" label="角色类型"></el-table-column>
                 </el-table>
-                <el-tag slot="reference">VIP-{{scope.row.level}}</el-tag>
+                <el-tag slot="reference">VIP-{{scope.row.userLevel}}</el-tag>
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="creator" label="创建用户" width="180"></el-table-column>
           <el-table-column prop="registerTime" label="注册时间" width="240"></el-table-column>
           <el-table-column prop="updateTime" label="修改时间" width="240"></el-table-column>
           <el-table-column prop="introduce" label="备注"></el-table-column>
@@ -73,19 +78,11 @@
               <el-dialog title="编辑用户信息" :visible.sync="updateFormVisible" width="400px">
                 <el-form :model="userForm">
                   <el-form-item label="用户名称" label-width="80px">
-                    <el-input v-model="userForm.username" autocomplete="off" placeholder="请输入角色名称"></el-input>
+                    <el-input v-model="userForm.username" autocomplete="off" disabled></el-input>
                   </el-form-item>
                   <el-form-item label="用户头像" label-width="80px">
-                    <el-upload
-                      class="upload-face"
-                      action="/ui/user/uploadFace"
-                      list-type="picture-card"
-                      :show-file-list="false"
-                      :on-success="afterSuccess"
-                      :before-upload="beforeUpload">
-                      <img v-if="userForm.face" :src="userForm.face" class="img-circle">
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                    <img v-if="userForm.face" :src="userForm.face" class="img-circle"/>
+                    <img v-else :src="defaultFace" class="img-circle"/>
                   </el-form-item>
                   <el-form-item label="用户角色" label-width="80px">
                     <el-select v-model="userForm.role" multiple collapse-tags filterable placeholder="请选择用户角色">
@@ -94,7 +91,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="描述" label-width="80px">
-                    <el-input v-model="userForm.introduce" autocomplete="off" placeholder="写点什么..." type="textarea"
+                    <el-input v-model="userForm.introduce" autocomplete="off" disabled type="textarea"
                               :rows="3"></el-input>
                   </el-form-item>
                 </el-form>
@@ -103,7 +100,10 @@
                   <el-button type="primary" @click="updateUser">确 定</el-button>
                 </div>
               </el-dialog>
-              <el-button size="mini" type="danger" @click="deleteUser(scope.row.id)">删除</el-button>
+              <el-button size="mini" :type="scope.row.isEnable === '已启用' ? 'success' : 'info'"
+                         @click="userStatus(scope.row.isEnable,scope.row.id)">{{scope.row.isEnable}}
+              </el-button>
+              <el-button size="mini" type="danger" @click="resetPass">重置密码</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -158,8 +158,9 @@ export default {
       tableData: [{
         id: 1,
         username: '王小虎',
-        face: '',
-        role: [{
+        facePath: '',
+        userAuth: [],
+        roleInfos: [{
           id: 1,
           roleName: '王小虎',
           roleType: 'admin'
@@ -168,11 +169,11 @@ export default {
           roleName: '王大虎',
           roleType: 'guest'
         }],
-        level: 1,
-        creator: '我自己',
+        userLevel: 1,
         registerTime: '2016-05-04 00:00:00',
         updateTime: '2016-05-04 00:00:00',
-        introduce: '成功'
+        introduce: '成功',
+        isEnable: ''
       }],
       addFormVisible: false,
       updateFormVisible: false,
@@ -218,7 +219,7 @@ export default {
       this.userForm.username = user.username
       this.userForm.password = user.password
       this.userForm.face = user.face
-      this.userForm.role = user.role
+      this.userForm.role = user.userAuth
       this.userForm.level = user.level
       this.userForm.introduce = user.introduce
     },
@@ -229,7 +230,7 @@ export default {
             this.total = response.data.total
             this.tableData = response.data.data
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('用户查询异常')
@@ -283,30 +284,55 @@ export default {
         console.log(error)
       })
     },
-    deleteUser (userId) {
-      this.$http.delete('/ui/user/delete/' + userId).then(response => {
+    // 改变用户状态信息
+    userStatus (status, id) {
+      let isEnable = 1
+      // 如果已经启用，则禁用
+      if (status === '已启用') {
+        isEnable = 0
+      }
+      this.$http.put('/ui/user/status/' + id + '/' + isEnable).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
-            // 删除用户成功后刷新列表
-            this.$message.success('删除用户成功')
+            // 启用用户成功后刷新列表
+            this.$message.success('用户状态修改成功')
             this.userList(this.pageSize, this.currentPage)
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
-          this.$message.error('删除用户异常')
+          this.$message.error('用户状态修改异常')
         }
       }).catch(error => {
         console.log(error)
       })
     },
+    // 重置用户密码
+    resetPass (id) {
+      this.$http.put('/ui/user/resetPass/' + id).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 启用用户成功后刷新列表
+            this.$message.success('用户密码重置成功')
+            this.userList(this.pageSize, this.currentPage)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('用户密码重置异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    // 简单的角色信息列表
     simpleRoleList () {
       this.$http.get('/ui/role/roleList/simple').then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.roleList = response.data.data
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('角色查询异常')
