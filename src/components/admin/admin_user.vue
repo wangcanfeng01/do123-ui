@@ -47,14 +47,8 @@
           <el-table-column prop="username" label="用户名称" width="160"></el-table-column>
           <el-table-column prop="facePath" label="头像" width="160">
             <template slot-scope="scope">
-              <el-upload class="upload-face" action="/ui/user/uploadFace"
-                         list-type="picture-card"
-                         :show-file-list="false"
-                         :on-success="afterSuccess"
-                         :before-upload="beforeUpload">
-                <img v-if="scope.row.facePath" :src="scope.row.facePath" class="img-circle"/>
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
+              <img v-if="scope.row.facePath" :src="scope.row.facePath" class="img-circle"/>
+              <img v-else :src="defaultFace" class="img-circle"/>
             </template>
           </el-table-column>
           <el-table-column label="用户等级" width="160">
@@ -70,6 +64,13 @@
           </el-table-column>
           <el-table-column prop="registerTime" label="注册时间" width="240"></el-table-column>
           <el-table-column prop="updateTime" label="修改时间" width="240"></el-table-column>
+          <el-table-column label="是否启用" width="100">
+            <template slot-scope="scope">
+              <el-button size="mini" :type="scope.row.isEnable === '已启用' ? 'success' : 'info'"
+                         @click="userStatus(scope.row.isEnable,scope.row.id)">{{scope.row.isEnable}}
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column prop="introduce" label="备注"></el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
@@ -100,10 +101,7 @@
                   <el-button type="primary" @click="updateUser">确 定</el-button>
                 </div>
               </el-dialog>
-              <el-button size="mini" :type="scope.row.isEnable === '已启用' ? 'success' : 'info'"
-                         @click="userStatus(scope.row.isEnable,scope.row.id)">{{scope.row.isEnable}}
-              </el-button>
-              <el-button size="mini" type="danger" @click="resetPass">重置密码</el-button>
+              <el-button size="mini" type="danger" @click="resetPass(scope.row.id)">重置密码</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -173,7 +171,7 @@ export default {
         registerTime: '2016-05-04 00:00:00',
         updateTime: '2016-05-04 00:00:00',
         introduce: '成功',
-        isEnable: ''
+        isEnable: '已启用'
       }],
       addFormVisible: false,
       updateFormVisible: false,
@@ -268,7 +266,7 @@ export default {
     },
     updateUser () {
       this.updateFormVisible = false
-      this.$http.post('/ui/user/modify', this.userForm).then(response => {
+      this.$http.put('/ui/user/modify/role', this.userForm).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             // 创建用户成功后刷新当前页面，进行重新展示列表
@@ -309,6 +307,7 @@ export default {
     },
     // 重置用户密码
     resetPass (id) {
+      console.log(id)
       this.$http.put('/ui/user/resetPass/' + id).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
@@ -348,21 +347,6 @@ export default {
     handleCurrentChange (val) {
       this.currentPage = val
       this.userList(this.pageSize, this.currentPage)
-    },
-    afterSuccess (response) {
-      this.userForm.face = response.data
-    },
-    // 限制只能上传图片，且图片大小不能超过1MB
-    beforeUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt1M = file.size / 1024 / 1024 < 1
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt1M) {
-        this.$message.error('上传头像图片大小不能超过 1MB!')
-      }
-      return isJPG && isLt1M
     }
   },
   mounted () {
