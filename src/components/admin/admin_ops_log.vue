@@ -11,15 +11,15 @@
               v-model="timeRange"
               type="datetimerange"
               :picker-options="pickerOptions"
-              range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               :default-time="defaultTime"
+              value-format="yyyy-MM-dd HH:mm:ss"
               align="right">
             </el-date-picker>
           </el-col>
           <el-col :span="3" :offset="1">
-            <el-button type="primary" style="margin-left: 15px">查询</el-button>
+            <el-button type="primary" style="margin-left: 15px" @click="selectLogByTime">查询</el-button>
           </el-col>
         </div>
         <el-table :data="tableData" style="width: 100%">
@@ -64,6 +64,8 @@
 export default {
   name: 'admin_ops_log',
   data () {
+    // 获取当前时间
+    const time = new Date().toTimeString().split(' ')[0]
     return {
       defaultFace: require('../../assets/face/default.jpg'),
       tableData: [{
@@ -82,7 +84,7 @@ export default {
       total: 0,
       pageSize: 20,
       timeRange: [],
-      defaultTime: [new Date().toTimeString(), new Date().toTimeString()],
+      defaultTime: [time, time],
       pickerOptions: {
         shortcuts: [{
           text: '最近一天',
@@ -113,6 +115,35 @@ export default {
     }
   },
   methods: {
+    selectLogByTime () {
+      if (this.timeRange && this.timeRange.length === 2) {
+        const start = this.timeRange[0]
+        const end = this.timeRange[1]
+        this.$http.get('/ui/ops/logList/time', {
+          params: {
+            currentPage: this.currentPage,
+            pageSize: this.pageSize,
+            start: start,
+            end: end
+          }
+        }).then(response => {
+          if (response && response.data) {
+            if (response.data.code === '0') {
+              this.tableData = response.data.data
+              this.total = response.data.total
+            } else {
+              this.$message.error(response.data.msg)
+            }
+          } else {
+            this.$message.error('查询操作日志异常')
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      } else {
+        this.$message.error('请选择起始时间和结束时间')
+      }
+    },
     selectLogList (currentPage, pageSize) {
       this.$http.get('/ui/ops/logList?currentPage=' + currentPage + '&pageSize=' + pageSize).then(response => {
         if (response && response.data) {
