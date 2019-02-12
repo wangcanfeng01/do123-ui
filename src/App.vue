@@ -13,11 +13,11 @@
           <img src="./assets/home.jpg" style="border-radius: 50%;margin-top: 0.8em">
         </router-link>
       </el-col>
-      <el-menu-item index="/home">主页</el-menu-item>
-      <el-menu-item index="/blog/center">博客</el-menu-item>
-      <el-menu-item index="/video">视频</el-menu-item>
-      <el-menu-item index="/about">关于本站</el-menu-item>
-      <el-menu-item index="/admin/center">管理中心</el-menu-item>
+      <el-menu-item index="/home" v-show="menuVisible.home">主页</el-menu-item>
+      <el-menu-item index="/blog/center" v-show="menuVisible.blog">博客</el-menu-item>
+      <el-menu-item index="/video" v-show="menuVisible.video">视频</el-menu-item>
+      <el-menu-item index="/about" v-show="menuVisible.about">关于本站</el-menu-item>
+      <el-menu-item index="/admin/center" v-show="menuVisible.admin">管理中心</el-menu-item>
       <el-col :span="3" :offset="5">
         <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
       </el-col>
@@ -54,6 +54,13 @@ export default {
       loginUser: {
         username: '',
         facePath: ''
+      },
+      menuVisible: {
+        home: '首页',
+        blog: '博客',
+        video: '视频',
+        about: '关于本站',
+        admin: '管理中心'
       }
     }
   },

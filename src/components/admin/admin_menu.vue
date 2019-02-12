@@ -20,6 +20,9 @@
             <el-form-item label="菜单名称" label-width="80px">
               <el-input v-model="menuForm.name" autocomplete="off" placeholder="请输入菜单名称"></el-input>
             </el-form-item>
+            <el-form-item label="菜单编码" label-width="80px">
+              <el-input v-model="menuForm.code" autocomplete="off" placeholder="请输入菜单编码"></el-input>
+            </el-form-item>
             <el-form-item label="菜单路径" label-width="80px">
               <el-input v-model="menuForm.path" autocomplete="off" placeholder="请输入菜单路径"></el-input>
             </el-form-item>
@@ -46,7 +49,8 @@
         </el-dialog>
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="menuName" label="菜单名称" width="120"></el-table-column>
-          <el-table-column prop="menuLevel" label="菜单层级" width="100"></el-table-column>
+          <el-table-column prop="menuCode" label="菜单编码" width="140"></el-table-column>
+          <el-table-column prop="menuLevel" label="菜单层级" width="80"></el-table-column>
           <el-table-column prop="creator" label="创建用户" width="120"></el-table-column>
           <el-table-column prop="parentName" label="父菜单" width="120"></el-table-column>
           <el-table-column prop="menuPath" label="菜单路径" width="200"></el-table-column>
@@ -61,6 +65,9 @@
                 <el-form :model="menuForm">
                   <el-form-item label="菜单名称" label-width="80px">
                     <el-input v-model="menuForm.name" autocomplete="off" placeholder="请输入菜单名称"></el-input>
+                  </el-form-item>
+                  <el-form-item label="菜单编码" label-width="80px">
+                    <el-input v-model="menuForm.code" autocomplete="off" placeholder="请输入菜单编码"></el-input>
                   </el-form-item>
                   <el-form-item label="菜单路径" label-width="80px">
                     <el-input v-model="menuForm.path" autocomplete="off" placeholder="请输入菜单路径"></el-input>
@@ -114,6 +121,7 @@ export default {
       tableData: [{
         id: '',
         menuName: '1',
+        menuCode: '菜单编码',
         menuLevel: 2,
         creator: '3',
         parentName: '测试',
@@ -130,6 +138,7 @@ export default {
       menuForm: {
         id: null,
         name: '',
+        code: '',
         level: null,
         path: '',
         mark: '',
@@ -150,6 +159,7 @@ export default {
     openAdd () {
       this.addFormVisible = true
       this.menuForm.name = ''
+      this.menuForm.code = ''
       this.menuForm.path = ''
       this.menuForm.level = null
       this.menuForm.mark = ''
@@ -159,6 +169,7 @@ export default {
       this.modifyFormVisible = true
       this.menuForm.id = menu.id
       this.menuForm.name = menu.menuName
+      this.menuForm.code = menu.menuCode
       this.menuForm.path = menu.menuPath
       this.menuForm.level = menu.menuLevel
       this.menuForm.mark = menu.mark
@@ -174,7 +185,7 @@ export default {
             this.menuList(this.pageSize, this.currentPage)
             this.simpleMenuList()
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('添加菜单异常')
@@ -191,7 +202,7 @@ export default {
             this.total = response.data.total
             this.tableData = response.data.data
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('菜单查询异常')
@@ -206,7 +217,7 @@ export default {
           if (response.data.code === '0') {
             this.simpleList = response.data.data
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('菜单查询异常')
@@ -224,7 +235,7 @@ export default {
             this.menuList(this.pageSize, this.currentPage)
             this.simpleMenuList()
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('删除菜单异常')
