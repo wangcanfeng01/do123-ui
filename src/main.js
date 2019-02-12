@@ -19,9 +19,22 @@ Vue.use(ElementUI)
 Vue.use(mavonEditor)
 Vue.config.productionTip = false
 /* eslint-disable no-new */
+
 new Vue({
   el: '#app',
   router,
   components: {App},
   template: '<App/>'
+})
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login' || to.meta.noAuth) {
+    next()
+  } else if (localStorage.getItem('user')) {
+    next()
+  } else {
+    next({
+      path: '/login',
+      query: {redirect: to.fullPath}
+    })
+  }
 })

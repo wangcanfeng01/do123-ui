@@ -20,7 +20,7 @@
         </el-row>
         <el-row>
           <el-col :span="10" :offset="pictureOffset">
-            <img src="../../assets/face/default.jpg" width="90%" height="100%"/>
+            <img :src="defaultFace" width="90%" height="100%"/>
           </el-col>
           <el-col :span="10" v-show="!isCollapse"
                   style="height: 100%;padding-top: 2em;text-align: center;">
@@ -85,6 +85,7 @@ export default {
   props: ['leftHeight'],
   data () {
     return {
+      defaultFace: require('../../assets/face/default.jpg'),
       isCollapse: false,
       pictureOffset: 2,
       collapseOffset: 0,

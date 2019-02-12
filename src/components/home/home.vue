@@ -9,48 +9,50 @@
     <div class="home_line">
       <h1 class="line_font">非常有趣的小站</h1>
     </div>
-    <el-container>
-      <el-aside width="50%">
-        <div class="left_img_content">
-          <div style="position:absolute;">
-            <img src="../../assets/home/blog.jpg"/>
+    <el-col :span="16" :offset="4">
+      <el-container>
+        <el-aside width="40%">
+          <div style="position: relative;width: 430px;float: right">
+            <div style="position:absolute;">
+              <img src="../../assets/home/blog.jpg" style="width: 350px;height: 350px;margin-left: 5em"/>
+            </div>
+            <div class="left_icon">
+              <router-link to="/blog" class="icon_link">
+                <font-awesome-icon icon="book"/>
+              </router-link>
+            </div>
           </div>
-          <div class="left_icon">
-            <router-link to="/blog" class="icon_link">
-              <font-awesome-icon icon="book"/>
-            </router-link>
+        </el-aside>
+        <el-aside width="60%">
+          <div class="font_right">
+            <h3>博客分享</h3>
+            <p>（1）在网络上收获了无数知识，因此在自己获得帮助的同时，反馈社会</p>
+            <p>（2）写博客可以记录自己当前所学，方便回顾 ，利人利己</p>
           </div>
-        </div>
-      </el-aside>
-      <el-aside width="50%">
-        <div class="font_right">
-          <h3>博客分享</h3>
-          <p>（1）在网络上收获了无数知识，因此在自己获得帮助的同时，反馈社会</p>
-          <p>（2）写博客可以记录自己当前所学，方便回顾 ，利人利己</p>
-        </div>
-      </el-aside>
-    </el-container>
-    <el-container>
-      <el-aside width="50%">
-        <div class="font_left">
-          <h3>视频搜索</h3>
-          <p>（1）通过机器学习算法，智能推荐用户平时浏览量最高的视频</p>
-          <p>（2）提供智能搜索方法，方便中老年用户查找视频</p>
-        </div>
-      </el-aside>
-      <el-aside width="50%">
-        <div style="position: relative;">
-          <div style="position:absolute;width: 100%;">
-            <img src="../../assets/home/video.jpg" style="width: 547px;height: 365px"/>
+        </el-aside>
+      </el-container>
+      <el-container>
+        <el-aside width="60%">
+          <div class="font_left">
+            <h3>视频搜索</h3>
+            <p>（1）通过机器学习算法，智能推荐用户平时浏览量最高的视频</p>
+            <p>（2）提供智能搜索方法，方便中老年用户查找视频</p>
           </div>
-          <div class="right_icon">
-            <router-link to="/video" class="icon_link">
-              <font-awesome-icon icon="play-circle"/>
-            </router-link>
+        </el-aside>
+        <el-aside width="40%">
+          <div style="position: relative;">
+            <div style="position:absolute;">
+              <img src="../../assets/home/video.jpg" style="width: 350px;height: 350px"/>
+            </div>
+            <div class="right_icon">
+              <router-link to="/video" class="icon_link">
+                <font-awesome-icon icon="play-circle"/>
+              </router-link>
+            </div>
           </div>
-        </div>
-      </el-aside>
-    </el-container>
+        </el-aside>
+      </el-container>
+    </el-col>
     <div class="clearfix"></div>
     <div class="home_line">
       <h1 class="line_font">有事留言</h1>
@@ -217,39 +219,32 @@ export default {
 
   .font_right {
     text-align: left;
-    height: 269px;
-    margin-left: 20px;
+    height: 256px;
     margin-top: 100px;
+    margin-left: 20px;
   }
 
   .font_left {
     text-align: right;
-    height: 269px;
+    height: 256px;
     margin-top: 100px;
     margin-right: 20px;
-  }
-
-  .left_img_content {
-    position: relative;
-    width: 30%;
-    height: 366px;
-    left: 42%
   }
 
   .left_icon {
     position: absolute;
     font-size: 6em;
     z-index: 1;
-    top: 100px;
-    left: 85%
+    margin-top: 1.1em;
+    left: 2.3em
   }
 
   .right_icon {
     position: absolute;
     font-size: 6em;
     z-index: 1;
-    top: 100px;
-    left: 23%
+    margin-top: 1.1em;
+    left: 1.3em
   }
 
   .icon_link {

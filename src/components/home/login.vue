@@ -24,12 +24,17 @@
               </el-form-item>
             </el-col>
             <el-col :span="20" :offset="2">
-              <el-checkbox label="15天内免登陆" name="type"></el-checkbox>
+              <el-checkbox label="15天内免登录" name="type"></el-checkbox>
             </el-col>
             <el-col :span="20" :offset="2">
               <el-form-item style="margin-top: 25px">
                 <el-row>
-                  <el-button type="primary" @click="submitForm('loginForm')" class="loginButton">登录</el-button>
+                  <el-col :span="16">
+                    <el-button type="primary" @click="userLogin('loginForm')" class="loginButton">登录</el-button>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-button type="warning" @click="visitorLogin()" style="height: 45px">游客</el-button>
+                  </el-col>
                 </el-row>
                 <el-row>
                   <router-link id="register" to="/register" class="register">注册新账号</router-link>
@@ -78,29 +83,44 @@ export default {
         borderTopLeftRadius: '9px',
         borderTopRightRadius: '9px',
         height: '6em'
-      }
+      },
+      isVisitor: false
     }
   },
   methods: {
-    submitForm (formName) {
+    userLogin (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post('ui/login?username=' + this.loginForm.username + '&password=' + this.loginForm.password).then(response => {
-            if (response && response.data) {
-              if (response.data.code === '0') {
-                this.$emit('listenLogin', 'true')
-                // 跳转到登录成功的路径上
-                window.location.href = response.data.data
-              } else {
-                this.$message.error(response.data)
-              }
-            } else {
-              this.$message.error('用户名或密码输入错误')
-            }
-          })
+          this.loginRequest()
         } else {
           console.log('error submit!!')
           return false
+        }
+      })
+    },
+    visitorLogin () {
+      this.loginForm.username = '游客'
+      this.loginForm.password = 'visitor'
+      this.loginRequest()
+    },
+    loginRequest () {
+      this.$http.post('/ui/user/login?username=' + this.loginForm.username + '&password=' + this.loginForm.password).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.$emit('listenLogin', 'true')
+            // // 跳转到登录成功的路径上
+            if (this.$route.query.redirect) {
+              localStorage.setItem('user', this.loginForm.username)
+              let redirect = this.$route.query.redirect
+              window.location.href = redirect
+            } else {
+              window.location.href = response.data.data
+            }
+          } else {
+            this.$message.error(response.data)
+          }
+        } else {
+          this.$message.error('用户名或密码输入错误')
         }
       })
     }
@@ -136,7 +156,7 @@ export default {
   }
 
   .loginButton {
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
     height: 45px;
     display: block;

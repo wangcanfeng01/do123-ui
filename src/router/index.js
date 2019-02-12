@@ -35,20 +35,31 @@ export default new Router({
     {
       path: '/',
       redirect: '/home'
-    },
-    {
+    }, {
+      path: '/index.html',
+      redirect: '/home'
+    }, {
       path: '/login',
       name: 'login',
+      meta: {
+        noAuth: true
+      },
       component: login
     },
     {
       path: '/home',
       name: 'home',
+      meta: {
+        noAuth: true
+      },
       component: home
     },
     {
       path: '/register',
       name: 'register',
+      meta: {
+        noAuth: true
+      },
       component: register
     },
     {

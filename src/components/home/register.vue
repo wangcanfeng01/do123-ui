@@ -97,10 +97,7 @@ export default {
                 setTimeout(function () {
                   window.location.href = '/login'
                 }, 1000)
-                this.$message({
-                  message: '注册成功',
-                  type: 'success'
-                })
+                this.$message.success('注册成功')
               } else {
                 this.$message.error(response.data.msg)
               }

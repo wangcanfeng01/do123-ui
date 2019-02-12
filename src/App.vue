@@ -21,16 +21,23 @@
       <el-col :span="3" :offset="5">
         <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
       </el-col>
-      <el-col :span="1">
+      <el-col :span="2">
         <el-button style="margin-left:0.3em; margin-top: 0.8em">搜索</el-button>
       </el-col>
       <el-col :span="1">
         <el-button style="margin-left: 0.3em;margin-top: 0.8em;" type="success" @click="login"
                    v-show="isLogin === 'false'">登录
         </el-button>
-        <el-button style="margin-left: 0.3em;margin-top: 0.8em;" type="danger" @click="logout"
-                   v-show="isLogin==='true'">退出
-        </el-button>
+        <el-dropdown trigger="click" @command="handleCommand" v-show="isLogin==='true'">
+          <el-button style="margin-top: 0.8em;" type="danger">
+            <img :src="loginUser.facePath" style="border-radius: 50%;width: 2em;margin: -0.5em auto"/>
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="personInfo">个人信息</el-dropdown-item>
+            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-col>
     </el-menu>
     <router-view v-on:listenLogin="changeStatus"></router-view>
@@ -43,7 +50,11 @@ export default {
     return {
       activeIndex: '/home',
       search: '',
-      isLogin: 'false'
+      isLogin: 'false',
+      loginUser: {
+        username: '',
+        facePath: ''
+      }
     }
   },
   methods: {
@@ -51,9 +62,20 @@ export default {
       this.$router.push('/login')
     },
     logout () {
-      this.$http.get('/logout')
-      this.isLogin = 'false'
-      this.$router.push('/home')
+      this.$http.post('/ui/user/logout').then(response => {
+        if (response && response.data && response.data.code === '0') {
+          this.isLogin = 'false'
+          localStorage.removeItem('user')
+          window.location.href = '/home'
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    handleCommand (command) {
+      if (command && command === 'logout') {
+        this.logout()
+      }
     },
     changeStatus (isIn) {
       // 传递是否已经已经登录的值
@@ -66,8 +88,17 @@ export default {
       if (response && response.data && response.data.code === '0') {
         if (response.data.data) {
           this.isLogin = 'true'
+          this.loginUser = response.data.data
+          if (this.loginUser.facePath === null) {
+            this.loginUser.facePath = '/upload/image/face/default.jpg'
+          }
+          localStorage.setItem('user', response.data.data)
+        } else {
+          localStorage.removeItem('user')
         }
       }
+    }).catch(error => {
+      console.log(error)
     })
   }
 }
