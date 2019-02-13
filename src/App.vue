@@ -53,14 +53,22 @@ export default {
       isLogin: 'false',
       loginUser: {
         username: '',
-        facePath: ''
+        facePath: '',
+        menuMap: {
+          'home': '首页',
+          'blog': '博客',
+          'video': '视频',
+          'about': '关于本站',
+          'admin': '管理中心'
+        }
       },
+      // 默认显示的菜单项
       menuVisible: {
         home: '首页',
         blog: '博客',
         video: '视频',
         about: '关于本站',
-        admin: '管理中心'
+        admin: ''
       }
     }
   },
@@ -99,12 +107,19 @@ export default {
           if (this.loginUser.facePath === null) {
             this.loginUser.facePath = '/upload/image/face/default.jpg'
           }
-          localStorage.setItem('user', response.data.data)
+          localStorage.setItem('user', response.data.data.username)
+          // 设置菜单的显隐
+          this.menuVisible.home = this.loginUser.menuMap.home
+          this.menuVisible.blog = this.loginUser.menuMap.blog
+          this.menuVisible.video = this.loginUser.menuMap.video
+          this.menuVisible.about = this.loginUser.menuMap.about
+          this.menuVisible.admin = this.loginUser.menuMap.admin
         } else {
           localStorage.removeItem('user')
         }
       }
     }).catch(error => {
+      localStorage.removeItem('user')
       console.log(error)
     })
   }
