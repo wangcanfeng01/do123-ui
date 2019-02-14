@@ -1,17 +1,33 @@
 <template>
   <div id="blog_center">
     <el-col :span="20" id="blog-content">
-      <el-col :span="15">
-        <el-row v-for="(o) in 4" :key="o" style="margin-bottom: 30px">
-          <el-card :body-style="{ padding: '20px' }">
-            <a class="image featured big">
-              <img src="../../assets/article/cover/default.jpg" class="image">
+      <el-col :span="18">
+        <el-row v-for="simpleArticle in simpleArticles" :key="simpleArticle.id" style="margin-bottom: 30px">
+          <el-card :body-style="{ padding: '20px'}" style="border-radius: 20px">
+            <a class="image featured big" target="_blank" :href="simpleArticle.link">
+              <img v-if="simpleArticle.cover" :src="simpleArticle.cover" class="image">
+              <img v-else src="../../assets/article/cover/default.jpg" class="image">
             </a>
             <div style="padding: 4px;">
-              <span>好吃的汉堡</span>
+              <h2 class="article-title"><a :href="simpleArticle.link">{{simpleArticle.title}}</a></h2>
+              <p class="article-content">{{simpleArticle.content}}</p>
               <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
-                <el-button type="text" class="button">操作按钮</el-button>
+                <el-row>
+                  <el-col :span="4">
+                    <el-button type="danger" plain>阅读全文</el-button>
+                  </el-col>
+                  <el-col :span="8" :offset="12">
+                    <span class="article-stat"><font-awesome-icon icon="user"/>{{' '+simpleArticle.author}}</span>
+                    <span class="article-stat">
+                      <font-awesome-icon icon="clock"/>
+                      {{simpleArticle.updateTime}}
+                    </span>
+                    <span class="article-stat"> <font-awesome-icon icon="eye"/>{{' '+simpleArticle.hit}}</span>
+                    <span class="article-stat"> <font-awesome-icon icon="heart"/>{{' '+simpleArticle.like}}</span>
+                    <span class="article-stat-last"> <font-awesome-icon
+                      icon="comment"/>{{' '+simpleArticle.comment}}</span>
+                  </el-col>
+                </el-row>
               </div>
             </div>
           </el-card>
@@ -19,20 +35,49 @@
       </el-col>
       <el-col :span="5" :offset="1">
         <el-row>
-          <h3 style="text-align: center">WCF</h3>
-          <small>前行路上，不能忘了自己的善良以及内心深处的理想</small>
-          <div style="border-bottom: solid;color: beige;margin-bottom: 20px;margin-top: 20px"></div>
+          <h3 class="person-name">小红花</h3>
         </el-row>
-        <el-row v-for="(o) in 4" :key="o" style="margin-bottom: 30px">
+        <el-row>
+          <el-col :span="12" :offset="6">
+            <img src="../../assets/face/default.jpg" style="border-radius: 50%;width: 100%;">
+          </el-col>
+        </el-row>
+        <el-row style="text-align: center">
+          <small>前行路上，不能忘了自己的善良以及内心深处的理想</small>
+        </el-row>
+        <div style="border-bottom: solid 1px;color: #868686;margin-bottom: 20px;margin-top: 40px;"></div>
+        <h2 class="category-header">我的专栏</h2>
+        <el-row v-for="category in categories" :key="category.id" style="margin-bottom: 30px">
           <el-card :body-style="{ padding: '0px' }" style="border-radius: 14px">
-            <a class="image featured little">
-              <img src="../../assets/article/cover/category/default.jpg" class="image">
+            <a class="image featured little" target="_blank" :href="category.link">
+              <img v-if="category.cover" :src="category.cover" class="image">
+              <img v-else src="../../assets/article/cover/category/default.jpg" class="image">
             </a>
             <div style="padding: 4px;">
-              <span>好吃的汉堡</span>
+              <h3 class="category-title"><a :href="category.link">{{category.title}}</a></h3>
               <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
-                <el-button type="text" class="button">操作按钮</el-button>
+                <time class="category-text">{{'创建于 '+category.createTime}}</time>
+              </div>
+            </div>
+          </el-card>
+        </el-row>
+        <div style="border-bottom: solid 1px;color: #868686;margin-bottom: 20px;margin-top: 40px;"></div>
+        <h2 class="comment-header">最近评论</h2>
+        <el-row v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px">
+          <el-card :body-style="{ padding: '0px' }" style="border-radius: 14px">
+            <el-row>
+              <el-col :span="4" style="margin-top: 5px;margin-left: 5px">
+                <img v-if="comment.face" :src="comment.face" class="image">
+                <img v-else src="../../assets/face/default.jpg" style="border-radius: 50%;width: 100%;" class="image">
+              </el-col>
+              <el-col :span="16" :offset="1">
+                <span style="line-height: 4em">{{comment.author+' 评论：'}}<i>{{comment.articleTile}}</i></span>
+              </el-col>
+            </el-row>
+            <p class="comment-content">{{comment.content}}</p>
+            <div style="padding: 4px;">
+              <div class="bottom clearfix">
+                <time class="category-text">{{'时间'+comment.createTime}}</time>
               </div>
             </div>
           </el-card>
@@ -47,7 +92,33 @@ export default {
   name: 'blog_center',
   data () {
     return {
-      currentDate: new Date()
+      simpleArticles: [{
+        id: 1,
+        title: '标题',
+        link: '',
+        cover: '',
+        updateTime: '2018-12-12 12:00:00',
+        author: '作者',
+        content: '文章内容......',
+        hit: 12,
+        like: 14,
+        comment: 23
+      }],
+      categories: [{
+        id: 1,
+        title: '分类',
+        link: '超链接',
+        cover: '',
+        createTime: '2018-12-12 12:00:00'
+      }],
+      comments: [{
+        id: 1,
+        author: '评论人名',
+        content: '评论内容',
+        face: '',
+        articleTile: '文章标题',
+        createTime: '2018-12-12 12:00:00'
+      }]
     }
   },
   mounted () {
@@ -86,7 +157,7 @@ export default {
   a.image.featured.big {
     overflow: hidden;
     width: 100%;
-    height: 25em;
+    height: 30em;
     border: 1px solid black;
     border-radius: 14px;
   }
@@ -112,5 +183,121 @@ export default {
     -webkit-transform: scale(1.05);
     -ms-transform: scale(1.05);
     transform: scale(1.05);
+  }
+
+  .article-title {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .article-title a {
+    text-transform: uppercase;
+    font-family: "Raleway", Helvetica, sans-serif;
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: #3b3b3e;
+    text-decoration: none;
+  }
+
+  .article-title a:hover {
+    color: #002850;
+  }
+
+  .article-stat {
+    color: #5e5d60;
+    font-family: "Arial";
+    font-size: 13px;
+    margin-right: 4px;
+    padding-right: 12px;
+    border-right: solid 1px #d8d8d8;
+  }
+
+  .article-stat-last {
+    color: #5e5d60;
+    font-family: "Arial";
+    font-size: 13px;
+    margin-right: 4px;
+    padding-right: 12px;
+  }
+
+  .article-content {
+    display: block;
+    font-family: "Arial";
+    color: #333;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    margin-bottom: 20px;
+  }
+
+  .person-name {
+    text-transform: uppercase;
+    font-family: "Raleway", Helvetica, sans-serif;
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: #3b3b3e;
+    text-decoration: none;
+  }
+
+  .category-header {
+    font-size: 0.9em;
+    color: #6e6d6d;
+    font-family: "Raleway", Helvetica, sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    line-height: 1.65;
+    margin: 0 0 2em 0;
+    text-transform: uppercase;
+  }
+
+  .category-title {
+    margin-top: 2px;
+  }
+
+  .category-title a {
+    text-decoration: none;
+    color: #3c3b3b;
+    font-family: "Raleway", Helvetica, sans-serif;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  .category-text {
+    display: block;
+    font-family: "Raleway", Helvetica, sans-serif;
+    font-size: 0.6em;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    margin: -0.625em 0 1em 1em;
+    text-transform: uppercase;
+  }
+
+  .comment-header {
+    font-size: 0.9em;
+    color: #6e6d6d;
+    font-family: "Raleway", Helvetica, sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    line-height: 1.65;
+    margin: 0 0 2em 0;
+    text-transform: uppercase;
+  }
+
+  .comment-content {
+    font-size: 1.0em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 12px;
+    padding: 0.3em 0.5em;
+    margin-top: 0.5em;
+    margin-left: 0.3em;
+    width: 90%;
+    background-color: #f9f9f9;
   }
 </style>
