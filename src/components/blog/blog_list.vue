@@ -4,24 +4,28 @@
       <el-row>
         <el-col :span="5" v-for="article in articles" :key="article.id">
           <el-card :body-style="{ padding: '0px' }" style="margin-right: 20px;margin-bottom: 20px">
-            <img v-if="article.cover" :src="article.cover" class="image">
-            <img v-else src="../../assets/article/cover/default.jpg" class="image">
-            <div style="padding: 14px;">
+            <el-row class="item-thumb">
+              <img v-if="article.cover" :src="article.cover" class="image">
+              <img v-else src="../../assets/article/cover/default.jpg" class="image">
+              <div class="item-slant reverse-slant" style="margin-top: -1.1em"></div>
+              <div class="item-slant" style="margin-top: -6.5em"></div>
+            </el-row>
+            <div style="padding: 14px;margin-top: -3em">
               <el-row>
-                <el-col :span="20">
-                  <span>{{article.title}}</span>
-                </el-col>
-                <el-col :span="4">
-                  <small>{{article.category}}</small>
-                </el-col>
+                <a :href="article.title" class="article-link"><span class="article-title">{{article.title}}</span></a>
+              </el-row>
+              <el-row style="margin-top: 10px">
+                <i class="article-keyword">{{article.keyword}}</i>
               </el-row>
               <div class="bottom clearfix">
                 <el-row style="line-height: 2em">
                   <el-col :span="18">
-                    <small style="font-size: 0.6em">{{'更新时间：'+ article.updateTime }}</small>
+                    <small style="font-size: 0.6em">{{article.author+' '+ article.updateTime }}</small>
                   </el-col>
-                  <el-col :span="5">
-                    <el-button type="danger" plain size="mini">点击阅读</el-button>
+                  <el-col :span="6" style="text-align: right">
+                    <a class="category-link" :href="'/ui/category/'+article.category">
+                      <small class="category-text">{{article.category}}</small>
+                    </a>
                   </el-col>
                 </el-row>
               </div>
@@ -55,7 +59,9 @@ export default {
         title: '文章标题',
         updateTime: '2018-12-12 12:00:00',
         cover: '',
-        category: '分类'
+        author: '作者',
+        category: '分类',
+        keyword: '关键词'
       }],
       total: 40,
       pageSize: 10,
@@ -105,24 +111,68 @@ export default {
 </script>
 
 <style scoped>
-  .time {
-    font-size: 13px;
-    color: #999;
-  }
-
   .bottom {
     margin-top: 13px;
     line-height: 12px;
   }
 
-  .button {
-    padding: 0;
-    float: right;
+  .article-title {
+    color: #5f5f5f;
+  }
+
+  .article-link {
+    text-decoration: none;
+  }
+
+  .article-link:hover {
+    text-decoration: underline #000000;
+  }
+
+  .category-link {
+    text-decoration: none;
+  }
+
+  .category-link:hover {
+    text-decoration: underline #000000;
+  }
+
+  .category-text {
+    color: #5f5f5f;
+  }
+
+  .article-keyword{
+    font-size: 0.5em;
   }
 
   .image {
     width: 100%;
     display: block;
+  }
+
+  .item-slant {
+    bottom: 50px;
+    left: 0;
+    width: 110%;
+    min-height: 100px;
+    -webkit-transform: rotate(7deg) translate(-10px, 0);
+    -ms-transform: rotate(7deg) translate(-10px, 0);
+    transform: rotate(7deg) translate(-10px, 0);
+    background-color: #fff
+  }
+
+  .item-slant.reverse-slant {
+    -webkit-transform: rotate(-10deg) translate(10px, -10px);
+    -ms-transform: rotate(-10deg) translate(10px, -10px);
+    transform: rotate(-10deg) translate(10px, -10px);
+    opacity: .7;
+    background-color: rgba(86, 155, 189, 0.99);
+    -webkit-box-shadow: none;
+    box-shadow: none
+  }
+
+  .item-thumb {
+    overflow: hidden;
+    height: 270px;
   }
 
   .clearfix:before,
