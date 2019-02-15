@@ -2,25 +2,43 @@
   <div id="blog_list">
     <el-col :span="20" id="blog-content">
       <el-row>
-        <el-col :span="5" v-for="(o) in 6" :key="o">
+        <el-col :span="5" v-for="article in articles" :key="article.id">
           <el-card :body-style="{ padding: '0px' }" style="margin-right: 20px;margin-bottom: 20px">
-            <img src="../../assets/article/cover/default.jpg" class="image">
+            <img v-if="article.cover" :src="article.cover" class="image">
+            <img v-else src="../../assets/article/cover/default.jpg" class="image">
             <div style="padding: 14px;">
-              <span>好吃的汉堡</span>
+              <el-row>
+                <el-col :span="20">
+                  <span>{{article.title}}</span>
+                </el-col>
+                <el-col :span="4">
+                  <small>{{article.category}}</small>
+                </el-col>
+              </el-row>
               <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
-                <el-button type="text" class="button">操作按钮</el-button>
+                <el-row style="line-height: 2em">
+                  <el-col :span="18">
+                    <small style="font-size: 0.6em">{{'更新时间：'+ article.updateTime }}</small>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-button type="danger" plain size="mini">点击阅读</el-button>
+                  </el-col>
+                </el-row>
               </div>
             </div>
           </el-card>
         </el-col>
       </el-row>
-      <el-row style="text-align: center">
+      <el-row>
         <el-pagination
-          :background="true"
-          layout="prev, pager, next"
-          :total="50"
-          class="pagination">
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total" class="list-pagination">
         </el-pagination>
       </el-row>
     </el-col>
@@ -32,13 +50,23 @@ export default {
   name: 'blog_list',
   data () {
     return {
-      currentDate: new Date()
+      articles: [{
+        id: 1,
+        title: '文章标题',
+        updateTime: '2018-12-12 12:00:00',
+        cover: '',
+        category: '分类'
+      }],
+      total: 40,
+      pageSize: 10,
+      currentPage: 1
     }
   },
   mounted () {
     this.$nextTick(() => {
       this.getHeight()
     })
+    this.getArticleList(this.pageSize, this.currentPage)
   },
   methods: {
     getHeight () {
@@ -48,6 +76,29 @@ export default {
         var rightHeight = right.offsetHeight
         this.$emit('listenHeight', rightHeight)
       })
+    },
+    getArticleList (pageSize, currentPage) {
+      this.$http.get('/ui/blog/articleList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.articles = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('文章列表查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    handleSizeChange (val) {
+      this.pageSize = val
+      this.getArticleList(this.pageSize, this.currentPage)
+    },
+    handleCurrentChange (val) {
+      this.currentPage = val
+      this.getArticleList(this.pageSize, this.currentPage)
     }
   }
 }
@@ -84,25 +135,57 @@ export default {
     clear: both
   }
 </style>
-
 <style>
-  .pagination li {
+  .list-pagination .btn-prev {
     background-color: transparent !important;
-    border-radius: 4px !important;
-    border: solid 1px;
-    color: #0f0f0f !important;
-  }
-
-  .pagination li:active {
-    background-color: #ff5d5d !important;
-    border-radius: 4px !important;
-    border: solid 1px;
-  }
-
-  .pagination li:active {
-    background-color: #ff5d5d !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
     border-radius: 4px !important;
     border: solid 1px !important;
-    color: #fdffff !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    color: #777777 !important;
+  }
+
+  .list-pagination .btn-prev:hover {
+    background-color: #ff5d5d !important;
+    color: #ffffff !important;
+  }
+
+  .list-pagination .btn-next {
+    background-color: transparent !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    border-radius: 4px !important;
+    border: solid 1px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    color: #777777 !important;
+  }
+
+  .list-pagination .btn-next:hover {
+    background-color: #ff5d5d !important;
+    color: #ffffff !important;
+  }
+
+  .list-pagination .active {
+    background-color: #ff5d5d !important;
+    color: #f3eaf5 !important;
+  }
+
+  .list-pagination li {
+    background-color: transparent !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    border-radius: 4px !important;
+    border: solid 1px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    color: #777777 !important;
+  }
+
+  .list-pagination li:hover {
+    background-color: #ff5d5d !important;
+    color: #f3eaf5 !important;
   }
 </style>
