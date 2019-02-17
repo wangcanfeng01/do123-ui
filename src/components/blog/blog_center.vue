@@ -4,13 +4,13 @@
       <el-col :span="18">
         <el-row v-for="simpleArticle in simpleArticles" :key="simpleArticle.id" style="margin-bottom: 30px">
           <el-card :body-style="{ padding: '20px'}" style="border-radius: 20px">
-            <a class="image featured big" target="_blank" :href="simpleArticle.link">
+            <a class="image featured big" target="_blank" :href="'/blog/article?slug='+simpleArticle.slug">
               <img v-if="simpleArticle.cover" :src="simpleArticle.cover" class="image">
               <img v-else src="../../assets/article/cover/default.jpg" class="image">
             </a>
             <div style="padding: 4px;">
-              <h2 class="article-title"><a :href="simpleArticle.link">{{simpleArticle.title}}</a></h2>
-              <p class="article-content">{{simpleArticle.content}}</p>
+              <h2 class="article-title"><a :href="simpleArticle.slug">{{simpleArticle.title}}</a></h2>
+              <p class="article-content">{{simpleArticle.text}}</p>
               <div class="bottom clearfix">
                 <el-row>
                   <el-col :span="4">
@@ -22,10 +22,10 @@
                       <font-awesome-icon icon="clock"/>
                       {{simpleArticle.updateTime}}
                     </span>
-                    <span class="article-stat"> <font-awesome-icon icon="eye"/>{{' '+simpleArticle.hit}}</span>
-                    <span class="article-stat"> <font-awesome-icon icon="heart"/>{{' '+simpleArticle.like}}</span>
+                    <span class="article-stat"> <font-awesome-icon icon="eye"/>{{' '+simpleArticle.hits}}</span>
+                    <span class="article-stat"> <font-awesome-icon icon="heart"/>{{' '+simpleArticle.stars}}</span>
                     <span class="article-stat-last"> <font-awesome-icon
-                      icon="comment"/>{{' '+simpleArticle.comment}}</span>
+                      icon="comment"/>{{' '+simpleArticle.commentsNum}}</span>
                   </el-col>
                 </el-row>
               </div>
@@ -46,7 +46,7 @@
           <small>前行路上，不能忘了自己的善良以及内心深处的理想</small>
         </el-row>
         <div style="border-bottom: solid 1px;color: #868686;margin-bottom: 20px;margin-top: 40px;"></div>
-        <h2 class="category-header">我的专栏</h2>
+        <h2 class="category-header">热门专栏</h2>
         <el-row v-for="category in categories" :key="category.id" style="margin-bottom: 30px">
           <el-card :body-style="{ padding: '0px' }" style="border-radius: 14px">
             <a class="image featured little" target="_blank" :href="category.link">
@@ -54,7 +54,7 @@
               <img v-else src="../../assets/article/cover/category/default.jpg" class="image">
             </a>
             <div style="padding: 4px;">
-              <h3 class="category-title"><a :href="category.link">{{category.title}}</a></h3>
+              <h3 class="category-title"><a :href="category.link">{{category.name}}</a></h3>
               <div class="bottom clearfix">
                 <time class="category-text">{{'创建于 '+category.createTime}}</time>
               </div>
@@ -95,18 +95,18 @@ export default {
       simpleArticles: [{
         id: 1,
         title: '标题',
-        link: '',
+        slug: '123',
         cover: '',
         updateTime: '2018-12-12 12:00:00',
         author: '作者',
-        content: '文章内容......',
-        hit: 12,
-        like: 14,
-        comment: 23
+        text: '文章内容......',
+        hits: 12,
+        stars: 14,
+        commentsNum: 23
       }],
       categories: [{
         id: 1,
-        title: '分类',
+        name: '分类',
         link: '超链接',
         cover: '',
         createTime: '2018-12-12 12:00:00'
@@ -121,11 +121,6 @@ export default {
       }]
     }
   },
-  mounted () {
-    this.$nextTick(() => {
-      this.getHeight()
-    })
-  },
   methods: {
     getHeight () {
       this.$nextTick(() => {
@@ -134,7 +129,44 @@ export default {
         var rightHeight = right.offsetHeight
         this.$emit('listenHeight', rightHeight)
       })
+    },
+    getRecentArticles () {
+      this.$http.get('/ui/blog/recentArticles').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.simpleArticles = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('文章列表查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getHotCategories () {
+      this.$http.get('/ui/blog/meta/hot/categories').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.categories = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('专题列表查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.getHeight()
+    })
+    this.getRecentArticles()
+    this.getHotCategories()
   }
 }
 </script>

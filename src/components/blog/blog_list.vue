@@ -3,7 +3,7 @@
     <el-col :span="20" id="blog-content">
       <el-row>
         <el-col :span="5" v-for="article in articles" :key="article.id">
-          <el-card :body-style="{ padding: '0px' }" style="margin-right: 20px;margin-bottom: 20px">
+          <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-right: 20px;margin-bottom: 20px">
             <el-row class="item-thumb">
               <img v-if="article.cover" :src="article.cover" class="image">
               <img v-else src="../../assets/article/cover/default.jpg" class="image">
@@ -12,21 +12,21 @@
             </el-row>
             <div style="padding: 14px;margin-top: -3em">
               <el-row>
-                <a :href="article.title" class="article-link"><span class="article-title">{{article.title}}</span></a>
+                <a :href="article.title" class="article-link">
+                  <span class="article-title" :title="article.title">{{article.title}}</span>
+                </a>
               </el-row>
-              <el-row style="margin-top: 10px">
-                <i class="article-keyword">{{article.keyword}}</i>
+              <el-row style="margin-top: 15px;white-space: nowrap;overflow: hidden">
+                <i class="article-keyword" :title="article.keywords">{{article.keywords}}</i>
               </el-row>
               <div class="bottom clearfix">
                 <el-row style="line-height: 2em">
-                  <el-col :span="18">
-                    <small style="font-size: 0.6em">{{article.author+' '+ article.updateTime }}</small>
-                  </el-col>
-                  <el-col :span="6" style="text-align: right">
-                    <a class="category-link" :href="'/ui/category/'+article.category">
-                      <small class="category-text">{{article.category}}</small>
-                    </a>
-                  </el-col>
+                  <small style="font-size: 0.6em">{{article.author+' '+ article.updateTime }}</small>
+                </el-row>
+                <el-row style="text-align: right">
+                  <a class="category-link" :href="'/ui/category/'+article.category">
+                    <small class="category-text">{{article.category}}</small>
+                  </a>
                 </el-row>
               </div>
             </div>
@@ -59,9 +59,10 @@ export default {
         title: '文章标题',
         updateTime: '2018-12-12 12:00:00',
         cover: '',
+        slug: '文章缩略名',
         author: '作者',
         category: '分类',
-        keyword: '关键词'
+        keywords: '关键词'
       }],
       total: 40,
       pageSize: 10,
@@ -78,16 +79,17 @@ export default {
     getHeight () {
       this.$nextTick(() => {
         // 获取到右侧内容的真实高度
-        var right = document.getElementById('blog-content')
-        var rightHeight = right.offsetHeight
+        let right = document.getElementById('blog-content')
+        let rightHeight = right.offsetHeight
         this.$emit('listenHeight', rightHeight)
       })
     },
     getArticleList (pageSize, currentPage) {
-      this.$http.get('/ui/blog/articleList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+      this.$http.get('/ui/blog/articleList/simple?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.articles = response.data.data
+            this.total = response.data.total
           } else {
             this.$message.error(response.data.msg)
           }
@@ -112,12 +114,13 @@ export default {
 
 <style scoped>
   .bottom {
-    margin-top: 13px;
     line-height: 12px;
   }
 
   .article-title {
     color: #5f5f5f;
+    white-space: nowrap;
+    overflow: hidden
   }
 
   .article-link {
@@ -140,7 +143,7 @@ export default {
     color: #5f5f5f;
   }
 
-  .article-keyword{
+  .article-keyword {
     font-size: 0.5em;
   }
 

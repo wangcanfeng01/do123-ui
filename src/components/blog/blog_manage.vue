@@ -12,36 +12,36 @@
           </el-col>
         </div>
         <el-table :data="tableData" border style="width: 100%">
-          <el-table-column prop="articleName" label="文章标题"></el-table-column>
-          <el-table-column prop="coverPic" label="封面图片">
+          <el-table-column prop="title" label="文章标题"></el-table-column>
+          <el-table-column label="封面图片">
             <template slot-scope="scope">
               <el-upload
                 class="upload-article-cover"
                 action="https://jsonplaceholder.typicode.com/posts/"
                 list-type="picture-card">
-                <img v-if="scope.row.coverPic" :src="scope.row.coverPic" class="img-circle">
+                <img v-if="scope.row.cover" :src="scope.row.cover" class="img-circle">
                 <i v-else class="el-icon-plus"></i>
               </el-upload>
             </template>
           </el-table-column>
-          <el-table-column prop="publishTime" label="发布时间"></el-table-column>
-          <el-table-column prop="hitTimes" label="浏览量"></el-table-column>
-          <el-table-column prop="categories" label="所属分类"></el-table-column>
-          <el-table-column prop="allowSee" label="是否公开">
+          <el-table-column prop="updateTime" label="更新时间"></el-table-column>
+          <el-table-column prop="hits" label="浏览量"></el-table-column>
+          <el-table-column prop="category" label="所属分类"></el-table-column>
+          <el-table-column label="是否公开">
             <template slot-scope="scope">
               <el-tag :type="scope.row.allowSee === '公开' ? 'success' : 'primary'"
                       disable-transitions>{{scope.row.allowSee}}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="publishStatus" label="发布状态">
+          <el-table-column label="发布状态">
             <template slot-scope="scope">
-              <el-tag :type="scope.row.publishStatus === '已发布' ? 'success' : 'primary'"
-                      disable-transitions>{{scope.row.publishStatus}}
+              <el-tag :type="scope.row.status === '已发布' ? 'success' : 'primary'"
+                      disable-transitions>{{scope.row.status}}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="allowComment" label="允许评论">
+          <el-table-column label="允许评论">
             <template slot-scope="scope">
               <el-tag :type="scope.row.allowComment === '允许' ? 'success' : 'primary'"
                       disable-transitions>{{scope.row.allowComment}}
@@ -61,7 +61,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[20, 40, 50, 100]"
+            :page-sizes="[10, 20, 30, 50]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
@@ -78,13 +78,16 @@ export default {
   data () {
     return {
       tableData: [{
-        articleName: '王小虎',
-        coverPic: '',
-        publishTime: '上海市普陀区金沙江路 1518 弄',
-        hitTimes: '33',
-        categories: '2016-05-04 00:00:00',
+        id: 1,
+        title: '王小虎',
+        slug: '',
+        cover: '',
+        updateTime: '2016-05-04 00:00:00',
+        author: '',
+        hits: 33,
+        category: '分类',
         allowSee: '公开',
-        publishStatus: '已发布',
+        status: '已发布',
         allowComment: '允许'
       }],
       currentPage: 1,
@@ -95,11 +98,12 @@ export default {
     }
   },
   methods: {
-    getArticleList (pageSize, currentPage) {
-      this.$http.get('/ui/blog/articleList?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+    getArticleList (currentPage, pageSize) {
+      this.$http.get('/ui/blog/management/list?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.tableData = response.data.data
+            this.total = response.data.total
           } else {
             this.$message.error(response.data.msg)
           }
@@ -141,17 +145,18 @@ export default {
     },
     handleSizeChange (val) {
       this.pageSize = val
-      this.getArticleList(this.pageSize, this.currentPage)
+      this.getArticleList(this.currentPage, this.pageSize)
     },
     handleCurrentChange (val) {
       this.currentPage = val
-      this.getArticleList(this.pageSize, this.currentPage)
+      this.getArticleList(this.currentPage, this.pageSize)
     }
   },
   mounted () {
     this.$nextTick(() => {
       this.getHeight()
     })
+    this.getArticleList(this.currentPage, this.pageSize)
   }
 }
 </script>

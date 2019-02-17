@@ -1,7 +1,7 @@
 <template>
   <div id="blog_keyword">
     <el-col :span="20" id="blog-content">
-      <el-col :span="10" :offset="1" id="blog-right">
+      <el-col :span="11" :offset="1" id="blog-right">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>专题列表</span>
@@ -87,6 +87,17 @@
               </el-form>
             </el-dialog>
           </el-badge>
+          <div class="bottom clearfix">
+            <el-pagination
+              @size-change="categorySizeChange"
+              @current-change="categoryPageChange"
+              :current-page="categoryCurrentPage"
+              :page-sizes="[20, 30, 50, 80]"
+              :page-size="categoryPageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="categoryTotal">
+            </el-pagination>
+          </div>
         </el-card>
       </el-col>
       <el-col :span="10" :offset="1">
@@ -106,6 +117,17 @@
               </el-dropdown-menu>
             </el-dropdown>
           </el-badge>
+          <div class="bottom clearfix">
+            <el-pagination
+              @size-change="keywordSizeChange"
+              @current-change="keywordPageChange"
+              :current-page="keywordCurrentPage"
+              :page-sizes="[20, 30, 50, 80]"
+              :page-size="keywordPageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="keywordTotal">
+            </el-pagination>
+          </div>
         </el-card>
       </el-col>
     </el-col>
@@ -117,6 +139,9 @@ export default {
   name: 'blog_keyword',
   data () {
     return {
+      categoryPageSize: 30,
+      categoryCurrentPage: 1,
+      categoryTotal: 50,
       categories: [{
         id: 1,
         name: '分类名',
@@ -124,6 +149,9 @@ export default {
         count: 12,
         description: '描述信息'
       }],
+      keywordPageSize: 30,
+      keywordCurrentPage: 1,
+      keywordTotal: 50,
       keywords: [{
         id: 1,
         name: '关键词名',
@@ -151,6 +179,38 @@ export default {
         let right = document.getElementById('blog-content')
         let rightHeight = right.offsetHeight
         this.$emit('listenHeight', rightHeight)
+      })
+    },
+    getCategoryList (currentPage, pageSize) {
+      this.$http.get('/ui/blog/meta/categories?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.categories = response.data.data
+            this.categoryTotal = response.data.total
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('专题列表查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getKeywordList (currentPage, pageSize) {
+      this.$http.get('/ui/blog/meta/keywords?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.keywords = response.data.data
+            this.keywordTotal = response.data.total
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('关键字列表查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
       })
     },
     openUpdateForm (category) {
@@ -212,12 +272,30 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    categorySizeChange (pageSize) {
+      this.categoryPageSize = pageSize
+      this.getCategoryList(this.categoryCurrentPage, this.categoryPageSize)
+    },
+    categoryPageChange (currentPage) {
+      this.categoryPageSize = currentPage
+      this.getCategoryList(this.categoryCurrentPage, this.categoryPageSize)
+    },
+    keywordSizeChange (pageSize) {
+      this.keywordPageSize = pageSize
+      this.getKeywordList(this.keywordCurrentPage, this.keywordPageSize)
+    },
+    keywordPageChange (currentPage) {
+      this.keywordCurrentPage = currentPage
+      this.getKeywordList(this.categoryCurrentPage, this.categoryPageSize)
     }
   },
   mounted () {
     this.$nextTick(() => {
       this.getHeight()
     })
+    this.getCategoryList(this.categoryCurrentPage, this.categoryPageSize)
+    this.getKeywordList(this.categoryCurrentPage, this.categoryPageSize)
   }
 }
 </script>
@@ -232,5 +310,22 @@ export default {
   .category-text {
     font-size: 1em;
     font-family: "PingFang SC";
+  }
+
+  .bottom {
+    border-top: solid 1px #bebebe;
+    padding-top: 15px;
+    margin-top: 13px;
+    line-height: 12px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+
+  .clearfix:after {
+    clear: both
   }
 </style>
