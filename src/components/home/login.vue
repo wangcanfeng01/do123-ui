@@ -29,11 +29,8 @@
             <el-col :span="20" :offset="2">
               <el-form-item style="margin-top: 25px">
                 <el-row>
-                  <el-col :span="16">
+                  <el-col :span="16" :offset="4">
                     <el-button type="primary" @click="userLogin('loginForm')" class="loginButton">登录</el-button>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-button type="warning" @click="visitorLogin()" style="height: 45px">游客</el-button>
                   </el-col>
                 </el-row>
                 <el-row>
@@ -98,26 +95,21 @@ export default {
         }
       })
     },
-    visitorLogin () {
-      this.loginForm.username = '游客'
-      this.loginForm.password = 'visitor'
-      this.loginRequest()
-    },
     loginRequest () {
       this.$http.post('/ui/user/login?username=' + this.loginForm.username + '&password=' + this.loginForm.password).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.$emit('listenLogin', 'true')
             // // 跳转到登录成功的路径上
+            localStorage.setItem('user', this.loginForm.username)
             if (this.$route.query.redirect) {
-              localStorage.setItem('user', this.loginForm.username)
               let redirect = this.$route.query.redirect
               window.location.href = redirect
             } else {
               window.location.href = response.data.data
             }
           } else {
-            this.$message.error(response.data)
+            this.$message.error(response.data.msg)
           }
         } else {
           this.$message.error('用户名或密码输入错误')
