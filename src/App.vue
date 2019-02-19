@@ -68,7 +68,7 @@ export default {
         blog: '博客',
         video: '视频',
         about: '关于本站',
-        admin: ''
+        admin: '管理中心'
       }
     }
   },
