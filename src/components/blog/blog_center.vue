@@ -66,18 +66,19 @@
         <el-row v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px">
           <el-card :body-style="{ padding: '0px' }" style="border-radius: 14px">
             <el-row>
-              <el-col :span="4" style="margin-top: 5px;margin-left: 5px">
-                <img v-if="comment.face" :src="comment.face" class="image">
-                <img v-else src="../../assets/face/default.jpg" style="border-radius: 50%;width: 100%;" class="image">
+              <el-col :span="4" style="margin-top: 15px;margin-left: 15px">
+                <img v-if="comment.authorFace" :src="comment.authorFace" class="img-face">
+                <img v-else src="../../assets/face/default.jpg" style="border-radius: 50%;width: 100%;"
+                     class="img-face">
               </el-col>
-              <el-col :span="16" :offset="1">
-                <span style="line-height: 4em">{{comment.author+' 评论：'}}<i>{{comment.articleTile}}</i></span>
+              <el-col :span="16" style="margin-top: 15px">
+                <span class="comment-title" >{{comment.authorName+' 评论：'}}<i>{{comment.articleTitle}}</i></span>
               </el-col>
             </el-row>
-            <p class="comment-content">{{comment.content}}</p>
+            <p class="comment-content">{{comment.text}}</p>
             <div style="padding: 4px;">
               <div class="bottom clearfix">
-                <time class="category-text">{{'时间'+comment.createTime}}</time>
+                <time class="category-text">{{'时间'+comment.updateTime}}</time>
               </div>
             </div>
           </el-card>
@@ -113,11 +114,11 @@ export default {
       }],
       comments: [{
         id: 1,
-        author: '评论人名',
-        content: '评论内容',
-        face: '',
-        articleTile: '文章标题',
-        createTime: '2018-12-12 12:00:00'
+        authorName: '评论人名',
+        text: '评论内容',
+        authorFace: '',
+        articleTitle: '文章标题',
+        updateTime: '2018-12-12 12:00:00'
       }]
     }
   },
@@ -159,6 +160,21 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    getRecentComments () {
+      this.$http.get('/ui/blog/recentComments').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.comments = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('专题列表查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   mounted () {
@@ -167,6 +183,7 @@ export default {
     })
     this.getRecentArticles()
     this.getHotCategories()
+    this.getRecentComments()
   }
 }
 </script>
@@ -320,6 +337,12 @@ export default {
     text-transform: uppercase;
   }
 
+  .comment-title {
+    line-height: 1em;
+    vertical-align: center;
+    font-size: 0.9em
+  }
+
   .comment-content {
     font-size: 1.0em;
     text-overflow: ellipsis;
@@ -331,5 +354,11 @@ export default {
     margin-left: 0.3em;
     width: 90%;
     background-color: #f9f9f9;
+  }
+
+  .img-face {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
   }
 </style>

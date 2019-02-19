@@ -5,16 +5,16 @@
       <el-row>
         <el-col :span="12">
           <div>
-            <img v-if="article.face" :src="article.face" class="img-circle"/>
+            <img v-if="article.authorFace" :src="article.authorFace" class="img-circle"/>
             <img v-else src="../../assets/face/face0.jpg" class="img-circle">
           </div>
           <div style="margin-left: 80px;margin-top: -50px;min-width: 300px">
-            <small>{{'最后一次更新 '+article.updateTime}}</small>
+            <small>{{article.author+'&nbsp;&nbsp;最后一次更新 '+article.updateTime}}</small>
           </div>
           <div style="margin-left: 80px;min-width: 300px">
-            <small>{{'字数 '+article.wordsCount}}</small>
-            <small>{{'评论 '+article.commentNum}}</small>
-            <small>{{'阅读 '+article.hits}}</small>
+            <small>{{'字数&nbsp;'+article.wordCount}}</small>
+            <small>{{'&nbsp;&nbsp;评论&nbsp;'+article.commentsNum}}</small>
+            <small>{{'&nbsp;&nbsp;阅读&nbsp;'+article.hits}}</small>
           </div>
         </el-col>
         <el-col :span="6" :offset="4" style="margin-top: 30px">
@@ -25,21 +25,22 @@
         </el-col>
       </el-row>
       <el-row>
-        <pre>{{article.text}}</pre>
+        <div v-html="article.text"></div>
       </el-row>
       <el-row>
         <p class="reshipment">本站文章均为原创或翻译，转载必须标明出处</p>
       </el-row>
       <el-row>
         <el-col :span="1" :offset="1" style="margin-top: 10px;min-width: 40px">
-          <img v-if="article.face" :src="article.face" class="img-circle-small"/>
+          <img v-if="loginUser.facePath" :src="loginUser.facePath" class="img-circle-small"/>
           <img v-else src="../../assets/face/face0.jpg" class="img-circle-small">
         </el-col>
         <el-col :span="18" style="margin-left: 5px">
           <textarea :rows="4" placeholder="说些什么吧..." v-model="commentForm.commentText"
-                    class="comment-area"></textarea>
+                    class="comment-area" ref="commentArea"></textarea>
         </el-col>
-        <el-col :span="4" :offset="19" style="margin-top: 20px">
+        <el-col :span="8" :offset="15" style="margin-top: 20px">
+          <el-button round @click="clearComment">清空</el-button>
           <el-button type="success" round @click="addComment">评论</el-button>
         </el-col>
       </el-row>
@@ -70,7 +71,7 @@
           </el-button>
         </div>
       </el-row>
-      <div>
+      <div v-if="commentTotal>0">
         <el-col :span="4" :offset="8">
           <el-pagination
             background
@@ -93,12 +94,13 @@ export default {
       article: {
         id: 1,
         title: '标题',
-        face: '',
+        author: '作者',
+        authorFace: '',
         text: '文章内容',
-        wordsCount: 14,
+        wordCount: 14,
         hits: 111,
         stars: 23123,
-        commentNum: 33,
+        commentsNum: 33,
         keywords: '关键字',
         updateTime: '2018-12-12 12:00:00'
       },
@@ -118,6 +120,10 @@ export default {
       commentForm: {
         commentText: '',
         parentId: null
+      },
+      loginUser: {
+        username: '',
+        facePath: ''
       }
     }
   },
@@ -184,8 +190,12 @@ export default {
         console.log(error)
       })
       // 评论完清除上一次评论内容
+      this.clearComment()
+    },
+    clearComment () {
       this.commentForm.parentId = null
       this.commentForm.commentText = ''
+      this.$refs.commentArea.value = ''
     },
     handleCurrentChange (val) {
       this.commentCurrentPage = val
@@ -195,6 +205,8 @@ export default {
   mounted () {
     // 获取路径参数中的slug
     this.slug = this.$route.query.slug
+    console.log(this.slug)
+    this.loginUser = localStorage.getItem('user')
     this.getArticleInfo(this.slug)
     this.getCommentList(this.commentCurrentPage, this.article.id)
   }
@@ -239,7 +251,7 @@ export default {
     padding-right: 10px;
     font-size: 15px;
     border-radius: 20px;
-    width: 95%;
+    width: 100%;
     resize: none;
     height: 80px;
     border: 1px solid #dcdcdc;
@@ -247,6 +259,10 @@ export default {
     display: inline-block;
     vertical-align: top;
     outline-style: none;
+  }
+
+  .comment-area:focus {
+    background-color: hsla(0, 0%, 95%, 0.1);
   }
 
   .reshipment {
@@ -258,7 +274,8 @@ export default {
     font-weight: 700;
     color: #969696;
   }
-  .comment-title{
+
+  .comment-title {
     color: #333;
     font-size: 17px;
     font-weight: 700;

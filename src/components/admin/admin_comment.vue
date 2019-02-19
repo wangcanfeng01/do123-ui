@@ -17,7 +17,7 @@
           <el-table-column prop="authorName" label="评论人名" width="140"></el-table-column>
           <el-table-column prop="face" label="头像" width="100">
             <template slot-scope="scope">
-              <img v-if="scope.row.face" :src="scope.row.face" class="img-circle"/>
+              <img v-if="scope.row.authorFace" :src="scope.row.authorFace" class="img-circle"/>
               <img v-else src="../../assets/face/face1.jpg" class="img-circle"/>
             </template>
           </el-table-column>
@@ -30,6 +30,7 @@
               </el-tag>
             </template>
           </el-table-column>
+          <el-table-column prop="articleTitle" label="文章标题" width="200"></el-table-column>
           <el-table-column prop="text" label="评论内容" min-width="240"></el-table-column>
           <el-table-column label="操作" width="100">
             <template slot-scope="scope">
@@ -42,7 +43,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[20, 30, 50, 80]"
+            :page-sizes="[10, 20, 30, 50]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
@@ -63,16 +64,17 @@ export default {
         updateTime: '2016-05-04 00:00:00',
         authorName: '评论人名称',
         authorId: 2,
-        face: '',
+        authorFace: '',
         articleId: 1,
         ip: '127.0.0.1',
         text: 'dsdadadadadad',
         type: '评论',
         isRead: '已读',
-        parent: 1
+        parent: 1,
+        articleTitle: ''
       }],
       currentPage: 1,
-      pageSize: 20,
+      pageSize: 10,
       total: 50
     }
   },
