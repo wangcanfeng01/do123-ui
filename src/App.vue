@@ -25,10 +25,17 @@
         <el-button style="margin-left:0.3em; margin-top: 0.8em">搜索</el-button>
       </el-col>
       <el-col :span="1">
-        <el-button style="margin-left: 0.3em;margin-top: 0.8em;" type="success" @click="login"
-                   v-show="isLogin === 'false'">登录
-        </el-button>
-        <el-dropdown trigger="click" @command="handleCommand" v-show="isLogin==='true'">
+        <el-dropdown trigger="click" @command="loginCommand" v-show="isLogin==='false'">
+          <el-button style="margin-top: 0.8em;" type="success">
+            登录<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="login">会员登录</el-dropdown-item>
+            <el-dropdown-item command="visitor">游客登录</el-dropdown-item>
+            <el-dropdown-item command="register">注册账号</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-dropdown trigger="click" @command="logoutCommand" v-show="isLogin==='true'">
           <el-button style="margin-top: 0.8em;" type="danger">
             <img :src="loginUser.facePath" style="border-radius: 50%;width: 2em;margin: -0.5em auto"/>
             <i class="el-icon-arrow-down el-icon--right"></i>
@@ -76,6 +83,27 @@ export default {
     login () {
       this.$router.push('/login')
     },
+    visitorLogin () {
+      this.$http.post('/ui/user/login?username=游客&password=visitor').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.isLogin = 'true'
+            // // 跳转到登录成功的路径上
+            localStorage.setItem('user', '游客')
+            if (this.$route.query.redirect) {
+              let redirect = this.$route.query.redirect
+              window.location.href = redirect
+            } else {
+              window.location.href = response.data.data
+            }
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('用户名或密码输入错误')
+        }
+      })
+    },
     logout () {
       this.$http.post('/ui/user/logout').then(response => {
         if (response && response.data && response.data.code === '0') {
@@ -87,7 +115,23 @@ export default {
         console.log(error)
       })
     },
-    handleCommand (command) {
+    loginCommand (command) {
+      switch (command) {
+        case 'login': {
+          this.login()
+          break
+        }
+        case 'visitor': {
+          this.visitorLogin()
+          break
+        }
+        case 'register': {
+          this.$router.push('/register')
+          break
+        }
+      }
+    },
+    logoutCommand (command) {
       if (command && command === 'logout') {
         this.logout()
       }
