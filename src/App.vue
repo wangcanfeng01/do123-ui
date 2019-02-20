@@ -151,7 +151,7 @@ export default {
           if (this.loginUser.facePath === null) {
             this.loginUser.facePath = '/upload/image/face/default.jpg'
           }
-          localStorage.setItem('user', response.data.data)
+          localStorage.setItem('user', this.loginUser.username)
           // 设置菜单的显隐
           this.menuVisible.home = this.loginUser.menuMap.home
           this.menuVisible.blog = this.loginUser.menuMap.blog

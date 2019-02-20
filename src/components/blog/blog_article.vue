@@ -50,17 +50,17 @@
       <el-row v-for="comment in comments" :key="comment.id"
               style="border-top: 1px solid #f0f0f0;;padding-top: 15px;margin-bottom: 10px">
         <div>
-          <img v-if="comment.face" :src="comment.face" class="img-circle-small"/>
+          <img v-if="comment.authorFace" :src="comment.authorFace" class="img-circle-small"/>
           <img v-else src="../../assets/face/face1.jpg" class="img-circle-small">
         </div>
         <div style="margin-left: 45px;margin-top: -45px;min-width: 300px">
-          <small>{{comment.author}}</small>
+          <small>{{comment.authorName}}</small>
         </div>
         <div style="margin-left: 45px;min-width: 300px">
           <small>{{comment.updateTime}}</small>
         </div>
         <div>
-          <pre class="comment-info">{{comment.content}}</pre>
+          <pre class="comment-info">{{comment.text}}</pre>
         </div>
         <div>
           <el-button type="text" style="color: rgba(174,174,174,0.87);">
@@ -133,6 +133,7 @@ export default {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.article = response.data.data
+            this.getCommentList(this.commentCurrentPage, this.article.id)
           } else {
             this.$message.error(response.data.msg)
           }
@@ -149,6 +150,7 @@ export default {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.comments = response.data.data
+            this.commentTotal = response.data.total
           } else {
             this.$message.error(response.data.msg)
           }
@@ -200,15 +202,26 @@ export default {
     handleCurrentChange (val) {
       this.commentCurrentPage = val
       this.getCommentList(this.commentCurrentPage, this.article.id)
+    },
+    getLogin () {
+      this.$http.get('/ui/user/get/login').then(response => {
+        if (response && response.data && response.data.code === '0') {
+          if (response.data.data) {
+            this.loginUser = response.data.data
+          }
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   mounted () {
     // 获取路径参数中的slug
     this.slug = this.$route.query.slug
-    console.log(this.slug)
     this.loginUser = localStorage.getItem('user')
+    console.log(this.loginUser.facePath)
     this.getArticleInfo(this.slug)
-    this.getCommentList(this.commentCurrentPage, this.article.id)
+    this.getLogin()
   }
 }
 </script>
