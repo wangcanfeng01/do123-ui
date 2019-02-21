@@ -18,7 +18,7 @@
           </div>
         </el-col>
         <el-col :span="6" :offset="4" style="margin-top: 30px">
-          <el-button type="danger" plain class="thumb-button" @click="addStars(article.id)">
+          <el-button type="danger" plain class="thumb-button" @click="addStars(article.id,article.stars)">
             <span class="thumb-font"><font-awesome-icon icon="thumbs-up"/>&nbsp;&nbsp;赞一个</span>
             <span class="thumb-number">{{article.stars}}</span>
           </el-button>
@@ -30,7 +30,7 @@
       <el-row>
         <p class="reshipment">本站文章均为原创或翻译，转载必须标明出处</p>
       </el-row>
-      <el-row>
+      <el-row v-show="loginUser.userId!=null">
         <el-col :span="1" :offset="1" style="margin-top: 10px;min-width: 40px">
           <img v-if="loginUser.facePath" :src="loginUser.facePath" class="img-circle-small"/>
           <img v-else src="../../assets/face/face0.jpg" class="img-circle-small">
@@ -43,6 +43,9 @@
           <el-button round @click="clearComment">清空</el-button>
           <el-button type="success" round @click="addComment">评论</el-button>
         </el-col>
+      </el-row>
+      <el-row v-show="loginUser.userId===null">
+        <p class="reshipment">登录后可添加评论</p>
       </el-row>
       <div style="margin-top: 30px;margin-bottom: 20px">
         <span class="comment-title">{{'精彩评论('+commentTotal+')'}}</span>
@@ -118,10 +121,14 @@ export default {
         stars: 13
       }],
       commentForm: {
+        articleId: null,
+        authorName: '',
+        authorId: null,
         commentText: '',
         parentId: null
       },
       loginUser: {
+        userId: null,
         username: '',
         facePath: ''
       }
@@ -161,8 +168,8 @@ export default {
         console.log(error)
       })
     },
-    addStars (articleId) {
-      this.$http.put('/ui/blog/article/addStars?articleId=' + articleId).then(response => {
+    addStars (articleId, stars) {
+      this.$http.put('/ui/blog/article/addStars?articleId=' + articleId + '&stars=' + stars).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.article.stars++
@@ -178,25 +185,32 @@ export default {
     },
     addComment (parent) {
       this.commentForm.parentId = parent
+      this.commentForm.articleId = this.article.id
+      this.commentForm.authorId = this.loginUser.userId
+      this.commentForm.authorName = this.loginUser.username
       this.$http.post('/ui/blog/article/addComment', this.commentForm).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
-            this.article.stars++
+            // 评论完清除上一次评论内容
+            this.clearComment()
+            this.getCommentList(this.commentCurrentPage, this.article.id)
+            this.$message.success('评论成功')
           } else {
             this.$message.error(response.data.msg)
           }
         } else {
-          this.$message.error('文章点赞异常')
+          this.$message.error('添加评论异常')
         }
       }).catch(error => {
         console.log(error)
       })
-      // 评论完清除上一次评论内容
-      this.clearComment()
     },
     clearComment () {
       this.commentForm.parentId = null
       this.commentForm.commentText = ''
+      this.commentForm.articleId = null
+      this.commentForm.authorId = null
+      this.commentForm.authorName = ''
       this.$refs.commentArea.value = ''
     },
     handleCurrentChange (val) {
@@ -208,9 +222,17 @@ export default {
         if (response && response.data && response.data.code === '0') {
           if (response.data.data) {
             this.loginUser = response.data.data
+          } else {
+            this.loginUser.userId = null
+            this.loginUser.facePath = ''
           }
+        } else {
+          this.loginUser.userId = null
+          this.loginUser.facePath = ''
         }
       }).catch(error => {
+        this.loginUser.userId = null
+        this.loginUser.facePath = ''
         console.log(error)
       })
     }
@@ -218,8 +240,6 @@ export default {
   mounted () {
     // 获取路径参数中的slug
     this.slug = this.$route.query.slug
-    this.loginUser = localStorage.getItem('user')
-    console.log(this.loginUser.facePath)
     this.getArticleInfo(this.slug)
     this.getLogin()
   }
