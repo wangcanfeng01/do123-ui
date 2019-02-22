@@ -45,7 +45,10 @@
         </el-col>
       </el-row>
       <el-row v-show="loginUser.userId===null">
-        <p class="reshipment">登录后可添加评论</p>
+        <p class="reshipment">空空如也的，不妨登录一下，说点什么</p>
+        <el-col :span="3" :offset="11">
+          <el-button type="success" @click="toLogin">登录</el-button>
+        </el-col>
       </el-row>
       <div style="margin-top: 30px;margin-bottom: 20px">
         <span class="comment-title">{{'精彩评论('+commentTotal+')'}}</span>
@@ -135,6 +138,9 @@ export default {
     }
   },
   methods: {
+    toLogin () {
+      this.$router.push('/login')
+    },
     getArticleInfo (slug) {
       this.$http.get('/ui/blog/article/' + slug).then(response => {
         if (response && response.data) {
