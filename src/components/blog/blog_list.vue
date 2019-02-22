@@ -12,7 +12,7 @@
             </el-row>
             <div style="padding: 14px;margin-top: -3em">
               <el-row>
-                <a :href="article.title" class="article-link">
+                <a class="article-link" :href="'/blog/article?slug='+article.slug" target="_blank">
                   <span class="article-title" :title="article.title">{{article.title}}</span>
                 </a>
               </el-row>
