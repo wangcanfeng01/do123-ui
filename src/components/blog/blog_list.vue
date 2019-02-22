@@ -1,6 +1,22 @@
 <template>
   <div id="blog_list">
     <el-col :span="20" id="blog-content">
+      <el-row style="border-bottom: 1px solid #ebeef5;margin-bottom: 20px;padding-bottom: 20px">
+        <el-col :span="4" :offset="1">
+          <el-select v-model="currentCategory" filterable placeholder="文章分类"
+                     remote :remote-method="toArticleCategory(currentCategory)">
+            <el-option v-for="category in categories" :key="category.id"
+                       :label="category.name" :value="category.name">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4" :offset="11">
+          <el-input></el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" style="margin-left: 15px">查询</el-button>
+        </el-col>
+      </el-row>
       <el-row>
         <el-col :span="5" v-for="article in articles" :key="article.id">
           <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-right: 20px;margin-bottom: 20px">
@@ -24,9 +40,9 @@
                   <small style="font-size: 0.6em">{{article.author+' '+ article.updateTime }}</small>
                 </el-row>
                 <el-row style="text-align: right">
-                  <a class="category-link" :href="'/ui/category/'+article.category">
-                    <small class="category-text">{{article.category}}</small>
-                  </a>
+                  <el-button type="text" style="height: 20px" @click="toArticleCategory(article.category)">
+                    {{article.category}}
+                  </el-button>
                 </el-row>
               </div>
             </div>
@@ -66,14 +82,23 @@ export default {
       }],
       total: 40,
       pageSize: 10,
-      currentPage: 1
+      currentPage: 1,
+      currentCategory: '全部',
+      categories: [{
+        id: 0,
+        name: '全部'
+      }, {
+        id: 1,
+        name: 'test'
+      }]
     }
   },
   mounted () {
     this.$nextTick(() => {
       this.getHeight()
     })
-    this.getArticleList(this.pageSize, this.currentPage)
+    this.getArticleByPage(this.pageSize, this.currentPage)
+    this.getCategories()
   },
   methods: {
     getHeight () {
@@ -84,8 +109,27 @@ export default {
         this.$emit('listenHeight', rightHeight)
       })
     },
-    getArticleList (pageSize, currentPage) {
-      this.$http.get('/ui/blog/articleList/simple?pageSize=' + pageSize + '&currentPage=' + currentPage).then(response => {
+    toArticleCategory (category) {
+      let req = {
+        params: {
+          'pageSize': this.pageSize,
+          'currentPage': this.currentPage,
+          'category': category
+        }
+      }
+      this.getArticleList(req)
+    },
+    getArticleByPage (pageSize, currentPage) {
+      let req = {
+        params: {
+          'pageSize': pageSize,
+          'currentPage': currentPage
+        }
+      }
+      this.getArticleList(req)
+    },
+    getArticleList (req) {
+      this.$http.get('/ui/blog/articleList/simple', req).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.articles = response.data.data
@@ -100,13 +144,28 @@ export default {
         console.log(error)
       })
     },
+    getCategories () {
+      this.$http.get('/ui/blog/categories/simple').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.categories = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('专题列表查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     handleSizeChange (val) {
       this.pageSize = val
-      this.getArticleList(this.pageSize, this.currentPage)
+      this.getArticleByPage(this.pageSize, this.currentPage)
     },
     handleCurrentChange (val) {
       this.currentPage = val
-      this.getArticleList(this.pageSize, this.currentPage)
+      this.getArticleByPage(this.pageSize, this.currentPage)
     }
   }
 }
