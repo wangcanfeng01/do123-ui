@@ -49,7 +49,7 @@
         <h2 class="category-header">热门专栏</h2>
         <el-row v-for="category in categories" :key="category.id" style="margin-bottom: 30px">
           <el-card :body-style="{ padding: '0px' }" style="border-radius: 14px">
-            <a class="image featured little" target="_blank" :href="category.link">
+            <a class="image featured little" :href="'/blog/list?category='+category.name">
               <img v-if="category.cover" :src="category.cover" class="image">
               <img v-else src="../../assets/article/cover/category/default.jpg" class="image">
             </a>
@@ -108,7 +108,6 @@ export default {
       categories: [{
         id: 1,
         name: '分类',
-        link: '超链接',
         cover: '',
         createTime: '2018-12-12 12:00:00'
       }],

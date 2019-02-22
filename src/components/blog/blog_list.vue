@@ -2,19 +2,18 @@
   <div id="blog_list">
     <el-col :span="20" id="blog-content">
       <el-row style="border-bottom: 1px solid #ebeef5;margin-bottom: 20px;padding-bottom: 20px">
-        <el-col :span="4" :offset="1">
-          <el-select v-model="currentCategory" filterable placeholder="文章分类"
-                     remote :remote-method="toArticleCategory(currentCategory)">
+        <el-col :span="4" :offset="10">
+          <el-select v-model="currentCategory" filterable placeholder="文章分类">
             <el-option v-for="category in categories" :key="category.id"
                        :label="category.name" :value="category.name">
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="4" :offset="11">
-          <el-input></el-input>
-        </el-col>
         <el-col :span="4">
-          <el-button type="primary" style="margin-left: 15px">查询</el-button>
+          <el-input v-model="queryTitle" placeholder="文章标题..."></el-input>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary" style="margin-left: 15px" @click="queryArticles">查询</el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -84,6 +83,7 @@ export default {
       pageSize: 10,
       currentPage: 1,
       currentCategory: '全部',
+      queryTitle: '',
       categories: [{
         id: 0,
         name: '全部'
@@ -92,13 +92,6 @@ export default {
         name: 'test'
       }]
     }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.getHeight()
-    })
-    this.getArticleByPage(this.pageSize, this.currentPage)
-    this.getCategories()
   },
   methods: {
     getHeight () {
@@ -145,10 +138,16 @@ export default {
       })
     },
     getCategories () {
-      this.$http.get('/ui/blog/categories/simple').then(response => {
+      this.$http.get('/ui/blog/meta/categories/simple').then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.categories = response.data.data
+            this.categories.push({
+              id: 0,
+              name: '全部'
+            })
+            // 倒置一下，把全部这个标签放到最前面
+            this.categories.reverse()
           } else {
             this.$message.error(response.data.msg)
           }
@@ -159,6 +158,17 @@ export default {
         console.log(error)
       })
     },
+    queryArticles () {
+      let req = {
+        params: {
+          'pageSize': this.pageSize,
+          'currentPage': this.currentPage,
+          'category': this.currentCategory,
+          'title': this.queryTitle
+        }
+      }
+      this.getArticleList(req)
+    },
     handleSizeChange (val) {
       this.pageSize = val
       this.getArticleByPage(this.pageSize, this.currentPage)
@@ -167,6 +177,16 @@ export default {
       this.currentPage = val
       this.getArticleByPage(this.pageSize, this.currentPage)
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.getHeight()
+    })
+    if (this.$route.query.category) {
+      this.currentCategory = this.$route.query.category
+    }
+    this.toArticleCategory(this.currentCategory)
+    this.getCategories()
   }
 }
 </script>

@@ -36,8 +36,8 @@
           </el-table-column>
           <el-table-column label="发布状态">
             <template slot-scope="scope">
-              <el-tag :type="scope.row.status === '已发布' ? 'success' : 'primary'"
-                      disable-transitions>{{scope.row.status}}
+              <el-tag :type="scope.row.publishStatus === '已发布' ? 'success' : 'primary'"
+                      disable-transitions>{{scope.row.publishStatus}}
               </el-tag>
             </template>
           </el-table-column>
@@ -87,7 +87,7 @@ export default {
         hits: 33,
         category: '分类',
         allowSee: '公开',
-        status: '已发布',
+        publishStatus: '已发布',
         allowComment: '允许'
       }],
       currentPage: 1,
@@ -164,8 +164,8 @@ export default {
 <style scoped>
   .img-circle {
     border-radius: 50%;
-    height: 148px;
-    width: 148px;
+    height: 100px;
+    width: 100px;
   }
 </style>
 <style>
