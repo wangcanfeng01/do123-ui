@@ -5,12 +5,12 @@
         <el-col :span="12">
           <el-input
             placeholder="请输入标题"
-            v-model="articleTitle"
+            v-model="article.title"
             clearable>
           </el-input>
         </el-col>
         <el-col :span="6" :offset="2">
-          <el-select v-model="defaultCategory" clearable placeholder="请选择文章分类">
+          <el-select v-model="article.category" clearable placeholder="请选择文章分类">
             <el-option v-for="category in categories" :key="category.id"
                        :label="category.name" :value="category.name">
             </el-option>
@@ -21,11 +21,10 @@
         <el-col :span="18">
           <fieldset class="fieldset-border">
             <legend class="legend-font">关键字</legend>
-            <el-tag :key="tag" v-for="tag in dynamicTags" closable :disable-transitions="false"
-                    @close="handleClose(tag)">
-              {{tag}}
+            <el-tag :key="keyword" v-for="keyword in article.keywords" closable :disable-transitions="false"
+                    @close="handleClose(keyword)">{{keyword}}
             </el-tag>
-            <el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue"
+            <el-input class="input-new-tag" v-if="keywordInputVisible" v-model="keywordInputValue"
                       ref="saveTagInput" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
             </el-input>
           </fieldset>
@@ -40,18 +39,18 @@
       </el-row>
       <el-row style="margin-top: 20px">
         <el-col :span="4" :offset="1">
-          <el-switch v-model="allowComment" active-color="#13ce66" inactive-color="#ff4949"
+          <el-switch v-model="article.allowComment" active-color="#13ce66" inactive-color="#ff4949"
                      active-text="允许评论" inactive-text="不可评论">
           </el-switch>
         </el-col>
         <el-col :span="4">
-          <el-switch v-model="allowSee" active-color="#13ce66" inactive-color="#ff4949"
+          <el-switch v-model="article.allowSee" active-color="#13ce66" inactive-color="#ff4949"
                      active-text="所有人可见" inactive-text="仅自己可见">
           </el-switch>
         </el-col>
         <el-col :span="5" :offset="5">
           <el-button @click="toBlogList">返回列表</el-button>
-          <el-button type="success">文章发布</el-button>
+          <el-button type="success" @click="publishArticle('publish')">文章发布</el-button>
         </el-col>
       </el-row>
     </el-col>
@@ -63,17 +62,23 @@ export default {
   name: 'blog_writer',
   data () {
     return {
-      articleTitle: '',
-      defaultCategory: '随笔',
       categories: [{
         id: 1,
         name: '选项1'
       }],
-      dynamicTags: ['test01', 'test02'],
-      inputVisible: true,
-      inputValue: '',
-      allowComment: true,
-      allowSee: true,
+      article: {
+        id: 1,
+        title: '标题',
+        slug: '',
+        author: '',
+        text: '文章内容',
+        keywords: ['关键字1', '关键字2'],
+        allowComment: true,
+        allowSee: true,
+        category: '随笔'
+      },
+      keywordInputVisible: true,
+      keywordInputValue: '',
       subfield: false,
       code_style: 'solarized-dark',
       externalLink: {
@@ -120,15 +125,56 @@ export default {
         console.log(error)
       })
     },
-    handleClose (tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
-    },
-    handleInputConfirm () {
-      let inputValue = this.inputValue
-      if (inputValue) {
-        this.dynamicTags.push(inputValue)
+    getArticleInfo (slug) {
+      let url
+      if (slug === undefined) {
+        url = '/ui/blog/article/write'
+      } else {
+        url = '/ui/blog/article/write?slug=' + slug
       }
-      this.inputValue = ''
+      this.$http.get(url).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.article = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('文章查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    publishArticle (type) {
+      this.$http.put('/ui/blog/article/modify/' + type, this.article).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            if (type === 'publish') {
+              this.$message.success('文章发布成功')
+            } else {
+              this.$message.success('文章保存成功')
+            }
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('文章提交异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    handleClose (tag) {
+      this.article.keywords.splice(this.article.keywords.indexOf(tag), 1)
+    },
+    // 增加新的关键字
+    handleInputConfirm () {
+      let inputValue = this.keywordInputValue
+      if (inputValue) {
+        this.article.keywords.push(inputValue)
+      }
+      this.keywordInputValue = ''
     },
     toBlogList () {
       this.$router.push('/blog/list')
@@ -147,6 +193,8 @@ export default {
       this.getHeight()
     })
     this.getCategories()
+    this.article.slug = this.$route.query.slug
+    this.getArticleInfo(this.article.slug)
   }
 }
 </script>

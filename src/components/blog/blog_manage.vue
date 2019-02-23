@@ -17,8 +17,10 @@
             <template slot-scope="scope">
               <el-upload
                 class="upload-article-cover"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                list-type="picture-card">
+                :action="'/ui/blog/article/addCover/'+scope.row.id"
+                :on-success="getFileSuccessUrl"
+                list-type="picture-card"
+                :show-file-list="false">
                 <img v-if="scope.row.cover" :src="scope.row.cover" class="img-circle">
                 <i v-else class="el-icon-plus"></i>
               </el-upload>
@@ -51,8 +53,8 @@
           <el-table-column label="操作" width="250">
             <template slot-scope="scope">
               <el-button size="mini" type="primary" @click="modifyArticle">编辑</el-button>
-              <el-button size="mini" type="danger" @click="deleteArticle">删除</el-button>
-              <el-button size="mini" type="success" @click="readArticle">查看</el-button>
+              <el-button size="mini" type="danger" @click="deleteArticle(scope.row.id)">删除</el-button>
+              <el-button size="mini" type="success" @click="readArticle(scope.row.slug)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -114,11 +116,20 @@ export default {
         console.log(error)
       })
     },
+    getFileSuccessUrl (result) {
+      if (result.code === '0') {
+        this.$message.success('封面上传成功!')
+        // 重新查询文章列表
+        this.getArticleList(this.currentPage, this.pageSize)
+      } else {
+        this.$message.error(result.msg)
+      }
+    },
     deleteArticle (id) {
       this.$http.delete('/ui/blog/article/delete/' + id).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
-            this.getArticleList(this.pageSize, this.currentPage)
+            this.getArticleList(this.currentPage, this.pageSize)
           } else {
             this.$message.error(response.data.msg)
           }
@@ -129,8 +140,9 @@ export default {
         console.log(error)
       })
     },
-    readArticle (id) {
-      console.log(id)
+    readArticle (slug) {
+      let data = this.$router.resolve({path: '/blog/article', query: {'slug': slug}})
+      window.open(data.href, '_blank')
     },
     modifyArticle (id) {
       // 进入到编辑界面

@@ -52,8 +52,10 @@
                 </el-form-item>
                 <el-form-item label="专题封面" label-width="80px">
                   <el-upload
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :action="'/ui/blog/meta/uploadCover/'+categoryForm.id"
+                    class="upload-category-cover"
                     list-type="picture-card"
+                    :on-success="getFileSuccessUrl"
                     :show-file-list="false">
                     <img v-if="categoryForm.cover" :src="categoryForm.cover" class="img-circle">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -224,6 +226,7 @@ export default {
       this.categoryForm.description = ''
       this.categoryForm.name = ''
       this.categoryForm.cover = ''
+      this.categoryForm.id = null
       this.addFormVisible = true
     },
     showCategoryForm (category) {
@@ -235,42 +238,87 @@ export default {
     },
     modifyCategory () {
       this.updateFormVisible = false
+      this.$http.put('/ui/blog/meta/modify/category', this.categoryForm).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.$message.success('编辑成功！')
+            this.getCategoryList(this.categoryCurrentPage, this.categoryPageSize)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('编辑专题信息异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getFileSuccessUrl (result) {
+      if (result.code === '0') {
+        this.$message.success('封面上传成功!')
+        this.categoryForm.cover = result.data
+      } else {
+        this.$message.error(result.msg)
+      }
     },
     addCategory () {
       this.addFormVisible = false
+      this.$http.post('/ui/blog/meta/add/category', this.categoryForm).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.getCategoryList(this.categoryCurrentPage, this.categoryPageSize)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('添加专题信息异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     },
-    deleteCategory () {
+    deleteCategory (category) {
       this.$confirm('确认删除该专题?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'danger'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        this.$http.delete('/ui/blog/meta/categoryDelete/' + category.id + '/' + category.count).then(response => {
+          if (response && response.data) {
+            if (response.data.code === '0') {
+              this.$message.success('删除成功!')
+              this.getCategoryList(this.categoryCurrentPage, this.categoryPageSize)
+            } else {
+              this.$message.error(response.data.msg)
+            }
+          } else {
+            this.$message.error('删除专题信息异常')
+          }
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+        this.$message.info('已取消删除')
       })
     },
-    deleteKeywords () {
+    deleteKeywords (keyword) {
       this.$confirm('确认删除该关键字?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'danger'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        this.$http.delete('/ui/blog/meta/keywordDelete/' + keyword.id + '/' + keyword.count).then(response => {
+          if (response && response.data) {
+            if (response.data.code === '0') {
+              this.$message.success('删除成功!')
+              this.getKeywordList(this.keywordCurrentPage, this.keywordPageSize)
+            } else {
+              this.$message.error(response.data.msg)
+            }
+          } else {
+            this.$message.error('删除关键字信息异常')
+          }
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+        this.$message.info('已取消删除')
       })
     },
     categorySizeChange (pageSize) {
@@ -301,6 +349,10 @@ export default {
 </script>
 
 <style scoped>
+  .img-circle {
+    height: 100px;
+    width: 100px;
+  }
   .img-button {
     width: 4em;
     height: 2em;
@@ -327,5 +379,13 @@ export default {
 
   .clearfix:after {
     clear: both
+  }
+</style>
+
+<style>
+  .upload-category-cover .el-upload--picture-card {
+    height: 100px;
+    width: 100px;
+    line-height: 100px;
   }
 </style>
