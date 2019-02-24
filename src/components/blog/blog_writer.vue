@@ -32,7 +32,8 @@
       </el-row>
       <el-row style="margin-top: 20px">
         <el-col :span="18">
-          <mavon-editor :subfield="subfield" :code_style="code_style"
+          <mavon-editor ref="mdTestArea" @imgAdd="uploadPic" @imgDel="deletePic" :subfield="subfield"
+                        :code_style="code_style"
                         :ishljs="true" :externalLink="externalLink">
           </mavon-editor>
         </el-col>
@@ -76,6 +77,9 @@ export default {
         allowComment: true,
         allowSee: true,
         category: '随笔'
+      },
+      pictureMap: {
+        '1': 'uuid'
       },
       keywordInputVisible: true,
       keywordInputValue: '',
@@ -127,7 +131,8 @@ export default {
     },
     getArticleInfo (slug) {
       let url
-      if (slug === undefined) {
+      // 保险起见还是把文章内的slug也加到判断中，防止重复创建文章
+      if (slug === undefined && this.article.slug === '') {
         url = '/ui/blog/article/write'
       } else {
         url = '/ui/blog/article/write?slug=' + slug
@@ -165,6 +170,38 @@ export default {
         console.log(error)
       })
     },
+    uploadPic (filename, $file) {
+      let formData = new FormData()
+      formData.append('image', $file)
+      this.$http.post('/ui/blog/articlePic/upload/1', formData).then((response) => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.$message.success('图片上传成功')
+            this.$refs.mdTestArea.$img2Url(filename, response.data.data.path)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('图片上传异常')
+        }
+      })
+    },
+    deletePic (filename) {
+      this.$http.delete('/ui/blog/articlePic/delete/1').then((response) => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.$message.success('图片删除成功')
+            console.log(filename)
+            // this.$refs.mdTestArea.$imgDel(filename)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('图片上传异常')
+        }
+      })
+    },
+    // 删除关键字的标签
     handleClose (tag) {
       this.article.keywords.splice(this.article.keywords.indexOf(tag), 1)
     },
@@ -193,8 +230,8 @@ export default {
       this.getHeight()
     })
     this.getCategories()
-    this.article.slug = this.$route.query.slug
-    this.getArticleInfo(this.article.slug)
+    // 获取路径中的slug参数，并作为查询参数
+    this.getArticleInfo(this.$route.query.slug)
   }
 }
 </script>
