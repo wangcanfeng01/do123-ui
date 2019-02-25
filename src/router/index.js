@@ -19,6 +19,7 @@ import roleInfo from '@/components/admin/admin_role'
 import menuInfo from '@/components/admin/admin_menu'
 import adminVideo from '@/components/admin/admin_video'
 import adminBlog from '@/components/admin/admin_blog'
+import adminPicture from '@/components/admin/admin_picture'
 import aboutMind from '@/components/about/about_mind'
 import blogCenter from '@/components/blog/blog_center'
 import blogKeyword from '@/components/blog/blog_keyword'
@@ -166,6 +167,10 @@ export default new Router({
         path: '/admin/blog',
         name: 'adminBlog',
         component: adminBlog
+      }, {
+        path: '/admin/picture',
+        name: 'adminPicture',
+        component: adminPicture
       }
       ]
     }

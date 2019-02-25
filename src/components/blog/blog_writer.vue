@@ -78,9 +78,6 @@ export default {
         allowSee: true,
         category: '随笔'
       },
-      pictureMap: {
-        '1': 'uuid'
-      },
       keywordInputVisible: true,
       keywordInputValue: '',
       subfield: false,
@@ -187,12 +184,10 @@ export default {
       })
     },
     deletePic (filename) {
-      this.$http.delete('/ui/blog/articlePic/delete/1').then((response) => {
+      this.$http.delete('/ui/blog/articlePic/delete?path=' + filename[1]).then((response) => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.$message.success('图片删除成功')
-            console.log(filename)
-            // this.$refs.mdTestArea.$imgDel(filename)
           } else {
             this.$message.error(response.data.msg)
           }
