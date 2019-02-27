@@ -3,11 +3,7 @@
     <el-col :span="20" id="blog-content">
       <el-row>
         <el-col :span="12">
-          <el-input
-            placeholder="请输入标题"
-            v-model="article.title"
-            clearable>
-          </el-input>
+          <el-input placeholder="请输入标题" v-model="article.title" clearable></el-input>
         </el-col>
         <el-col :span="6" :offset="2">
           <el-select v-model="article.category" clearable placeholder="请选择文章分类">
@@ -34,7 +30,7 @@
         <el-col :span="18">
           <mavon-editor ref="mdTestArea" @imgAdd="uploadPic" @imgDel="deletePic" :subfield="subfield"
                         :code_style="code_style"
-                        :ishljs="true" :externalLink="externalLink">
+                        :ishljs="true" :externalLink="externalLink" v-model="article.text">
           </mavon-editor>
         </el-col>
       </el-row>
@@ -128,8 +124,7 @@ export default {
     },
     getArticleInfo (slug) {
       let url
-      // 保险起见还是把文章内的slug也加到判断中，防止重复创建文章
-      if (slug === undefined && this.article.slug === '') {
+      if (slug === undefined) {
         url = '/ui/blog/article/write'
       } else {
         url = '/ui/blog/article/write?slug=' + slug
@@ -138,6 +133,7 @@ export default {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.article = response.data.data
+            this.$router.push({path: '/blog/writer', query: {slug: this.article.slug}})
           } else {
             this.$message.error(response.data.msg)
           }
@@ -170,7 +166,7 @@ export default {
     uploadPic (filename, $file) {
       let formData = new FormData()
       formData.append('image', $file)
-      this.$http.post('/ui/blog/articlePic/upload/1', formData).then((response) => {
+      this.$http.post('/ui/blog/articlePic/upload/' + this.article.id, formData).then((response) => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.$message.success('图片上传成功')
@@ -226,7 +222,8 @@ export default {
     })
     this.getCategories()
     // 获取路径中的slug参数，并作为查询参数
-    this.getArticleInfo(this.$route.query.slug)
+    let slug = this.$route.query.slug
+    this.getArticleInfo(slug)
   }
 }
 </script>

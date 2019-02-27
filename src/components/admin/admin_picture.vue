@@ -23,26 +23,19 @@
           </el-col>
         </div>
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="authorName" label="操作人名"></el-table-column>
-          <el-table-column prop="facePath" label="头像" width="160">
+          <el-table-column prop="uploader" label="上传者"></el-table-column>
+          <el-table-column prop="picName" label="图片真实名称"></el-table-column>
+          <el-table-column prop="uuid" label="图片uuid"></el-table-column>
+          <el-table-column prop="uploadTime" label="图片上传时间"></el-table-column>
+          <el-table-column prop="" label="图片大小">
+            <template slot-scope="scope">{{scope.row.size+'kb'}}</template>
+          </el-table-column>
+          <el-table-column prop="path" label="图片路径"></el-table-column>
+          <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <img v-if="scope.row.facePath" :src="scope.row.facePath" class="img-circle"/>
-              <img v-else :src="defaultFace" class="img-circle"/>
+              <el-button size="mini" type="success">查看详情</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="ip" label="IP地址"></el-table-column>
-          <el-table-column prop="createTime" label="操作时间"></el-table-column>
-          <el-table-column prop="actionType" label="操作动作"></el-table-column>
-          <el-table-column prop="actionObject" label="操作对象"></el-table-column>
-          <el-table-column prop="actionResult" label="操作结果">
-            <template slot-scope="scope">
-              <el-tag :type="scope.row.actionResult === '成功' ? 'success' : 'danger'"
-                      disable-transitions>{{scope.row.actionResult}}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="actionInfo" label="操作内容"></el-table-column>
-          <el-table-column prop="details" label="操作内容详情"></el-table-column>
         </el-table>
         <div class="block" style="margin-top: 20px">
           <el-pagination
@@ -67,18 +60,17 @@ export default {
     // 获取当前时间
     const time = new Date().toTimeString().split(' ')[0]
     return {
-      defaultFace: require('../../assets/face/default.jpg'),
       tableData: [{
         id: 1,
-        authorName: '王小虎',
-        facePath: 'sssss',
-        ip: '上海市普陀区金沙江路 1518 弄',
-        createTime: '2016-05-04 00:00:00',
-        actionType: '删除',
-        actionObject: '博客',
-        actionResult: '成功',
-        actionInfo: '操作内容',
-        details: '无'
+        picName: '王小虎',
+        uuid: 'sssss',
+        path: '/test',
+        uploader: 'wcf',
+        uploadTime: '2016-05-04 00:00:00',
+        picType: 1,
+        typeName: '图片类型名称',
+        size: 50,
+        belongTo: 1
       }],
       currentPage: 1,
       total: 0,

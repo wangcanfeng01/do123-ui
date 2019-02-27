@@ -51,6 +51,7 @@
             <el-menu-item index="/admin/opsLog">操作记录</el-menu-item>
             <el-menu-item index="/admin/comment">评论记录</el-menu-item>
             <el-menu-item index="/admin/sysLog">系统日志</el-menu-item>
+            <el-menu-item index="/admin/picture">图片记录</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="4">

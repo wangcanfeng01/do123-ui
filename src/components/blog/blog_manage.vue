@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column label="操作" width="250">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="modifyArticle">编辑</el-button>
+              <el-button size="mini" type="primary" @click="modifyArticle(scope.row.slug)">编辑</el-button>
               <el-button size="mini" type="danger" @click="deleteArticle(scope.row.id)">删除</el-button>
               <el-button size="mini" type="success" @click="readArticle(scope.row.slug)">查看</el-button>
             </template>
@@ -144,8 +144,11 @@ export default {
       let data = this.$router.resolve({path: '/blog/article', query: {'slug': slug}})
       window.open(data.href, '_blank')
     },
-    modifyArticle (id) {
+    modifyArticle (slug) {
       // 进入到编辑界面
+      this.$router.push({
+        path: '/blog/writer', query: {slug: slug}
+      })
     },
     getHeight () {
       this.$nextTick(() => {
