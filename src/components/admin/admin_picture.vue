@@ -166,6 +166,30 @@ export default {
         this.$message.error('请选择起始时间和结束时间')
       }
     },
+    showDetail (detail) {
+      // 查询图片归属对象
+      this.$http.get('/ui/log/picture/belongTo?type=' + detail.type + '&id=' + detail.id).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.detailForm.belongTo = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('查询图片归属异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+      this.detailForm.path = detail.path
+      this.detailForm.picName = detail.picName
+      this.detailForm.uploadTime = detail.uploadTime
+      this.detailForm.typeName = detail.typeName
+      this.detailForm.size = detail.size + 'kb'
+      this.detailForm.uploader = detail.uploader
+      this.detailForm.belongTo = detail.belongTo
+      this.detailFormVisible = true
+    },
     selectLogList (currentPage, pageSize) {
       this.$http.get('/ui/ops/pictureList?currentPage=' + currentPage + '&pageSize=' + pageSize).then(response => {
         if (response && response.data) {
