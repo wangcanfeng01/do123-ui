@@ -1,7 +1,7 @@
 <template>
   <div id="blog">
     <!--// 插入左侧导航-->
-    <blog-left :left-height="leftHeight"></blog-left>
+    <blog-left :left-height="leftHeight" :leftMenus="leftMenus"></blog-left>
     <!--//载入右侧数据-->
     <router-view v-on:listenHeight="changeHeight"></router-view>
   </div>
@@ -17,6 +17,13 @@ export default {
   },
   data () {
     return {
+      leftMenus: {
+        blogPersonal: '个人中心',
+        blogWrite: '写新文章',
+        blogList: '文章列表',
+        blogManage: '文章管理',
+        blogKeyword: '标签/关键字'
+      },
       leftHeight: {
         minHeight: '900px',
         height: ''
