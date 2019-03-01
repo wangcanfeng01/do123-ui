@@ -18,7 +18,7 @@
             </el-button>
           </el-col>
         </el-row>
-        <el-menu-item index="/blog/center">
+        <el-menu-item index="/blog/center" v-show="leftMenus.blogPersonal">
           <font-awesome-icon icon="desktop"/>
           <span slot="title">个人中心</span>
         </el-menu-item>
@@ -46,7 +46,7 @@
 <script>
 export default {
   name: 'blog_left',
-  props: ['leftHeight'],
+  props: ['leftHeight', 'leftMenus'],
   data () {
     return {
       isCollapse: false,
