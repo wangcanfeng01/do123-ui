@@ -18,11 +18,11 @@ export default {
   data () {
     return {
       leftMenus: {
-        blogPersonal: '个人中心',
-        blogWrite: '写新文章',
-        blogList: '文章列表',
-        blogManage: '文章管理',
-        blogKeyword: '标签/关键字'
+        'blog_personal': '个人中心',
+        'blog_write': '写新文章',
+        'blog_list': '文章列表',
+        'blog_manage': '文章管理',
+        'blog_keyword ': '标签/关键字'
       },
       leftHeight: {
         minHeight: '900px',
@@ -31,10 +31,29 @@ export default {
     }
   },
   methods: {
+    // 获取左侧导航有权限的菜单
+    getBlogAuthMenu () {
+      this.$http.get('/ui/menu/authMenu').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.leftMenus = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('权限菜单查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     // 监听右侧数据的真实高度，从而改变左侧导航栏的高度
     changeHeight (height) {
       this.leftHeight.height = height + 'px'
     }
+  },
+  mounted () {
+    this.getBlogAuthMenu()
   }
 }
 </script>

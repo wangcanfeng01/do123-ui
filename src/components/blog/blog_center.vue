@@ -47,8 +47,9 @@
         </el-row>
         <div style="border-bottom: solid 1px;color: #868686;margin-bottom: 20px;margin-top: 40px;"></div>
         <h2 class="category-header">热门专栏</h2>
-        <el-row v-for="category in categories" :key="category.id" style="margin-bottom: 30px">
-          <el-card :body-style="{ padding: '0px' }" style="border-radius: 14px">
+        <el-row style="margin-bottom: 30px">
+          <el-card v-for="category in categories" :key="category.id" :body-style="{ padding: '0px' }"
+                   style="border-radius: 14px">
             <a class="image featured little" :href="'/blog/list?category='+category.name">
               <img v-if="category.cover" :src="category.cover" class="image">
               <img v-else src="../../assets/article/cover/category/default.jpg" class="image">
@@ -63,8 +64,9 @@
         </el-row>
         <div style="border-bottom: solid 1px;color: #868686;margin-bottom: 20px;margin-top: 40px;"></div>
         <h2 class="comment-header">最近评论</h2>
-        <el-row v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px">
-          <el-card :body-style="{ padding: '0px' }" style="border-radius: 14px">
+        <el-row style="margin-bottom: 30px">
+          <el-card v-for="comment in comments" :key="comment.id" :body-style="{ padding: '0px' }"
+                   style="border-radius: 14px">
             <el-row>
               <el-col :span="4" style="margin-top: 15px;margin-left: 15px">
                 <img v-if="comment.authorFace" :src="comment.authorFace" class="img-face">
@@ -72,7 +74,7 @@
                      class="img-face">
               </el-col>
               <el-col :span="16" style="margin-top: 15px">
-                <span class="comment-title" >{{comment.authorName+' 评论：'}}<i>{{comment.articleTitle}}</i></span>
+                <span class="comment-title">{{comment.authorName+' 评论：'}}<i>{{comment.articleTitle}}</i></span>
               </el-col>
             </el-row>
             <p class="comment-content">{{comment.text}}</p>

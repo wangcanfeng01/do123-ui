@@ -66,7 +66,7 @@ export default {
           'blog': '博客',
           'video': '视频',
           'about': '关于本站',
-          'admin': '管理中心'
+          'admin': ''
         }
       },
       // 默认显示的菜单项
@@ -75,7 +75,7 @@ export default {
         blog: '博客',
         video: '视频',
         about: '关于本站',
-        admin: '管理中心'
+        admin: ''
       }
     }
   },

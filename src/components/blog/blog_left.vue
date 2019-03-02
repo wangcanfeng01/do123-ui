@@ -18,23 +18,23 @@
             </el-button>
           </el-col>
         </el-row>
-        <el-menu-item index="/blog/center" v-show="leftMenus.blogPersonal">
+        <el-menu-item index="/blog/center" v-show="leftMenus.blog_personal">
           <font-awesome-icon icon="desktop"/>
           <span slot="title">个人中心</span>
         </el-menu-item>
-        <el-menu-item index="/blog/writer">
+        <el-menu-item index="/blog/writer" v-show="leftMenus.blog_write">
           <font-awesome-icon icon="user-edit"/>
           <span slot="title">写新文章</span>
         </el-menu-item>
-        <el-menu-item index="/blog/list">
+        <el-menu-item index="/blog/list" v-show="leftMenus.blog_list">
           <font-awesome-icon icon="list-alt"/>
           <span slot="title">文章列表</span>
         </el-menu-item>
-        <el-menu-item index="/blog/manage">
+        <el-menu-item index="/blog/manage" v-show="leftMenus.blog_manage">
           <font-awesome-icon icon="toolbox"/>
           <span slot="title">文章管理</span>
         </el-menu-item>
-        <el-menu-item index="/blog/keyword">
+        <el-menu-item index="/blog/keyword" v-show="leftMenus.blog_keyword">
           <font-awesome-icon icon="tags"/>
           <span slot="title">标签/关键字</span>
         </el-menu-item>

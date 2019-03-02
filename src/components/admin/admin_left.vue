@@ -60,9 +60,9 @@
             <span slot="title">用户中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/admin/menu">菜单管理</el-menu-item>
-            <el-menu-item index="/admin/role">角色管理</el-menu-item>
-            <el-menu-item index="/admin/user">用户管理</el-menu-item>
+            <el-menu-item index="/admin/menu" v-show="leftMenus.admin_menu">菜单管理</el-menu-item>
+            <el-menu-item index="/admin/role" v-show="leftMenus.admin_role">角色管理</el-menu-item>
+            <el-menu-item index="/admin/user" v-show="leftMenus.admin_user">用户管理</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="5">
@@ -83,7 +83,7 @@
 
 <script>
 export default {
-  props: ['leftHeight'],
+  props: ['leftHeight', 'leftMenus'],
   data () {
     return {
       defaultFace: require('../../assets/face/default.jpg'),
