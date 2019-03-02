@@ -74,7 +74,7 @@ export default {
         home: '首页',
         blog: '博客',
         video: '视频',
-        about: '关于本站',
+        about: '',
         admin: ''
       }
     }
