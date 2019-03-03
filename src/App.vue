@@ -13,11 +13,11 @@
           <img src="./assets/home.jpg" style="border-radius: 50%;margin-top: 0.8em">
         </router-link>
       </el-col>
-      <el-menu-item index="/home" v-show="menuVisible.home">主页</el-menu-item>
-      <el-menu-item index="/blog/center" v-show="menuVisible.blog">博客</el-menu-item>
-      <el-menu-item index="/video" v-show="menuVisible.video">视频</el-menu-item>
-      <el-menu-item index="/about" v-show="menuVisible.about">关于本站</el-menu-item>
-      <el-menu-item index="/admin/center" v-show="menuVisible.admin">管理中心</el-menu-item>
+      <el-menu-item index="/home" v-show="loginUser.menuMap.home">主页</el-menu-item>
+      <el-menu-item index="/blog/center" v-show="loginUser.menuMap.blog">博客</el-menu-item>
+      <el-menu-item index="/video" v-show="loginUser.menuMap.video">视频</el-menu-item>
+      <el-menu-item index="/about" v-show="loginUser.menuMap.about">关于本站</el-menu-item>
+      <el-menu-item index="/admin/center" v-show="loginUser.menuMap.admin">管理中心</el-menu-item>
       <el-col :span="3" :offset="5">
         <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
       </el-col>
@@ -68,14 +68,6 @@ export default {
           'about': '关于本站',
           'admin': ''
         }
-      },
-      // 默认显示的菜单项
-      menuVisible: {
-        home: '首页',
-        blog: '博客',
-        video: '视频',
-        about: '',
-        admin: ''
       }
     }
   },
@@ -152,12 +144,6 @@ export default {
             this.loginUser.facePath = '/upload/image/face/default.jpg'
           }
           localStorage.setItem('user', this.loginUser.username)
-          // 设置菜单的显隐
-          this.menuVisible.home = this.loginUser.menuMap.home
-          this.menuVisible.blog = this.loginUser.menuMap.blog
-          this.menuVisible.video = this.loginUser.menuMap.video
-          this.menuVisible.about = this.loginUser.menuMap.about
-          this.menuVisible.admin = this.loginUser.menuMap.admin
         } else {
           localStorage.removeItem('user')
         }

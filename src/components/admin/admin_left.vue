@@ -28,7 +28,7 @@
             <span style="display:block;">WCF</span>
           </el-col>
         </el-row>
-        <el-menu-item index="/admin/center">
+        <el-menu-item index="/admin/center" v-show="leftMenus.admin_center">
           <font-awesome-icon icon="desktop"/>
           <span slot="title">监控中心</span>
         </el-menu-item>
@@ -38,8 +38,8 @@
             <span slot="title">数据中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/admin/video">视频监控</el-menu-item>
-            <el-menu-item index="/admin/blog">博客监控</el-menu-item>
+            <el-menu-item index="/admin/video" v-show="leftMenus.admin_video">视频数据中心</el-menu-item>
+            <el-menu-item index="/admin/blog" v-show="leftMenus.admin_blog">博客数据中心</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="3">
@@ -48,10 +48,10 @@
             <span slot="title">日志中心</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/admin/opsLog">操作记录</el-menu-item>
-            <el-menu-item index="/admin/comment">评论记录</el-menu-item>
-            <el-menu-item index="/admin/sysLog">系统日志</el-menu-item>
-            <el-menu-item index="/admin/picture">图片记录</el-menu-item>
+            <el-menu-item index="/admin/opsLog" v-show="leftMenus.admin_ops_log">操作记录</el-menu-item>
+            <el-menu-item index="/admin/comment" v-show="leftMenus.admin_comment">评论记录</el-menu-item>
+            <el-menu-item index="/admin/sysLog" v-show="leftMenus.admin_sysLog">系统日志</el-menu-item>
+            <el-menu-item index="/admin/picture" v-show="leftMenus.admin_picture">图片记录</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="4">
@@ -71,9 +71,9 @@
             <span slot="title">安全管理</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/admin/visitor">访客记录</el-menu-item>
-            <el-menu-item index="/admin/dbInfo">数据库连接状态</el-menu-item>
-            <el-menu-item index="/admin/tasks">后台任务数</el-menu-item>
+            <el-menu-item index="/admin/visitor" v-show="leftMenus.admin_visitor">访客记录</el-menu-item>
+            <el-menu-item index="/admin/dbInfo" v-show="leftMenus.admin_dbInfo">数据库连接状态</el-menu-item>
+            <el-menu-item index="/admin/tasks" v-show="leftMenus.admin_tasks">后台任务数</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>

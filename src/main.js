@@ -29,7 +29,7 @@ new Vue({
 // router.beforeEach((to, from, next) => {
 //   if (to.path === '/login' || to.meta.noAuth) {
 //     next()
-//   } else if (localStorage.getItem('user')) {
+//   } else if (localStorage.getItem('user') && localStorage.getItem('user') !== undefined) {
 //     next()
 //   } else {
 //     next({

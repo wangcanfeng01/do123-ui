@@ -17,13 +17,7 @@ export default {
   },
   data () {
     return {
-      leftMenus: {
-        'blog_personal': '个人中心',
-        'blog_write': '写新文章',
-        'blog_list': '文章列表',
-        'blog_manage': '文章管理',
-        'blog_keyword ': '标签/关键字'
-      },
+      leftMenus: {},
       leftHeight: {
         minHeight: '900px',
         height: ''

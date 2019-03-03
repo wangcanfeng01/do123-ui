@@ -32,22 +32,29 @@
                 </el-aside>
                 <el-aside width="80%" class="tab_main">
                   <div style="margin-left: 20px;margin-top: 20px">
-                    <el-steps direction="vertical" :active="1" space="300px">
-                      <el-step title="步骤 1"></el-step>
-                      <el-step title="步骤 2"></el-step>
-                      <el-step title="步骤 3" description="这是一段很长很长很长的描述性文字"></el-step>
-                      <el-step title="步骤 4"></el-step>
-                      <el-step title="步骤 5"></el-step>
-                      <el-step title="步骤 6"></el-step>
-                    </el-steps>
+                    <div style="text-align: right;margin-right: 40px">
+                      <el-button icon="el-icon-plus" circle title="增加版本信息" type="success"
+                                 @click="addVersionInfo"></el-button>
+                      <el-button icon="el-icon-sort" circle :title="versionOrder" @click="changeOrder"></el-button>
+                    </div>
+                    <el-col :offset="1" :span="18">
+                      <el-card v-for="version in versionList" :key="version.id"
+                               style="border-radius: 12px;margin-bottom: 20px">
+                        <h4>{{'版本'+version.version}}</h4>
+                        <pre class="version-info">{{version.description}}</pre>
+                        <div style="text-align: right;margin-right: 40px">
+                          <span class="version-time">{{ '发布时间：'+version.publishTime }}</span>
+                          <el-button type="primary" icon="el-icon-edit" circle style="margin-left: 40px"></el-button>
+                          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+                        </div>
+                      </el-card>
+                    </el-col>
                   </div>
                 </el-aside>
               </el-container>
             </el-tab-pane>
             <el-tab-pane label="。。。">
-              <el-container>
-                待加入
-              </el-container>
+              <el-container>待加入</el-container>
             </el-tab-pane>
           </el-tabs>
         </el-main>
@@ -81,12 +88,49 @@ export default {
           {name: 'scala', type: 'waring'},
           {name: 'vue', type: 'danger'}
         ]
+      },
+      versionOrder: '正序',
+      versionList: [{
+        id: 1,
+        version: '1.0.0',
+        publishTime: '2019-01-01 12:12:12',
+        description: '（1）修改版本信息展示模块\n' +
+          '（2）增加版本信息描述表\n' +
+          '（3）删除文章漏洞修补\n' +
+          '（4）开放博客的后台监控中心\n' +
+          '（5）增加博客中的文字统计，点击数统计，评论统计，分类信息， 以及展示日志信息和各类文章排行信息',
+        author: 'ssss',
+        modifyTime: '2019-01-01 12:12:12'
+      }],
+      addFormVisible: false,
+      modifyFormVisible: false,
+      versionForm: {
+        id: 1,
+        version: '',
+        description: ''
       }
     }
   },
   methods: {
-    handleClick (tab, event) {
-      console.log(tab, event)
+    // 改变版本信息的排序方式
+    changeOrder () {
+      if (this.versionOrder === '正序') {
+        this.versionOrder = '倒序'
+        this.selectVersionList(-1)
+      } else {
+        this.versionOrder = '正序'
+        this.selectVersionList(1)
+      }
+    },
+    openAddForm (version) {
+      this.versionForm.id = null
+      this.versionForm.version = ''
+      this.versionForm.description = ''
+      this.addFormVisible = true
+    },
+    addVersionInfo () {
+    },
+    selectVersionList (order) {
     }
   },
   mounted () {
@@ -135,6 +179,21 @@ export default {
     background-color: #E9EEF3;
     color: #333;
     min-height: 700px;
+  }
+
+  .version-info {
+    background-color: hsla(0, 0%, 71%, .1);
+    border-radius: 10px;
+    padding: 15px;
+    font-family: "Arial";
+  }
+
+  .version-time {
+    color: #5e5d60;
+    font-family: "Arial";
+    font-size: 13px;
+    margin-right: 4px;
+    padding-right: 12px;
   }
 
   .about_footer {

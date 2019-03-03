@@ -236,8 +236,9 @@ export default {
         console.log(error)
       })
     },
+    // 查询需要配置权限的菜单
     simpleMenuList () {
-      this.$http.get('/ui/menu/menuList/simple').then(response => {
+      this.$http.get('/ui/menu/menuList/auth').then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.menuList = response.data.data
