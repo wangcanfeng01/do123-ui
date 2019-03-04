@@ -15,7 +15,7 @@
                     <div slot="header" class="clearfix" style="text-align: center">
                       <span>基本信息</span>
                     </div>
-                    <div><span>姓名：{{personInfo.username}}</span></div>
+                    <div><span>姓名：{{personInfo.personName}}</span></div>
                     <div><span>邮箱：{{personInfo.email}}</span></div>
                     <div><span>工作区域：{{personInfo.workArea}}</span></div>
                     <div><span>联系方式：{{personInfo.telephone}}</span></div>
@@ -34,21 +34,55 @@
                   <div style="margin-left: 20px;margin-top: 20px">
                     <div style="text-align: right;margin-right: 40px">
                       <el-button icon="el-icon-plus" circle title="增加版本信息" type="success"
-                                 @click="addVersionInfo"></el-button>
+                                 @click="openAddForm"></el-button>
                       <el-button icon="el-icon-sort" circle :title="versionOrder" @click="changeOrder"></el-button>
                     </div>
-                    <el-col :offset="1" :span="18">
+                    <!--增加版本信息弹出框-->
+                    <el-dialog title="添加版本信息" :visible.sync="addFormVisible" width="500px">
+                      <el-form :model="versionForm">
+                        <el-form-item label="专题名称" label-width="80px">
+                          <el-input v-model="versionForm.version" autocomplete="off" placeholder="请输入版本号"></el-input>
+                        </el-form-item>
+                        <el-form-item label="版本内容" label-width="80px">
+                          <el-input v-model="versionForm.description" autocomplete="off" placeholder="写点什么..."
+                                    type="textarea" :rows="5"></el-input>
+                        </el-form-item>
+                      </el-form>
+                      <div slot="footer" class="dialog-footer">
+                        <el-button @click="addFormVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="addVersionInfo">确 定</el-button>
+                      </div>
+                    </el-dialog>
+                    <el-col :offset="1" :span="20">
                       <el-card v-for="version in versionList" :key="version.id"
                                style="border-radius: 12px;margin-bottom: 20px">
                         <h4>{{'版本'+version.version}}</h4>
                         <pre class="version-info">{{version.description}}</pre>
                         <div style="text-align: right;margin-right: 40px">
                           <span class="version-time">{{ '发布时间：'+version.publishTime }}</span>
-                          <el-button type="primary" icon="el-icon-edit" circle style="margin-left: 40px"></el-button>
-                          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+                          <el-button type="primary" icon="el-icon-edit" circle style="margin-left: 40px"
+                                     title="修改版本信息" @click="openModifyForm(version)"></el-button>
+                          <el-button type="danger" icon="el-icon-delete" circle title="删除版本信息"
+                                     @click="deleteVersionInfo(version.id)"></el-button>
                         </div>
                       </el-card>
                     </el-col>
+                    <!--修改版本信息弹出框-->
+                    <el-dialog title="编辑版本信息" :visible.sync="modifyFormVisible" width="500px">
+                      <el-form :model="versionForm">
+                        <el-form-item label="专题名称" label-width="80px">
+                          <el-input v-model="versionForm.version" autocomplete="off" placeholder="请输入版本号"></el-input>
+                        </el-form-item>
+                        <el-form-item label="版本内容" label-width="80px">
+                          <el-input v-model="versionForm.description" autocomplete="off" placeholder="写点什么..."
+                                    type="textarea" :rows="5"></el-input>
+                        </el-form-item>
+                      </el-form>
+                      <div slot="footer" class="dialog-footer">
+                        <el-button @click="modifyFormVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="modifyVersionInfo">确 定</el-button>
+                      </div>
+                    </el-dialog>
                   </div>
                 </el-aside>
               </el-container>
@@ -69,10 +103,10 @@ export default {
   name: 'about',
   data () {
     return {
-      activeIndex: 'first',
       tabPosition: 'left',
       personInfo: {
-        username: '王灿锋',
+        personName: '王灿锋',
+        username: 'wcf',
         email: '373811598@qq.com',
         workArea: '杭州',
         telephone: '18768147151',
@@ -90,6 +124,7 @@ export default {
         ]
       },
       versionOrder: '正序',
+      orderType: -1,
       versionList: [{
         id: 1,
         version: '1.0.0',
@@ -116,25 +151,102 @@ export default {
     changeOrder () {
       if (this.versionOrder === '正序') {
         this.versionOrder = '倒序'
-        this.selectVersionList(-1)
+        this.orderType = -1
+        this.selectVersionList(this.orderType)
       } else {
+        this.orderType = 1
         this.versionOrder = '正序'
-        this.selectVersionList(1)
+        this.selectVersionList(this.orderType)
       }
     },
-    openAddForm (version) {
+    openAddForm () {
       this.versionForm.id = null
       this.versionForm.version = ''
       this.versionForm.description = ''
       this.addFormVisible = true
     },
+    openModifyForm (version) {
+      this.versionForm.id = version.id
+      this.versionForm.version = version.version
+      this.versionForm.description = version.description
+      this.modifyFormVisible = true
+    },
     addVersionInfo () {
+      this.$http.post('/ui/about/add/version', this.versionForm).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.$message.success('添加版本信息成功')
+            this.selectVersionList(this.orderType)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('版本信息插入异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+      this.addFormVisible = false
+    },
+    modifyVersionInfo () {
+      this.$http.put('/ui/about/modify/version', this.versionForm).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.$message.success('版本信息修改成功')
+            this.selectVersionList(this.orderType)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('版本信息修改异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+      this.modifyFormVisible = false
     },
     selectVersionList (order) {
+      this.$http.get('/ui/about/versionList?order=' + order + '&author=' + this.personInfo.username).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.versionList = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('版本信息查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    deleteVersionInfo (id) {
+      this.$confirm('确认删除该版本信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'danger'
+      }).then(() => {
+        this.$http.delete('/ui/about/version/delete/' + id).then(response => {
+          if (response && response.data) {
+            if (response.data.code === '0') {
+              this.selectVersionList(this.orderType)
+            } else {
+              this.$message.error(response.data.msg)
+            }
+          } else {
+            this.$message.error('删除版本信息异常')
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
     }
   },
   mounted () {
     document.querySelector('body').setAttribute('style', 'background:url(' + require('../../assets/bg/loginbg.png') + ');background-size: cover;')
+    this.selectVersionList(-1)
   },
   beforeDestroy () {
     document.querySelector('body').removeAttribute('style')

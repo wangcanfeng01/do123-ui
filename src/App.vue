@@ -135,6 +135,7 @@ export default {
   },
   mounted () {
     this.activeIndex = this.$route.path
+    localStorage.removeItem('user')
     this.$http.get('/ui/user/get/login').then(response => {
       if (response && response.data && response.data.code === '0') {
         if (response.data.data) {
@@ -147,6 +148,8 @@ export default {
         } else {
           localStorage.removeItem('user')
         }
+      } else {
+        localStorage.removeItem('user')
       }
     }).catch(error => {
       localStorage.removeItem('user')
