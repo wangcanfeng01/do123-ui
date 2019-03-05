@@ -28,7 +28,8 @@
       </el-row>
       <el-row style="margin-top: 20px">
         <el-col :span="18">
-          <mavon-editor ref="mdTestArea" @imgAdd="uploadPic" @imgDel="deletePic" :subfield="subfield"
+          <mavon-editor ref="mdTestArea" @imgAdd="uploadPic" @imgDel="deletePic" @save="saveArticle"
+                        :subfield="subfield"
                         :code_style="code_style"
                         :ishljs="true" :externalLink="externalLink" v-model="article.text">
           </mavon-editor>
@@ -143,6 +144,9 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    saveArticle () {
+      this.publishArticle('save')
     },
     publishArticle (type) {
       this.$http.put('/ui/blog/article/modify/' + type, this.article).then(response => {
