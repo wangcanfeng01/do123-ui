@@ -24,8 +24,10 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-row>
-        <div v-html="article.text"></div>
+      <el-row class="text-info">
+        <el-col :span="22" :offset="1">
+          <div v-html="article.text"></div>
+        </el-col>
       </el-row>
       <el-row>
         <p class="reshipment">本站文章均为原创或翻译，转载必须标明出处</p>
@@ -282,6 +284,11 @@ export default {
     border-radius: 30px !important;
     height: 60px;
     width: 200px;
+  }
+
+  .text-info {
+    white-space: normal;
+    font-size: 1em;
   }
 
   .comment-area {
