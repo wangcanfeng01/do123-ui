@@ -13,37 +13,14 @@
               <el-button type="primary" style="margin-left: 15px">查询</el-button>
             </el-col>
           </div>
-          <el-table
-            :data="tableData"
-            style="width: 100%">
-            <el-table-column
-              prop="username"
-              label="访客名称">
-            </el-table-column>
-            <el-table-column
-              prop="face"
-              label="访客头像">
-            </el-table-column>
-            <el-table-column
-              prop="role"
-              label="访客角色">
-            </el-table-column>
-            <el-table-column
-              prop="level"
-              label="访客等级">
-            </el-table-column>
-            <el-table-column
-              prop="visitTime"
-              label="访问时间">
-            </el-table-column>
-            <el-table-column
-              prop="address"
-              label="访客IP">
-            </el-table-column>
-            <el-table-column
-              prop="area"
-              label="访客地域">
-            </el-table-column>
+          <el-table :data="tableData" style="width: 100%">
+            <el-table-column prop="username" label="访客名称"></el-table-column>
+            <el-table-column prop="face" label="访客头像"></el-table-column>
+            <el-table-column prop="role" label="访客角色"></el-table-column>
+            <el-table-column prop="level" label="访客等级"></el-table-column>
+            <el-table-column prop="visitTime" label="访问时间"></el-table-column>
+            <el-table-column prop="address" label="访客IP"></el-table-column>
+            <el-table-column prop="area" label="访客地域"></el-table-column>
           </el-table>
           <div class="block" style="margin-top: 20px">
             <el-pagination
