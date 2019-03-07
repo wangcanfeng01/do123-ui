@@ -7,19 +7,16 @@
             <span style="line-height: 40px">操作日志列表</span>
           </el-col>
           <el-col :span="8" :offset="5">
-            <el-date-picker
-              v-model="timeRange"
-              type="datetimerange"
-              :picker-options="pickerOptions"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :default-time="defaultTime"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              align="right">
+            <el-date-picker v-model="timeRange" type="datetimerange"
+                            :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期"
+                            :default-time="defaultTime" value-format="yyyy-MM-dd HH:mm:ss" align="right">
             </el-date-picker>
           </el-col>
           <el-col :span="3" :offset="1">
             <el-button type="primary" style="margin-left: 15px" @click="selectLogByTime">查询</el-button>
+            <el-button type="warning" style="margin-left: 15px"
+                       @click="selectLogList(currentPage,pageSize)">重置
+            </el-button>
           </el-col>
         </div>
         <el-table :data="tableData" style="width: 100%">

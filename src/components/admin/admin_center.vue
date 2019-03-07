@@ -94,7 +94,7 @@
               <small>cpu使用量</small>
             </h3>
           </div>
-          <el-col :span="12" :offset="2">
+          <el-col :span="12" :offset="1">
             <cpu-status></cpu-status>
           </el-col>
           <el-col :span="6">
@@ -102,10 +102,10 @@
             <span>CPU</span>
             <el-progress :text-inside="true" :stroke-width=25 :percentage="40"
                          style="margin-bottom: 10px;"></el-progress>
-            <span>内存使用量</span>
+            <span>内存使用量(2G/4G)</span>
             <el-progress :text-inside="true" :stroke-width="25" :percentage="70"
                          style="margin-bottom: 10px;"></el-progress>
-            <span>硬盘使用量</span>
+            <span>硬盘使用量(20G/40G)</span>
             <el-progress :text-inside="true" :stroke-width="25" :percentage="80"
                          style="margin-bottom: 10px;"></el-progress>
           </el-col>
@@ -116,19 +116,29 @@
           <div slot="header" class="clearfix">
             <h3>访客信息</h3>
           </div>
-          <el-table :data="tableData">
-            <el-table-column prop="username" label="用户名">
+          <el-table :data="visitorData">
+            <el-table-column prop="username" label="访客名称"></el-table-column>
+            <el-table-column prop="facePath" label="访客头像">
+              <template slot-scope="scope">
+                <img v-if="scope.row.facePath" :src="scope.row.facePath" class="img-circle"/>
+                <img v-else :src="defaultFace" class="img-circle"/>
+              </template>
             </el-table-column>
-            <el-table-column prop="role" label="角色">
+            <el-table-column label="访客等级" width="160">
+              <template slot-scope="scope">
+                <el-popover placement="right" width="230" trigger="hover">
+                  <el-table :data="scope.row.roleInfos">
+                    <el-table-column width="100" property="roleName" label="角色名称"></el-table-column>
+                    <el-table-column width="120" property="roleType" label="角色类型"></el-table-column>
+                  </el-table>
+                  <el-tag slot="reference">VIP-{{scope.row.userLevel}}</el-tag>
+                </el-popover>
+              </template>
             </el-table-column>
-            <el-table-column prop="address" label="用户ip">
-            </el-table-column>
-            <el-table-column prop="actionTimes" label="最近一月操作次数">
-            </el-table-column>
-            <el-table-column prop="actionTime" label="最后操作时间">
-            </el-table-column>
-            <el-table-column prop="areaInfo" label="地域信息">
-            </el-table-column>
+            <el-table-column prop="loginTime" label="登录时间"></el-table-column>
+            <el-table-column prop="logoutTime" label="登出时间"></el-table-column>
+            <el-table-column prop="remoteIp" label="访客IP"></el-table-column>
+            <el-table-column prop="remoteArea" label="访客地域"></el-table-column>
           </el-table>
         </el-card>
       </el-row>
@@ -146,15 +156,48 @@ export default {
   },
   data () {
     return {
-      tableData: [{
-        username: 'wcf',
-        role: 'admin',
-        address: '127.0.0.1',
-        actionTimes: '11',
-        actionTime: '2018-10-10 00:00:00',
-        areaInfo: '绍兴'
+      defaultFace: require('../../assets/face/default.jpg'),
+      visitorData: [{
+        id: 1,
+        username: '王小虎',
+        facePath: '',
+        roleInfos: [{
+          id: 1,
+          roleName: '王小虎',
+          roleType: 'admin'
+        }, {
+          id: 2,
+          roleName: '王大虎',
+          roleType: 'guest'
+        }],
+        userLevel: '1',
+        loginTime: '2016-05-04 00:00:00',
+        logoutTime: '2016-05-04 00:00:00',
+        remoteIp: '127.0.0.1',
+        remoteArea: '绍兴'
       }]
     }
+  },
+  methods: {
+    selectVisitorList (currentPage, pageSize) {
+      this.$http.get('/ui/visitor/select?currentPage=' + currentPage + '&pageSize=' + pageSize).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.visitorData = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('查询访客信息异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  mounted () {
+    // 查询最近5条访客信息
+    this.selectVisitorList(1, 5)
   }
 }
 </script>
@@ -167,5 +210,11 @@ export default {
 
   .tile_count {
     margin-left: 20px;
+  }
+
+  .img-circle {
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
   }
 </style>

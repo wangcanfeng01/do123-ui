@@ -17,7 +17,7 @@
             <template slot-scope="scope">
               <el-upload
                 class="upload-article-cover"
-                :action="'/ui/blog/article/addCover/'+scope.row.id"
+                :action="'/ui/blog/article/addCover?id='+scope.row.id+'&path='+scope.row.cover"
                 :on-success="getFileSuccessUrl"
                 list-type="picture-card"
                 :show-file-list="false">

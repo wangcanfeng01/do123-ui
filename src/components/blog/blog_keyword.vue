@@ -52,7 +52,7 @@
                 </el-form-item>
                 <el-form-item label="专题封面" label-width="80px">
                   <el-upload
-                    :action="'/ui/blog/meta/uploadCover/'+categoryForm.id"
+                    :action="'/ui/blog/meta/uploadCover?id='+categoryForm.id+'&path='+categoryForm.cover"
                     class="upload-category-cover"
                     list-type="picture-card"
                     :on-success="getFileSuccessUrl"
@@ -353,6 +353,7 @@ export default {
     height: 100px;
     width: 100px;
   }
+
   .img-button {
     width: 4em;
     height: 2em;

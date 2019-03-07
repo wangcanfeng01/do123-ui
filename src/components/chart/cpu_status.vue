@@ -20,14 +20,14 @@ export default {
     return {
       polar: {
         title: {
-          text: '某楼盘销售情况',
-          subtext: '纯属虚构'
+          text: '服务器运行状况',
+          subtext: 'cpu-硬盘-内存'
         },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['意向', '预购', '成交']
+          data: ['cpu', '内存', '硬盘']
         },
         calculable: true,
         xAxis: [
@@ -44,21 +44,21 @@ export default {
         ],
         series: [
           {
-            name: '成交',
+            name: 'cpu',
             type: 'line',
             smooth: true,
             itemStyle: {normal: {areaStyle: {type: 'default'}}},
             data: [10, 12, 21, 54, 260, 830, 710]
           },
           {
-            name: '预购',
+            name: '内存',
             type: 'line',
             smooth: true,
             itemStyle: {normal: {areaStyle: {type: 'default'}}},
             data: [30, 182, 434, 791, 390, 30, 10]
           },
           {
-            name: '意向',
+            name: '硬盘',
             type: 'line',
             smooth: true,
             itemStyle: {normal: {areaStyle: {type: 'default'}}},
