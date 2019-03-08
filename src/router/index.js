@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from '@/components/home/login'
 import home from '@/components/home/home'
 import register from '@/components/home/register'
+import personInfo from '@/components/home/person_info'
 import video from '@/components/video/video'
 import blog from '@/components/blog/blog'
 import about from '@/components/about/about'
@@ -62,6 +63,11 @@ export default new Router({
         noAuth: true
       },
       component: register
+    },
+    {
+      path: '/personInfo',
+      name: 'personInfo',
+      component: personInfo
     },
     {
       path: '/video',

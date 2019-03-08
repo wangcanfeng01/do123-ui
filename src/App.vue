@@ -41,7 +41,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="personInfo">个人信息</el-dropdown-item>
+            <el-dropdown-item command="personInfo" v-show="loginUser.username!=='游客'">个人信息</el-dropdown-item>
             <el-dropdown-item command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -124,8 +124,16 @@ export default {
       }
     },
     logoutCommand (command) {
-      if (command && command === 'logout') {
-        this.logout()
+      switch (command) {
+        case 'logout': {
+          this.logout()
+          break
+        }
+        case 'personInfo': {
+          let data = this.$router.resolve({path: '/personInfo', query: {'username': this.loginUser.username}})
+          window.open(data.href, '_blank')
+          break
+        }
       }
     },
     changeStatus (isIn) {
