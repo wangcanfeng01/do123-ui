@@ -12,14 +12,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/ui': {
-        target: 'http://localhost/',
+        target: 'http://www.canfeng.xyz/',
         changeOrigin: true,
         pathReWrite: {
           '^/ui': ''
         }
       },
       '/upload': {
-        target: 'http://localhost/',
+        target: 'http://www.canfeng.xyz/',
         changeOrigin: true,
         pathReWrite: {
           '^/upload': ''

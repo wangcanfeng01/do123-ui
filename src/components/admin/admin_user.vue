@@ -71,6 +71,13 @@
               </el-button>
             </template>
           </el-table-column>
+          <el-table-column label="用户类型" width="100">
+            <template slot-scope="scope">
+              <el-button size="mini" :type="scope.row.userType === '开发者' ? 'success' : 'info'"
+                         @click="changeUserType(scope.row.userType,scope.row.id)">{{scope.row.userType}}
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column prop="introduce" label="备注"></el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
@@ -171,7 +178,8 @@ export default {
         registerTime: '2016-05-04 00:00:00',
         updateTime: '2016-05-04 00:00:00',
         introduce: '成功',
-        isEnable: '已启用'
+        isEnable: '已启用',
+        userType: '开发者'
       }],
       addFormVisible: false,
       updateFormVisible: false,
@@ -290,6 +298,31 @@ export default {
         isEnable = 0
       }
       this.$http.put('/ui/user/status/' + id + '/' + isEnable).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 启用用户成功后刷新列表
+            this.$message.success('用户状态修改成功')
+            this.userList(this.pageSize, this.currentPage)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('用户状态修改异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    // 改变用户类型信息
+    changeUserType (type, id) {
+      let userType = 'user'
+      // 如果已经启用，则禁用
+      if (type === '开发者') {
+        userType = 'user'
+      } else {
+        userType = 'programmer'
+      }
+      this.$http.put('/ui/user/type/' + id + '/' + userType).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             // 启用用户成功后刷新列表

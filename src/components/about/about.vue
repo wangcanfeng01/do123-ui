@@ -6,28 +6,36 @@
       </el-header>
       <el-container>
         <el-main class="about_main">
-          <el-tabs :tab-position="tabPosition" class="tab_all">
-            <el-tab-pane label="王灿锋">
+          <el-tabs :tab-position="tabPosition" class="tab_all" @tab-click="tabChange">
+            <el-tab-pane :key="programmer.id" v-for="programmer in programmers" :label="programmer.personName">
               <el-container>
                 <el-aside width="20%" class="tab_left">
-                  <img src="../../assets/face/wcf.jpg" class="person_img"/>
+                  <img :src="programmer.facePath" class="person_img"/>
                   <el-card style="width: 80%;margin-left: 10%">
                     <div slot="header" class="clearfix" style="text-align: center">
                       <span>基本信息</span>
                     </div>
-                    <div><span>姓名：{{personInfo.personName}}</span></div>
-                    <div><span>邮箱：{{personInfo.email}}</span></div>
-                    <div><span>工作区域：{{personInfo.workArea}}</span></div>
-                    <div><span>联系方式：{{personInfo.telephone}}</span></div>
+                    <div><span>姓名：{{programmer.personName}}</span></div>
+                    <div><span>邮箱：{{programmer.email}}</span></div>
+                    <div><span>工作区域：{{programmer.workArea}}</span></div>
+                    <div><span>联系方式：{{programmer.telephone}}</span></div>
                     <div>
-                      <router-link :to="personInfo.mind">思维导图</router-link>
+                      <router-link v-if="programmer.mind" :to="programmer.mind">思维导图</router-link>
                     </div>
                   </el-card>
                   <el-card style="width: 80%;margin-left: 10%;margin-top: 20px">
                     <div slot="header" class="clearfix" style="text-align: center">
                       <span>技能</span>
                     </div>
-                    <el-tag v-for="tag in personInfo.tags" :key="tag.name" :type="tag.type">{{tag.name}}</el-tag>
+                    <div v-if="programmer.tags.length!==0">
+                      <el-tag v-for="tag in programmer.tags" :key="tag.name"
+                              :type="tag.type" style="margin-right: 5px;margin-bottom: 5px">
+                        {{tag.name}}
+                      </el-tag>
+                    </div>
+                    <div v-else>
+                      <el-tag type="danger">暂无标签</el-tag>
+                    </div>
                   </el-card>
                 </el-aside>
                 <el-aside width="80%" class="tab_main">
@@ -37,22 +45,6 @@
                                  @click="openAddForm"></el-button>
                       <el-button icon="el-icon-sort" circle :title="versionOrder" @click="changeOrder"></el-button>
                     </div>
-                    <!--增加版本信息弹出框-->
-                    <el-dialog title="添加版本信息" :visible.sync="addFormVisible" width="500px">
-                      <el-form :model="versionForm">
-                        <el-form-item label="专题名称" label-width="80px">
-                          <el-input v-model="versionForm.version" autocomplete="off" placeholder="请输入版本号"></el-input>
-                        </el-form-item>
-                        <el-form-item label="版本内容" label-width="80px">
-                          <el-input v-model="versionForm.description" autocomplete="off" placeholder="写点什么..."
-                                    type="textarea" :rows="5"></el-input>
-                        </el-form-item>
-                      </el-form>
-                      <div slot="footer" class="dialog-footer">
-                        <el-button @click="addFormVisible = false">取 消</el-button>
-                        <el-button type="primary" @click="addVersionInfo">确 定</el-button>
-                      </div>
-                    </el-dialog>
                     <el-col :offset="1" :span="20">
                       <el-card v-for="version in versionList" :key="version.id"
                                style="border-radius: 12px;margin-bottom: 20px">
@@ -87,13 +79,26 @@
                 </el-aside>
               </el-container>
             </el-tab-pane>
-            <el-tab-pane label="。。。">
-              <el-container>待加入</el-container>
-            </el-tab-pane>
           </el-tabs>
         </el-main>
         <el-footer class="about_footer">Footer</el-footer>
       </el-container>
+      <!--增加版本信息弹出框-->
+      <el-dialog title="添加版本信息" :visible.sync="addFormVisible" width="500px">
+        <el-form :model="versionForm">
+          <el-form-item label="专题名称" label-width="80px">
+            <el-input v-model="versionForm.version" autocomplete="off" placeholder="请输入版本号"></el-input>
+          </el-form-item>
+          <el-form-item label="版本内容" label-width="80px">
+            <el-input v-model="versionForm.description" autocomplete="off" placeholder="写点什么..."
+                      type="textarea" :rows="5"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="addFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addVersionInfo">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-container>
   </div>
 </template>
@@ -104,7 +109,10 @@ export default {
   data () {
     return {
       tabPosition: 'left',
-      personInfo: {
+      currentUsername: '',
+      programmers: [{
+        id: 1,
+        facePath: '',
         personName: '王灿锋',
         username: 'wcf',
         email: '373811598@qq.com',
@@ -115,14 +123,13 @@ export default {
           {name: 'jdk源码', type: 'success'},
           {name: 'spring相关', type: 'success'},
           {name: 'JNA', type: 'success'},
-          {name: 'scala', type: 'waring'},
           {name: 'spark', type: 'waring'},
           {name: 'hadoop', type: 'waring'},
           {name: 'HBase', type: 'waring'},
           {name: 'scala', type: 'waring'},
           {name: 'vue', type: 'danger'}
         ]
-      },
+      }],
       versionOrder: '正序',
       orderType: -1,
       versionList: [{
@@ -147,6 +154,15 @@ export default {
     }
   },
   methods: {
+    tabChange (tab, event) {
+      let personName = tab.label
+      this.programmers.forEach((item) => {
+        if (personName === item.personName) {
+          this.currentUsername = item.username
+        }
+      })
+      this.selectVersionList(this.orderType)
+    },
     // 改变版本信息的排序方式
     changeOrder () {
       if (this.versionOrder === '正序') {
@@ -160,16 +176,33 @@ export default {
       }
     },
     openAddForm () {
+      this.addFormVisible = true
       this.versionForm.id = null
       this.versionForm.version = ''
       this.versionForm.description = ''
-      this.addFormVisible = true
     },
     openModifyForm (version) {
       this.versionForm.id = version.id
       this.versionForm.version = version.version
       this.versionForm.description = version.description
       this.modifyFormVisible = true
+    },
+    selectPersonDetails () {
+      this.$http.get('/ui/about/personDetails').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.programmers = response.data.data
+            this.currentUsername = this.programmers[0].username
+            this.selectVersionList(this.orderType)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('开发者信息查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     },
     addVersionInfo () {
       this.$http.post('/ui/about/add/version', this.versionForm).then(response => {
@@ -206,7 +239,8 @@ export default {
       this.modifyFormVisible = false
     },
     selectVersionList (order) {
-      this.$http.get('/ui/about/versionList?order=' + order + '&author=' + this.personInfo.username).then(response => {
+      let username = encodeURIComponent(this.currentUsername)
+      this.$http.get('/ui/about/versionList?order=' + order + '&author=' + username).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.versionList = response.data.data
@@ -246,7 +280,7 @@ export default {
   },
   mounted () {
     document.querySelector('body').setAttribute('style', 'background:url(' + require('../../assets/bg/loginbg.png') + ');background-size: cover;')
-    this.selectVersionList(-1)
+    this.selectPersonDetails()
   },
   beforeDestroy () {
     document.querySelector('body').removeAttribute('style')
@@ -285,6 +319,7 @@ export default {
     /*height: 200px;*/
     margin-left: 25%;
     margin-bottom: 20px;
+    border-radius: 50%;
   }
 
   .about_main {

@@ -97,7 +97,9 @@ export default {
     },
     loginRequest () {
       localStorage.removeItem('user')
-      this.$http.post('/ui/user/login?username=' + this.loginForm.username + '&password=' + this.loginForm.password).then(response => {
+      let username = encodeURIComponent(this.loginForm.username)
+      let password = encodeURIComponent(this.loginForm.password)
+      this.$http.post('/ui/user/login?username=' + username + '&password=' + password).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.$emit('listenLogin', 'true')

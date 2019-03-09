@@ -126,19 +126,19 @@ export default {
         },
         {
           title: '尊重他人',
-          url: require('../../assets/home/home.jpg')
+          url: require('../../assets/home/girl.jpg')
         },
         {
           title: '心不在焉，虽学不成',
-          url: require('../../assets/home/home.jpg')
+          url: require('../../assets/home/lion.jpg')
         },
         {
           title: '宁静志远',
-          url: require('../../assets/home/home.jpg')
+          url: require('../../assets/home/night.jpg')
         },
         {
           title: '巧言令色，鲜矣仁',
-          url: require('../../assets/home/home.jpg')
+          url: require('../../assets/home/mount.jpg')
         }
       ],
       messageForm: {
