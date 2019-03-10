@@ -1,9 +1,9 @@
 <template>
   <div id="blog_article">
-    <el-col :span="10" :offset="7">
+    <el-col :span="14" :offset="5">
       <h1 style="text-align: center">{{article.title}}</h1>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="12" :offset="2">
           <div>
             <img v-if="article.authorFace" :src="article.authorFace" class="img-circle"/>
             <img v-else src="../../assets/face/face0.jpg" class="img-circle">
@@ -17,17 +17,15 @@
             <small>{{'&nbsp;&nbsp;阅读&nbsp;'+article.hits}}</small>
           </div>
         </el-col>
-        <el-col :span="6" :offset="4" style="margin-top: 30px">
+        <el-col :span="4" :offset="2" style="margin-top: 30px">
           <el-button type="danger" plain class="thumb-button" @click="addStars(article.id,article.stars)">
             <span class="thumb-font"><font-awesome-icon icon="thumbs-up"/>&nbsp;&nbsp;赞一个</span>
             <span class="thumb-number">{{article.stars}}</span>
           </el-button>
         </el-col>
       </el-row>
-      <el-row class="text-info">
-        <el-col :span="22" :offset="1">
-          <div v-html="article.text"></div>
-        </el-col>
+      <el-row>
+        <div v-html="article.text" class="text-info"></div>
       </el-row>
       <el-row>
         <p class="reshipment">本站文章均为原创或翻译，转载必须标明出处</p>
@@ -286,11 +284,6 @@ export default {
     width: 200px;
   }
 
-  .text-info {
-    white-space: normal;
-    font-size: 1em;
-  }
-
   .comment-area {
     padding-top: 5px;
     padding-left: 10px;
@@ -341,5 +334,83 @@ export default {
 
   .clearfix:after {
     clear: both
+  }
+</style>
+<style>
+  .text-info {
+    white-space: normal;
+    font-size: 1em;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .text-info p {
+    font-size: 14px;
+    word-wrap: break-word;
+    word-break: break-word
+  }
+
+  .text-info h1, .text-info h2, .text-info h3, .text-info h4, .text-info h5, .text-info h6 {
+    position: relative;
+    margin: 20px 0;
+  }
+
+  .text-info h1::before, .text-info h2::before, .text-info h3::before, .text-info h4::before, .text-info h5::before, .text-info h6::before {
+    position: absolute;
+    top: 0;
+    left: -15px;
+    /*content: '#';*/
+    color: #6fa3ef
+  }
+
+  .text-info p a {
+    color: #313131;
+    border-bottom: 1px solid #ccc
+  }
+
+  .text-info p a:hover {
+    color: #6fa3ef;
+    border-bottom: 1px solid #6fa3ef
+  }
+
+  .text-info img {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto
+  }
+
+  .text-info input.text {
+    display: inline-block;
+    padding: 5px 10px;
+    color: #5f5f5f;
+    border: 1px solid #5f5f5f;
+    border-radius: 3px;
+    outline: 0;
+    background-color: #fff
+  }
+
+  .text-info input.submit {
+    display: inline-block;
+    padding: 5px 15px;
+    color: #fff;
+    border: 1px solid #5f5f5f;
+    border-radius: 3px;
+    outline: 0;
+    background-color: #5f5f5f
+  }
+
+  .text-info .flinks {
+    padding: 0
+  }
+
+  .text-info .flinks li {
+    display: inline-block;
+    overflow: hidden;
+    width: 32%;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
 </style>

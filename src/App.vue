@@ -37,7 +37,7 @@
         </el-dropdown>
         <el-dropdown trigger="click" @command="logoutCommand" v-show="isLogin==='true'">
           <el-button style="margin-top: 0.8em;" type="danger">
-            <img :src="loginUser.facePath" style="border-radius: 50%;width: 2em;margin: -0.5em auto"/>
+            <img :src="loginUser.facePath" style="border-radius: 50%;width: 2em;height: 2em;margin: -0.5em auto"/>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
@@ -101,7 +101,7 @@ export default {
         if (response && response.data && response.data.code === '0') {
           this.isLogin = 'false'
           localStorage.removeItem('user')
-          window.location.href = '/home'
+          window.location.href = '/login'
         }
       }).catch(error => {
         console.log(error)

@@ -328,7 +328,7 @@ export default {
       this.$http.post('/ui/user/logout').then(response => {
         if (response && response.data && response.data.code === '0') {
           localStorage.removeItem('user')
-          window.location.href = '/home'
+          window.location.href = '/login'
         }
       }).catch(error => {
         console.log(error)

@@ -274,4 +274,15 @@ export default {
   .v-note-edit {
     min-height: 500px !important;
   }
+
+  .v-show-content {
+    white-space: normal;
+    font-size: 1em;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .v-show-content pre {
+    max-width: 100%;
+  }
 </style>
