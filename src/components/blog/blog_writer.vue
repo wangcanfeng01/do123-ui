@@ -50,6 +50,7 @@
           <el-button @click="toBlogList">返回列表</el-button>
           <el-button type="success" @click="publishArticle('publish')">文章发布</el-button>
         </el-col>
+        <div style="margin-bottom: 50px"></div>
       </el-row>
     </el-col>
   </div>
