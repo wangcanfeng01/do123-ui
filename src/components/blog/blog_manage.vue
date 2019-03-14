@@ -16,14 +16,14 @@
           <el-table-column label="封面图片">
             <template slot-scope="scope">
               <el-upload
-              class="upload-article-cover"
-              :action="'/ui/blog/article/addCover?id='+scope.row.id+'&path='+scope.row.cover"
-              :on-success="getFileSuccessUrl"
-              list-type="picture-card"
-              :show-file-list="false">
-              <img v-if="scope.row.cover" :src="scope.row.cover" class="img-circle">
-              <i v-else class="el-icon-plus"></i>
-            </el-upload>
+                class="upload-article-cover"
+                :action="'/ui/blog/article/addCover?id='+scope.row.id+'&path='+scope.row.cover"
+                :on-success="getFileSuccessUrl"
+                list-type="picture-card"
+                :show-file-list="false">
+                <img v-if="scope.row.cover" :src="scope.row.cover" class="img-circle">
+                <i v-else class="el-icon-plus"></i>
+              </el-upload>
             </template>
           </el-table-column>
           <el-table-column prop="updateTime" label="更新时间"></el-table-column>
@@ -126,18 +126,26 @@ export default {
       }
     },
     deleteArticle (id) {
-      this.$http.delete('/ui/blog/article/delete/' + id).then(response => {
-        if (response && response.data) {
-          if (response.data.code === '0') {
-            this.getArticleList(this.currentPage, this.pageSize)
+      this.$confirm('确认删除该文章?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'danger'
+      }).then(() => {
+        this.$http.delete('/ui/blog/article/delete/' + id).then(response => {
+          if (response && response.data) {
+            if (response.data.code === '0') {
+              this.getArticleList(this.currentPage, this.pageSize)
+            } else {
+              this.$message.error(response.data.msg)
+            }
           } else {
-            this.$message.error(response.data.msg)
+            this.$message.error('文章删除异常')
           }
-        } else {
-          this.$message.error('文章删除异常')
-        }
-      }).catch(error => {
-        console.log(error)
+        }).catch(error => {
+          console.log(error)
+        })
+      }).catch(() => {
+        this.$message.info('已取消删除')
       })
     },
     readArticle (slug) {
