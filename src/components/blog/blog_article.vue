@@ -25,7 +25,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <div v-html="article.text" class="text-info"></div>
+        <div v-html="article.text" class="text-info" v-highlight></div>
       </el-row>
       <el-row>
         <p class="reshipment">本站文章均为原创或翻译，转载必须标明出处</p>
@@ -92,6 +92,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'blog_article',
   data () {
