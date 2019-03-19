@@ -14,7 +14,7 @@ import adminSysLog from '@/components/admin/admin_sys_log'
 import adminComment from '@/components/admin/admin_comment'
 import userInfo from '@/components/admin/admin_user'
 import visitorInfo from '@/components/admin/admin_visitor'
-import dbInfo from '@/components/admin/admin_server'
+import serverInfo from '@/components/admin/admin_server'
 import tasksInfo from '@/components/admin/admin_tasks'
 import roleInfo from '@/components/admin/admin_role'
 import menuInfo from '@/components/admin/admin_menu'
@@ -150,9 +150,9 @@ export default new Router({
         name: 'visitorInfo',
         component: visitorInfo
       }, {
-        path: '/admin/dbInfo',
-        name: 'dbInfo',
-        component: dbInfo
+        path: '/admin/serverInfo',
+        name: 'serverInfo',
+        component: serverInfo
       }, {
         path: '/admin/tasks',
         name: 'tasksInfo',

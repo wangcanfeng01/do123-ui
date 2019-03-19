@@ -1,12 +1,12 @@
 <template>
   <div id="home">
-    <el-carousel :interval="5000" height="750px" style="width: 80%;left: 10%">
+    <el-carousel :interval="5000" height="700px" style="width: 70%;left: 15%">
       <el-carousel-item v-for="(img,item) in items" :key="item">
         <img class="home_img" v-bind:src="img.url"/>
         <h2>{{ img.title }}</h2>
       </el-carousel-item>
     </el-carousel>
-    <div class="home_line" style="width: 80%;left: 10%">
+    <div class="home_line" style="width: 70%;left: 15%">
       <h1 class="line_font">非常有趣的小站</h1>
     </div>
     <el-col :span="16" :offset="4">

@@ -6,40 +6,46 @@
           <el-col :span="5">
             <span style="line-height: 40px">后台任务状态列表</span>
           </el-col>
-          <el-col :span="8" :offset="8">
+          <el-col :span="4" :offset="8">
             <el-input></el-input>
           </el-col>
-          <el-col :span="3">
+          <el-col :span="6">
             <el-button type="primary" style="margin-left: 15px">查询</el-button>
-            <el-button type="success" style="margin-left: 15px" @click="openAdd">新增用户</el-button>
+            <el-button type="success" style="margin-left: 15px" @click="openAdd">创建任务</el-button>
           </el-col>
         </div>
         <!--新增任务弹出框-->
         <el-dialog title="新增任务" :visible.sync="addFormVisible" width="400px">
-          <el-form :model="taskForm" status-icon :rules="rules" ref="addTaskForm">
+          <el-form :model="taskForm" status-icon ref="addTaskForm">
             <el-form-item prop="taskName" label="任务名称" label-width="80px" required>
               <el-input v-model="taskForm.taskName" autocomplete="off" placeholder="请输入任务名称"></el-input>
             </el-form-item>
-            <el-form-item label="用户角色" label-width="80px">
-              <el-select v-model="userForm.role" multiple collapse-tags filterable placeholder="请选择用户角色">
-                <el-option v-for="role in roleList" :key="role.id" :label="role.roleName"
-                           :value="role.id"></el-option>
+            <el-form-item label="任务类型" label-width="80px" required>
+              <el-select v-model="taskForm.taskType" placeholder="请选择任务类型">
+                <el-option v-for="type in taskTypeList" :key="type.code" :label="type.name"
+                           :value="type.code"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item prop="password" label="用户密码" label-width="80px" required>
-              <el-input v-model="userForm.password" autocomplete="off" placeholder="请输入密码" type="password"></el-input>
+            <el-form-item prop="taskInterval" label="执行周期" label-width="80px">
+              <el-select v-model="taskForm.taskInterval" placeholder="请选择执行周期">
+                <el-option v-for="interval in taskIntervalList" :key="interval.code" :label="interval.name"
+                           :value="interval.code"></el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item prop="rePass" label="确认密码" label-width="80px" required>
-              <el-input v-model="userForm.rePass" autocomplete="off" placeholder="请确认密码" type="password"></el-input>
+            <el-form-item label="任务组名" label-width="80px" required>
+              <el-select v-model="taskForm.taskGroup" placeholder="请选择任务组">
+                <el-option v-for="group in taskGroupList" :key="group.code" :label="group.name"
+                           :value="group.code"></el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item label="签名档" label-width="80px">
-              <el-input v-model="userForm.introduce" autocomplete="off" placeholder="写点什么..." type="textarea"
-                        :rows="3"></el-input>
+            <el-form-item label="点火时间" label-width="80px">
+              <el-time-select v-model="taskForm.triggerTime" :picker-options="triggerRange"
+                              placeholder="请选择点火时间"></el-time-select>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="addFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addUser('addUserForm')">确 定</el-button>
+            <el-button type="primary" @click="addJob('addUserForm')">确 定</el-button>
           </div>
         </el-dialog>
         <el-table :data="tableData" style="width: 100%">
@@ -74,6 +80,10 @@
 export default {
   name: 'admin_tasks',
   data () {
+    let now = new Date()
+    let hour = now.getHours()
+    let minutes = now.getMinutes()
+    let nowTime = hour + ':' + minutes
     return {
       tableData: [{
         id: 1,
@@ -95,15 +105,35 @@ export default {
       taskForm: {
         taskName: '',
         taskType: '',
-        taskResult: '',
         taskInterval: '',
         taskGroup: '',
         triggerTime: ''
+      },
+      taskTypeList: [{
+        code: 'single',
+        name: '单次任务'
+      }, {
+        code: 'multi',
+        name: '周期性任务'
+      }],
+      taskIntervalList: [{
+        code: '',
+        name: ''
+      }],
+      taskGroupList: [{
+        code: '',
+        name: ''
+      }],
+      triggerRange: {
+        start: nowTime,
+        step: '00:15',
+        end: '23:59'
       }
     }
   },
   methods: {
     openAdd () {
+      console.log(this.triggerRange.start)
       this.addFormVisible = true
       this.taskForm.taskName = ''
       this.taskForm.taskType = ''
@@ -111,6 +141,23 @@ export default {
       this.taskForm.taskInterval = ''
       this.taskForm.taskGroup = ''
       this.taskForm.triggerTime = ''
+    },
+    addJob (formName) {
+      this.$http.post('/ui/task/addJob', this.taskForm).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 创建任务成功后刷新当前页面，进行重新展示列表
+            this.$message.success('创建任务成功')
+            this.getTaskList()
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('创建任务异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     },
     getTaskList () {
       this.$http.get('/ui/task/taskList?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize).then(response => {
@@ -127,6 +174,36 @@ export default {
         console.log(error)
       })
     },
+    getIntervalList () {
+      this.$http.get('/ui/task/intervalList').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.taskIntervalList = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('执行周期查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getGroupList () {
+      this.$http.get('/ui/task/groupList').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.taskGroupList = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('任务组查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     handleSizeChange (val) {
       this.pageSize = val
       this.getTaskList()
@@ -138,6 +215,8 @@ export default {
   },
   mounted () {
     this.getTaskList()
+    this.getGroupList()
+    this.getIntervalList()
   }
 }
 </script>

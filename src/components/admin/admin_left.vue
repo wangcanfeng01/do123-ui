@@ -72,7 +72,7 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="/admin/visitor" v-show="leftMenus.admin_visitor">访客记录</el-menu-item>
-            <el-menu-item index="/admin/dbInfo" v-show="leftMenus.admin_dbInfo">数据库连接状态</el-menu-item>
+            <el-menu-item index="/admin/serverInfo" v-show="leftMenus.admin_serverInfo">服务器信息</el-menu-item>
             <el-menu-item index="/admin/tasks" v-show="leftMenus.admin_tasks">后台任务数</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
