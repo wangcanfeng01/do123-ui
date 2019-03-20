@@ -51,14 +51,22 @@
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="taskName" label="任务名称"></el-table-column>
           <el-table-column prop="createTime" label="创建时间"></el-table-column>
-          <el-table-column prop="taskStatus" label="任务状态"></el-table-column>
-          <el-table-column prop="taskType" label="任务类型"></el-table-column>
-          <el-table-column prop="taskCreator" label="任务创建者"></el-table-column>
-          <el-table-column prop="taskResult" label="执行结果"></el-table-column>
+          <el-table-column prop="taskStatus" label="任务状态" width="80"></el-table-column>
+          <el-table-column prop="taskType" label="任务类型" width="80"></el-table-column>
+          <el-table-column prop="taskCreator" label="任务创建者" width="100"></el-table-column>
+          <el-table-column prop="taskResult" label="执行结果" width="80"></el-table-column>
           <el-table-column prop="updateTime" label="更新时间"></el-table-column>
           <el-table-column prop="taskPeriod" label="任务周期"></el-table-column>
           <el-table-column prop="taskGroup" label="任务组"></el-table-column>
           <el-table-column prop="triggerTime" label="点火时间"></el-table-column>
+          <el-table-column label="操作" width="200">
+            <template slot-scope="scope">
+              <el-button size="mini" type="warning" @click="changeJobStatus(scope.row)">
+                {{scope.row.taskStatus==='已暂停'?'启用':'暂停'}}
+              </el-button>
+              <el-button size="mini" type="danger" @click="deleteJob(scope.row.id)">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <div class="block" style="margin-top: 20px">
           <el-pagination
@@ -89,7 +97,7 @@ export default {
         id: 1,
         taskName: '测试',
         createTime: '2012-12-12 00:00:00',
-        taskStatus: '2012-12-12 00:00:00',
+        taskStatus: '已暂停',
         taskType: '完成',
         taskCreator: '12分',
         taskResult: '统计',
@@ -158,12 +166,72 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+      this.addFormVisible = false
+    },
+    changeJobStatus (task) {
+      if (task.taskStatus === '已暂停') {
+        this.resumeJob(task.id)
+      } else {
+        this.pauseJob(task.id)
+      }
+    },
+    pauseJob (taskId) {
+      this.$http.put('/ui/task/pauseJob?taskId=' + taskId).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 暂停任务成功后刷新当前页面，重新展示列表
+            this.$message.success('暂停任务成功')
+            this.getTaskList()
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('暂停任务异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    resumeJob (taskId) {
+      this.$http.put('/ui/task/resumeJob?taskId=' + taskId).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 恢复任务成功后刷新当前页面，重新展示列表
+            this.$message.success('恢复任务成功')
+            this.getTaskList()
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('恢复任务异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    deleteJob (taskId) {
+      this.$http.delete('/ui/task/deleteJob?taskId=' + taskId).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            // 删除任务成功后刷新当前页面，重新展示列表
+            this.$message.success('删除任务成功')
+            this.getTaskList()
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('删除任务异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     },
     getTaskList () {
       this.$http.get('/ui/task/taskList?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.tableData = response.data.data
+            this.total = response.data.total
           } else {
             this.$message.error(response.data.msg)
           }
