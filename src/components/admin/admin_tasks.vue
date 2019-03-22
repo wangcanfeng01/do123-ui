@@ -20,25 +20,25 @@
             <el-form-item prop="taskName" label="任务名称" label-width="80px" required>
               <el-input v-model="taskForm.taskName" autocomplete="off" placeholder="请输入任务名称"></el-input>
             </el-form-item>
-            <el-form-item label="任务类型" label-width="80px" required>
-              <el-select v-model="taskForm.taskType" placeholder="请选择任务类型">
-                <el-option v-for="type in taskTypeList" :key="type.code" :label="type.name"
-                           :value="type.code"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="taskInterval" label="执行周期" label-width="80px">
-              <el-select v-model="taskForm.taskInterval" placeholder="请选择执行周期">
-                <el-option v-for="interval in taskIntervalList" :key="interval.code" :label="interval.name"
-                           :value="interval.code"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label="任务组名" label-width="80px" required>
               <el-select v-model="taskForm.taskGroup" placeholder="请选择任务组">
                 <el-option v-for="group in taskGroupList" :key="group.code" :label="group.name"
                            :value="group.code"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="点火时间" label-width="80px">
+            <el-form-item label="任务类型" label-width="80px" required>
+              <el-select v-model="taskForm.taskType" placeholder="请选择任务类型">
+                <el-option v-for="type in taskTypeList" :key="type.code" :label="type.name"
+                           :value="type.code"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item prop="taskInterval" label="执行周期" label-width="80px" v-show="taskForm.taskType!=='single'">
+              <el-select v-model="taskForm.taskInterval" placeholder="请选择执行周期">
+                <el-option v-for="interval in taskIntervalList" :key="interval.code" :label="interval.name"
+                           :value="interval.code"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="点火时间" label-width="80px" v-show="taskForm.taskType==='single'">
               <el-time-select v-model="taskForm.triggerTime" :picker-options="triggerRange"
                               placeholder="请选择点火时间"></el-time-select>
             </el-form-item>
@@ -136,12 +136,12 @@ export default {
         start: nowTime,
         step: '00:15',
         end: '23:59'
-      }
+      },
+      triggerInput: false
     }
   },
   methods: {
     openAdd () {
-      console.log(this.triggerRange.start)
       this.addFormVisible = true
       this.taskForm.taskName = ''
       this.taskForm.taskType = ''
@@ -286,6 +286,15 @@ export default {
     this.getGroupList()
     this.getIntervalList()
   }
+  // watch: {
+  //   taskForm: {
+  //     handler (val, oldVal) {
+  //       console.log(val.taskInterval)
+  //     },
+  //     immediate: true,
+  //     deep: true
+  //   }
+  // }
 }
 </script>
 
