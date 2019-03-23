@@ -1,6 +1,6 @@
 <template>
   <div id="blog_article">
-    <el-col :span="14" :offset="5">
+    <el-col :span="12" :offset="6">
       <h1 style="text-align: center">{{article.title}}</h1>
       <el-row>
         <el-col :span="12" :offset="2">
@@ -25,8 +25,13 @@
         </el-col>
       </el-row>
       <el-row>
-        <div v-html="article.text" class="text-info" v-highlight></div>
+        <div v-html="article.text" class="text-info" ref="text_info" v-highlight></div>
       </el-row>
+      <transition name="fade">
+        <div @click="closePic" class="v-note-img-wrapper" v-show="showPic">
+          <img :src="previewPictureSrc" alt="none">
+        </div>
+      </transition>
       <el-row>
         <p class="reshipment">本站文章均为原创或翻译，转载必须标明出处</p>
       </el-row>
@@ -115,10 +120,7 @@ export default {
       commentCurrentPage: 1,
       comments: [{
         id: 1,
-        content: '评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容' +
-          '评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容 评论内容评论内容评论内容评论内容评论' +
-          '内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容' +
-          '评论内容评论内容评论内容评论内容评论内容评论内容',
+        content: '评论内容评论内容评论内容评论内容评论内容评论内',
         author: '评论者',
         face: '',
         updateTime: '2018-12-12 12:00:00',
@@ -135,10 +137,23 @@ export default {
         userId: null,
         username: '',
         facePath: ''
-      }
+      },
+      showPic: false,
+      previewPictureSrc: ''
     }
   },
   methods: {
+    closePic () {
+      this.showPic = false
+      this.previewPictureSrc = ''
+    },
+    preview (event) {
+      let ele = event.srcElement
+      if (ele.tagName === 'IMG') {
+        this.previewPictureSrc = ele.src
+        this.showPic = true
+      }
+    },
     toLogin () {
       this.$router.push('/login')
     },
@@ -249,6 +264,11 @@ export default {
     this.slug = this.$route.query.slug
     this.getArticleInfo(this.slug)
     this.getLogin()
+    this.$nextTick(() => {
+      this.$refs.text_info.addEventListener('click', (event) => {
+        this.preview(event)
+      })
+    })
   }
 }
 </script>
@@ -327,6 +347,19 @@ export default {
     background-color: hsla(0, 0%, 71%, .1);
   }
 
+  .v-note-img-wrapper {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1600;
+  }
+
   .clearfix:before,
   .clearfix:after {
     display: table;
@@ -336,6 +369,7 @@ export default {
   .clearfix:after {
     clear: both
   }
+
 </style>
 <style>
   .text-info {
