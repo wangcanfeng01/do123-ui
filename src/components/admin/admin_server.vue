@@ -14,11 +14,20 @@
           </el-col>
         </div>
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="createTime" label="统计时间"></el-table-column>
-          <el-table-column prop="heapUsed" label="堆内存使用量"></el-table-column>
-          <el-table-column prop="noHeapUsed" label="非堆内存使用量"></el-table-column>
-          <el-table-column prop="diskUsed" label="硬盘使用率"></el-table-column>
-          <el-table-column prop="cpuUsed" label="cpu使用率"></el-table-column>
+          <el-table-column prop="createTime" label="统计时间" min-width="120"></el-table-column>
+          <el-table-column label="堆内存使用量" min-width="80">
+            <template slot-scope="scope">{{scope.row.heapUsed+'MB'}}</template>
+          </el-table-column>
+          <el-table-column label="非堆内存使用量" min-width="80">
+            <template slot-scope="scope">{{scope.row.noHeapUsed+'MB'}}</template>
+          </el-table-column>
+          <el-table-column label="硬盘使用率" min-width="80">
+            <template slot-scope="scope">{{scope.row.diskUsed+'%'}}</template>
+          </el-table-column>
+          <el-table-column label="cpu使用率" min-width="80">
+            <template slot-scope="scope">{{scope.row.cpuUsed+'%'}}</template>
+          </el-table-column>
+          <el-table-column prop="statisticType" label="统计类型" min-width="80"></el-table-column>
         </el-table>
         <div class="block" style="margin-top: 20px">
           <el-pagination
@@ -47,7 +56,8 @@ export default {
         heapUsed: '123',
         noHeapUsed: '22',
         diskUsed: '1',
-        cpuUsed: '4'
+        cpuUsed: '4',
+        statisticType: ''
       }],
       currentPage: 1,
       pageSize: 20,
@@ -60,6 +70,7 @@ export default {
         if (response && response.data) {
           if (response.data.code === '0') {
             this.tableData = response.data.data
+            this.total = response.data.total
           } else {
             this.$message.error(response.data.msg)
           }

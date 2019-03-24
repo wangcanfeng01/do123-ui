@@ -95,19 +95,51 @@
             </h3>
           </div>
           <el-col :span="12" :offset="1">
-            <cpu-status></cpu-status>
+            <cpu-status style="margin-top: 80px"></cpu-status>
           </el-col>
-          <el-col :span="6">
-            <h3>服务器指标</h3>
-            <span>CPU</span>
-            <el-progress :text-inside="true" :stroke-width=25 :percentage="40"
-                         style="margin-bottom: 10px;"></el-progress>
-            <span>内存使用量(2G/4G)</span>
-            <el-progress :text-inside="true" :stroke-width="25" :percentage="70"
-                         style="margin-bottom: 10px;"></el-progress>
-            <span>硬盘使用量(20G/40G)</span>
-            <el-progress :text-inside="true" :stroke-width="25" :percentage="80"
-                         style="margin-bottom: 10px;"></el-progress>
+          <el-col :span="11">
+            <h3>当前服务器指标</h3>
+            <el-row>
+              <el-col :span="10">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>CPU使用量</span>
+                  </div>
+                  <el-progress type="circle" :stroke-width=25 :percentage="serverIndex.cpuPercentage"
+                               style="margin-bottom: 10px;margin-left: 20%"></el-progress>
+                </el-card>
+              </el-col>
+              <el-col :span="10" :offset="2">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>硬盘使用量(40G)</span>
+                  </div>
+                  <el-progress type="circle" :stroke-width=25 :percentage="serverIndex.diskPercentage"
+                               style="margin-bottom: 10px;margin-left: 20%"></el-progress>
+                </el-card>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="10">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>堆内存使用量(4G)</span>
+                  </div>
+                  <el-progress type="circle" :stroke-width=25 :percentage="serverIndex.heapPercentage"
+                               style="margin-bottom: 10px;margin-left: 20%"></el-progress>
+                </el-card>
+              </el-col>
+              <el-col :span="10" :offset="2">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>非堆内存使用量(4G)</span>
+                  </div>
+                  <el-progress type="circle" :stroke-width=25 :percentage="serverIndex.noheapPercentage"
+                               style="margin-bottom: 10px;margin-left: 20%"></el-progress>
+                </el-card>
+              </el-col>
+            </el-row>
           </el-col>
         </el-card>
       </el-row>
@@ -175,7 +207,14 @@ export default {
         logoutTime: '2016-05-04 00:00:00',
         remoteIp: '127.0.0.1',
         remoteArea: '绍兴'
-      }]
+      }],
+      statisticInfoList: {},
+      serverIndex: {
+        cpuPercentage: 40,
+        heapPercentage: 40,
+        noheapPercentage: 40,
+        diskPercentage: 40
+      }
     }
   },
   methods: {
@@ -193,11 +232,27 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    getServerIndex () {
+      this.$http.get('/ui/server/nowIndex').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.serverIndex = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('查询服务器信息异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   mounted () {
     // 查询最近5条访客信息
     this.selectVisitorList(1, 5)
+    this.getServerIndex()
   }
 }
 </script>

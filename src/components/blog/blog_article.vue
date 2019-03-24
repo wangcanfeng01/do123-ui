@@ -412,7 +412,7 @@ export default {
     position: relative;
     display: block;
     overflow: hidden;
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
     margin: 0 auto
   }
