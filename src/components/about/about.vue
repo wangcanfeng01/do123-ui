@@ -1,5 +1,5 @@
 <template>
-  <div id="about">
+  <div id="about_center">
     <el-container>
       <el-header class="about_header">
         <span>开发人员与版本信息</span>
@@ -16,11 +16,16 @@
                       <span>基本信息</span>
                     </div>
                     <div><span>姓名：{{programmer.personName}}</span></div>
-                    <div><span>邮箱：{{programmer.email}}</span></div>
-                    <div><span>工作区域：{{programmer.workArea}}</span></div>
-                    <div><span>联系方式：{{programmer.telephone}}</span></div>
-                    <div>
+                    <div style="margin-top: 5px"><span>邮箱：{{programmer.email}}</span></div>
+                    <div style="margin-top: 5px"><span>工作区域：{{programmer.workArea}}</span></div>
+                    <div style="margin-top: 5px"><span>联系方式：{{programmer.telephone}}</span></div>
+                    <div style="margin-top: 5px">
                       <router-link v-if="programmer.mind" :to="programmer.mind">思维导图</router-link>
+                    </div>
+                    <div style="margin-top: -5px">
+                      <el-button v-if="programmer.resume" @click="readResume(programmer.resume)"
+                                 size="middle" type="text">{{'个人简历:'+programmer.resume}}
+                      </el-button>
                     </div>
                   </el-card>
                   <el-card style="width: 80%;margin-left: 10%;margin-top: 20px">
@@ -105,7 +110,7 @@
 
 <script>
 export default {
-  name: 'about',
+  name: 'about_center',
   data () {
     return {
       tabPosition: 'left',
@@ -128,7 +133,8 @@ export default {
           {name: 'HBase', type: 'waring'},
           {name: 'scala', type: 'waring'},
           {name: 'vue', type: 'danger'}
-        ]
+        ],
+        resume: ''
       }],
       versionOrder: '正序',
       orderType: -1,
@@ -253,6 +259,10 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    readResume (resume) {
+      let data = this.$router.resolve({path: '/readPDF', query: {'fileName': resume}})
+      window.open(data.href, '_blank')
     },
     deleteVersionInfo (id) {
       this.$confirm('确认删除该版本信息?', '提示', {

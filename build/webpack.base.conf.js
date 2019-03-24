@@ -99,6 +99,9 @@ module.exports = {
     }, {
       from: path.resolve(__dirname, '../node_modules/mavon-editor/dist/katex'),
       to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/katex')
+    },{
+      from: path.resolve(__dirname, '../static/pdfjs'),
+      to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/pdfjs')
     }])
   ]
 }

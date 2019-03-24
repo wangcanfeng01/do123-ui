@@ -44,7 +44,7 @@
           <el-col :span="3" :offset="2" style="min-width: 90px;line-height: 40px"><span> 账户密码：</span></el-col>
           <el-col :span="12">
             <el-button type="danger" @click="openPasswordForm">修改密码</el-button>
-            <!--新增用户弹出框-->
+            <!--修改密码弹出框-->
             <el-dialog title="修改密码" :visible.sync="passwordFormVisible" width="400px">
               <el-form :model="passwordForm" status-icon :rules="rules" ref="changePassForm">
                 <el-form-item prop="sourcePass" label="原密码" label-width="80px" required>
@@ -139,6 +139,20 @@
         </el-row>
 
         <el-row style="margin-top: 20px;">
+          <el-col :span="3" :offset="2" style="min-width: 90px;line-height: 40px"><span> 个人简历：</span></el-col>
+          <el-col :span="12">
+            <el-upload
+              class="upload-demo"
+              drag
+              :action="'/ui/personal/uploadResume?resume='+personDetail.resume">
+              <i v-if="personDetail.resume">{{personDetail.resume}}</i>
+              <i v-else class="el-icon-upload"></i>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <div class="el-upload__tip" slot="tip">只能上传pdf文件</div>
+            </el-upload>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 20px;">
           <el-col :span="3" :offset="2" style="min-width: 90px;line-height: 40px"><span> 思维导图：</span></el-col>
           <el-col :span="12">
             <el-input placeholder="暂不支持..." v-model="personDetail.mind" disabled></el-input>
@@ -212,7 +226,8 @@ export default {
           {name: 'hadoop', type: 'waring'},
           {name: 'HBase', type: 'waring'},
           {name: 'vue', type: 'danger'}
-        ]
+        ],
+        resume: ''
       },
       passwordForm: {
         sourcePass: '',
