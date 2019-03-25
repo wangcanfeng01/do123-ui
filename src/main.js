@@ -11,21 +11,15 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import axios from 'axios'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/solarized-dark.css'
+import ECharts from 'vue-echarts'
+import 'echarts/theme/macarons'
 
 Vue.prototype.$http = axios
 library.add(fas)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(ElementUI)
 Vue.use(mavonEditor)
-Vue.directive('highlight', function (el) {
-  let blocks = el.querySelectorAll('pre code')
-  blocks.forEach((block) => {
-    hljs.highlightBlock(block)
-  })
-})
-
+Vue.component('v-chart', ECharts)
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 
@@ -35,15 +29,15 @@ new Vue({
   components: {App},
   template: '<App/>'
 })
-router.beforeEach((to, from, next) => {
-  if (to.path === '/login' || to.meta.noAuth) {
-    next()
-  } else if (localStorage.getItem('user')) {
-    next()
-  } else {
-    next({
-      path: '/login',
-      query: {redirect: to.fullPath}
-    })
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.path === '/login' || to.meta.noAuth) {
+//     next()
+//   } else if (localStorage.getItem('user')) {
+//     next()
+//   } else {
+//     next({
+//       path: '/login',
+//       query: {redirect: to.fullPath}
+//     })
+//   }
+// })
