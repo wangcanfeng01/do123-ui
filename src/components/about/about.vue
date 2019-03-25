@@ -16,11 +16,13 @@
                       <span>基本信息</span>
                     </div>
                     <div><span>姓名：{{programmer.personName}}</span></div>
-                    <div style="margin-top: 5px"><span>邮箱：{{programmer.email}}</span></div>
-                    <div style="margin-top: 5px"><span>工作区域：{{programmer.workArea}}</span></div>
-                    <div style="margin-top: 5px"><span>联系方式：{{programmer.telephone}}</span></div>
-                    <div style="margin-top: 5px">
-                      <router-link v-if="programmer.mind" :to="programmer.mind">思维导图</router-link>
+                    <div style="margin-top: 10px"><span>邮箱：{{programmer.email}}</span></div>
+                    <div style="margin-top: 10px"><span>工作区域：{{programmer.workArea}}</span></div>
+                    <div style="margin-top: 10px"><span>联系方式：{{programmer.telephone}}</span></div>
+                    <div style="margin-top: 10px">
+                      <el-button v-if="programmer.mind" @click="openPic(programmer.mind)"
+                                 size="middle" type="text">{{'思维导图:'+programmer.mind}}
+                      </el-button>
                     </div>
                     <div style="margin-top: -5px">
                       <el-button v-if="programmer.resume" @click="readResume(programmer.resume)"
@@ -262,6 +264,10 @@ export default {
     },
     readResume (resume) {
       let data = this.$router.resolve({path: '/readPDF', query: {'fileName': resume}})
+      window.open(data.href, '_blank')
+    },
+    openPic (mind) {
+      let data = this.$router.resolve({path: '/upload/files' + mind + '.jpg'})
       window.open(data.href, '_blank')
     },
     deleteVersionInfo (id) {

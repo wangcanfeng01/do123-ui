@@ -144,20 +144,29 @@
             <el-upload
               class="upload-demo"
               drag
-              :action="'/ui/personal/uploadResume?resume='+personDetail.resume">
+              :action="'/ui/personal/uploadResume?resume='+personDetail.resume"
+              :show-file-list="false"
+              :on-success="onUploadFileSuccess">
+              <i class="el-icon-upload"></i>
               <i v-if="personDetail.resume">{{personDetail.resume}}</i>
-              <i v-else class="el-icon-upload"></i>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
               <div class="el-upload__tip" slot="tip">只能上传pdf文件</div>
             </el-upload>
           </el-col>
         </el-row>
-        <el-row style="margin-top: 20px;">
+        <el-row style="margin-top: 20px;margin-bottom: 50px">
           <el-col :span="3" :offset="2" style="min-width: 90px;line-height: 40px"><span> 思维导图：</span></el-col>
           <el-col :span="12">
-            <el-input placeholder="暂不支持..." v-model="personDetail.mind" disabled></el-input>
+            <el-upload
+              :action="'/ui/personal/uploadMind?mind='+personDetail.mind"
+              :on-success="onUploadMindSuccess"
+              list-type="picture-card"
+              :show-file-list="false">
+              <img v-if="personDetail.mind" :src="personDetail.mind" class="img-mind">
+              <i v-else class="el-icon-plus"></i>
+            </el-upload>
           </el-col>
-          <el-col :offset="2" :span="5">
+          <el-col :offset="2" :span="5" style="margin-top: 80px">
             <el-button type="danger" @click="updatePersonDetails">保存修改</el-button>
           </el-col>
         </el-row>
@@ -265,6 +274,24 @@ export default {
         this.$message.success('头像上传成功!')
         // 重新查询人员基础信息
         this.selectPersonBaseInfo(this.personBaseInfo.username)
+      } else {
+        this.$message.error(result.msg)
+      }
+    },
+    onUploadFileSuccess (result) {
+      if (result.code === '0') {
+        this.$message.success('简历上传成功!')
+        // 重新查询人员基础信息
+        this.selectPersonDetailsInfo(this.personBaseInfo.username)
+      } else {
+        this.$message.error(result.msg)
+      }
+    },
+    onUploadMindSuccess (result) {
+      if (result.code === '0') {
+        this.$message.success('思维导图上传成功!')
+        // 重新查询人员基础信息
+        this.selectPersonDetailsInfo(this.personBaseInfo.username)
       } else {
         this.$message.error(result.msg)
       }
@@ -395,6 +422,10 @@ export default {
     height: 148px;
     width: 148px;
     border-radius: 50%;
+  }
+  .img-mind{
+    height: 148px;
+    width: 148px;
   }
 </style>
 <style>
