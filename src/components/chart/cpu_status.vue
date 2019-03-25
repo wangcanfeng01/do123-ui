@@ -1,6 +1,6 @@
 <template>
   <div id="cpu_status">
-    <v-chart :options="polar"/>
+    <v-chart theme="macarons" :options="polar"/>
   </div>
 </template>
 
