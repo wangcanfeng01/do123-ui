@@ -8,7 +8,7 @@
             <el-row>
               <font-awesome-icon icon="file"/>
               <span>文章</span></el-row>
-            <el-row><span>10</span></el-row>
+            <el-row><span>{{totalStatistic.articles+ ' 篇'}}</span></el-row>
             <!--<el-row>-->
             <!--<span>月<i class="el-icon-caret-top"> 4%</i></span>-->
             <!--</el-row>-->
@@ -19,7 +19,7 @@
             <el-row>
               <font-awesome-icon icon="font"/>
               <span>字数</span></el-row>
-            <el-row><span>50</span></el-row>
+            <el-row><span>{{totalStatistic.words+ ' 字'}}</span></el-row>
           </el-card>
         </el-col>
         <el-col :span="6">
@@ -27,7 +27,7 @@
             <el-row>
               <font-awesome-icon icon="eye"/>
               <span>浏览</span></el-row>
-            <el-row><span>2000</span></el-row>
+            <el-row><span>{{totalStatistic.hits+' 次'}}</span></el-row>
           </el-card>
         </el-col>
         <el-col :span="6">
@@ -35,7 +35,7 @@
             <el-row>
               <font-awesome-icon icon="comment"/>
               <span>留言</span></el-row>
-            <el-row><span>103</span></el-row>
+            <el-row><span>{{totalStatistic.comments+' 条'}}</span></el-row>
           </el-card>
         </el-col>
       </el-row>
@@ -93,8 +93,33 @@ export default {
   },
   data () {
     return {
-      message: '尚未开发'
+      totalStatistic: {
+        articles: 13,
+        hits: 1233,
+        comments: 2,
+        words: 2
+      }
     }
+  },
+  methods: {
+    getArticleStatistic () {
+      this.$http.get('/ui/blog/statistic/article').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.totalStatistic = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('文章统计信息查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  mounted () {
+    this.getArticleStatistic()
   }
 }
 </script>
