@@ -54,6 +54,27 @@ export default {
         ]
       }
     }
+  },
+  methods: {
+    getDistribution () {
+      this.$http.get('/ui/blog/statistic/categories').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.option.legend.data = response.data.data.itemName
+            this.option.series[0].data = response.data.data.nameAndValues
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('查询专题分布信息异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  mounted () {
+    this.getDistribution()
   }
 }
 </script>

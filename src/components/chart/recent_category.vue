@@ -26,16 +26,6 @@ export default {
         legend: {
           data: ['文章数']
         },
-        toolbox: {
-          show: true,
-          feature: {
-            mark: {show: true},
-            dataView: {show: true, readOnly: false},
-            magicType: {show: true, type: ['line', 'bar']},
-            restore: {show: true},
-            saveAsImage: {show: true}
-          }
-        },
         calculable: true,
         xAxis: [
           {
@@ -63,6 +53,27 @@ export default {
         ]
       }
     }
+  },
+  methods: {
+    getRecentCategory () {
+      this.$http.get('/ui/blog/statistic/recentCategory').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.option.xAxis[0].data = response.data.data.axis
+            this.option.series[0].data = response.data.data.value
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('查询专题分布信息异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  mounted () {
+    this.getRecentCategory()
   }
 }
 </script>

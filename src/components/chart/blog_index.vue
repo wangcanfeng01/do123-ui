@@ -26,7 +26,7 @@ export default {
           x: 'center',
           data: ['文章指数']
         },
-        calculable: true,
+        // calculable: true,
         polar: [
           {
             indicator: [
@@ -39,25 +39,43 @@ export default {
             radius: 130
           }
         ],
-        series: [
-          {
-            name: '文章指数',
-            type: 'radar',
-            itemStyle: {
-              normal: {
-                areaStyle: {
-                  type: 'default'
-                }
+        series: [{
+          name: '文章指数',
+          type: 'radar',
+          itemStyle: {
+            normal: {
+              areaStyle: {
+                type: 'default'
               }
-            },
-            data: [{
-              value: [30, 40, 50, 60, 70],
-              name: '文章指数'
-            }]
-          }
-        ]
+            }
+          },
+          data: [{
+            value: [30, 40, 50, 60, 70],
+            name: '文章指数'
+          }]
+        }]
       }
     }
+  },
+  methods: {
+    getBlogIndex () {
+      this.$http.get('/ui/blog/statistic/blogIndex').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.option.series[0].data[0].value = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('文章指数信息查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  mounted () {
+    this.getBlogIndex()
   }
 }
 </script>

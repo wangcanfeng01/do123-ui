@@ -55,7 +55,7 @@
       <el-row style="margin-top: 20px">
         <el-col :span="11">
           <el-card class="box-card">
-            <popular-blog></popular-blog>
+            <popular-blog class="popular"></popular-blog>
           </el-card>
         </el-col>
         <el-col :span="11" :offset="1">

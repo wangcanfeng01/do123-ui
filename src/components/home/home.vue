@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <el-carousel :interval="5000" height="700px" style="width: 70%;left: 15%">
+    <el-carousel :interval="4000" height="700px" type="card">
       <el-carousel-item v-for="(img,item) in items" :key="item">
         <img class="home_img" v-bind:src="img.url"/>
         <h2>{{ img.title }}</h2>

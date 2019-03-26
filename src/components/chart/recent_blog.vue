@@ -52,8 +52,28 @@ export default {
           }
         ]
       }
-
     }
+  },
+  methods: {
+    getRecentArticles () {
+      this.$http.get('/ui/blog/statistic/recentArticles').then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.option.xAxis[0].data = response.data.data.axis
+            this.option.series[0].data = response.data.data.value
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('查询近期文章信息异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  mounted () {
+    this.getRecentArticles()
   }
 }
 </script>
