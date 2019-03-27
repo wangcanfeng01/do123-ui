@@ -121,23 +121,23 @@ export default {
     return {
       items: [
         {
-          title: '相信自己',
+          title: '写好代码才能玩好游戏',
           url: require('../../assets/home/home.jpg')
         },
         {
-          title: '尊重他人',
+          title: '这个网站没有访问量？',
           url: require('../../assets/home/girl.jpg')
         },
         {
-          title: '心不在焉，虽学不成',
+          title: '我的代码就是没有bug',
           url: require('../../assets/home/lion.jpg')
         },
         {
-          title: '宁静志远',
+          title: '上回买的手柄都有灰了，还不拿出来用用？',
           url: require('../../assets/home/night.jpg')
         },
         {
-          title: '巧言令色，鲜矣仁',
+          title: '每天都要进步一点点，咸鱼也能翻身的',
           url: require('../../assets/home/mount.jpg')
         }
       ],

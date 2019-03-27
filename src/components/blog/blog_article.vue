@@ -1,6 +1,10 @@
 <template>
   <div id="blog_article">
-    <el-col :span="12" :offset="6">
+    <el-col :span="4" :offset="1" style="margin-top: 20px;">
+      <el-button @click="getNav">显示导航</el-button>
+      <div ref="nav-info" class="wcf-nav" v-show="navVisible"></div>
+    </el-col>
+    <el-col :span="12" :offset="1">
       <h1 style="text-align: center">{{article.title}}</h1>
       <el-row>
         <el-col :span="12" :offset="2">
@@ -140,7 +144,9 @@ export default {
         facePath: ''
       },
       showPic: false,
-      previewPictureSrc: ''
+      previewPictureSrc: '',
+      navVisible: false,
+      indexes: []
     }
   },
   methods: {
@@ -258,6 +264,64 @@ export default {
         this.loginUser.facePath = ''
         console.log(error)
       })
+    },
+    getNav () {
+      this.navVisible = true
+      let text = this.$refs['text_info']
+      this.$refs['nav-info'].innerHTML = text.innerHTML
+      let nodes = this.$refs['nav-info'].children
+      if (nodes.length) {
+        for (let i = 0; i < nodes.length; i++) {
+          this.createNav(nodes[i], i)
+        }
+      }
+      // 插入导航锚点
+      this.insertIndexElement(text)
+      // 创建导航头
+      this.createTitle(nodes[0])
+    },
+    // 制作导航函数，整个方法的核心
+    createNav (node, i) {
+      // 设置正则表达式
+      let reg = /^H[1-6]{1}$/
+      if (!reg.exec(node.tagName)) {
+        // 如果不是标题信息，不展示
+        node.style.display = 'none'
+      } else {
+        // 存入索引数组，等会用于生成锚点
+        this.indexes.push(i)
+        // 生成导航元素
+        let ele = document.createElement('a')
+        ele.innerText = node.innerText
+        // 删除原来标题中的信息
+        node.innerText = ''
+        ele.href = '#wcf_blog_' + i
+        // 插入导航元素
+        node.appendChild(ele)
+      }
+    },
+    // 插入锚点的函数
+    insertIndexElement (info) {
+      let len = this.indexes.length
+      if (len > 0) {
+        // 从后往前插入，从前往后插入会导致index位移
+        for (let i = len - 1; i >= 0; i--) {
+          let ele = document.createElement('a')
+          ele.setAttribute('id', 'wcf_blog_' + this.indexes[i])
+          info.insertBefore(ele, info.children[this.indexes[i]])
+        }
+      }
+    },
+    // 生成导航头
+    createTitle (first) {
+      let title = document.createElement('h1')
+      title.innerText = '导航'
+      title.style.fontSize = '2em'
+      title.style.fontFamily = 'Arial,sans-serif'
+      title.style.paddingBottom = '15px'
+      title.style.borderBottom = 'solid black 1px'
+      title.style.marginRight = '20px'
+      this.$refs['nav-info'].insertBefore(title, first)
     }
   },
   mounted () {
@@ -370,7 +434,6 @@ export default {
   .clearfix:after {
     clear: both
   }
-
 </style>
 <style>
   .text-info {
@@ -448,5 +511,42 @@ export default {
     width: 32%;
     white-space: nowrap;
     text-overflow: ellipsis
+  }
+
+  .wcf-nav {
+    border: solid #d8d8d8 1px;
+    padding-left: 20px;
+    border-radius: 15px;
+    min-height: 750px;
+    color: #0f0f0f
+  }
+
+  .wcf-nav h1 {
+    font-size: 1.4em;
+  }
+
+  .wcf-nav h2 {
+    font-size: 1.0em;
+    margin-left: 20px;
+  }
+
+  .wcf-nav h3 {
+    font-size: 0.7em;
+    margin-left: 35px;
+  }
+
+  .wcf-nav h4 {
+    font-size: 0.5em;
+    margin-left: 45px;
+  }
+
+  .wcf-nav h5 {
+    font-size: 0.3em;
+    margin-left: 55px;
+  }
+
+  .wcf-nav h1 a, .wcf-nav h2 a, .wcf-nav h3 a, .wcf-nav h4 a, .wcf-nav h5 a {
+    color: #1c469b;
+    text-decoration: none;
   }
 </style>
