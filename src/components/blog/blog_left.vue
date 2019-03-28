@@ -1,12 +1,9 @@
 <template>
   <div id="blog_left">
     <el-col :span="leftCol">
-      <el-menu :default-active="currentIndex"
-               active-text-color="#ffd04b"
-               :unique-opened="true"
-               :collapse="isCollapse"
-               :router="true"
-               class="nav_height" :style="leftHeight">
+      <el-menu :default-active="currentIndex" active-text-color="#ffd04b"
+               :unique-opened="true" :collapse="isCollapse"
+               :router="true" class="nav_height" :style="leftHeight">
         <el-row style="margin-bottom: 20px">
           <el-col :span="16" :offset="2">
             <span v-show="!isCollapse" style="line-height: 40px;">Hello VIP WCF</span>
@@ -52,7 +49,7 @@ export default {
       isCollapse: false,
       pictureOffset: 2,
       collapseOffset: 0,
-      leftCol: 3,
+      leftCol: document.body.clientWidth > 450 ? 3 : 9,
       currentIndex: '/blog/center'
     }
   },
@@ -62,12 +59,12 @@ export default {
      */
     handleOpen () {
       if (this.isCollapse) {
-        this.leftCol = 3
+        this.leftCol = document.body.clientWidth > 450 ? 3 : 9
         this.collapseOffset = 0
         this.pictureOffset = 2
         this.isCollapse = false
       } else {
-        this.leftCol = 1
+        this.leftCol = document.body.clientWidth > 450 ? 1 : 4
         this.collapseOffset = 2
         this.pictureOffset = 6
         this.isCollapse = true

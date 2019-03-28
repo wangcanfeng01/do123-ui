@@ -1,23 +1,23 @@
 <template>
   <div id="blog_list">
-    <el-col :span="20" id="blog-content">
+    <el-col :span="contentWidth" id="blog-content">
       <el-row style="border-bottom: 1px solid #ebeef5;margin-bottom: 20px;padding-bottom: 20px">
-        <el-col :span="4" :offset="10">
+        <el-col :span="categoryCol.width" :offset="categoryCol.offset">
           <el-select v-model="currentCategory" filterable placeholder="文章分类">
             <el-option v-for="category in categories" :key="category.id"
                        :label="category.name" :value="category.name">
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="titleSelect.input">
           <el-input v-model="queryTitle" placeholder="文章标题..."></el-input>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="titleSelect.button">
           <el-button type="primary" style="margin-left: 15px" @click="queryArticles">查询</el-button>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="5" v-for="article in articles" :key="article.id">
+        <el-col :span="5" v-for="article in articles" :key="article.id" style="min-width: 230px">
           <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-right: 20px;margin-bottom: 20px">
             <el-row class="item-thumb">
               <img v-if="article.cover" :src="article.cover" class="image">
@@ -69,6 +69,15 @@ export default {
   name: 'blog_list',
   data () {
     return {
+      contentWidth: document.body.clientWidth > 450 ? 18 : 13,
+      categoryCol: {
+        width: document.body.clientWidth > 450 ? 4 : 11,
+        offset: document.body.clientWidth > 450 ? 10 : 0
+      },
+      titleSelect: {
+        input: document.body.clientWidth > 450 ? 4 : 11,
+        button: document.body.clientWidth > 450 ? 2 : 2
+      },
       articles: [{
         id: 1,
         title: '文章标题',

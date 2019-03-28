@@ -267,7 +267,7 @@ export default {
       window.open(data.href, '_blank')
     },
     openPic (mind) {
-      let data = this.$router.resolve({path: '/upload/files' + mind + '.jpg'})
+      let data = this.$router.resolve({path: '/upload/files/' + mind})
       window.open(data.href, '_blank')
     },
     deleteVersionInfo (id) {

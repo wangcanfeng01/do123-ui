@@ -23,7 +23,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['cpu', '堆内存', '非堆内存', '硬盘']
+          data: ['cpu(MB)', '堆内存(MB)', '非堆内存(MB)', '硬盘(GB)']
         },
         calculable: true,
         xAxis: [
@@ -40,28 +40,28 @@ export default {
         ],
         series: [
           {
-            name: 'cpu',
+            name: 'cpu(MB)',
             type: 'line',
             smooth: true,
             itemStyle: {normal: {areaStyle: {type: 'default'}}},
             data: [10, 12, 21, 54, 260, 830, 710]
           },
           {
-            name: '堆内存',
+            name: '堆内存(MB)',
             type: 'line',
             smooth: true,
             itemStyle: {normal: {areaStyle: {type: 'default'}}},
             data: [30, 182, 434, 791, 390, 30, 10]
           },
           {
-            name: '非堆内存',
+            name: '非堆内存(MB)',
             type: 'line',
             smooth: true,
             itemStyle: {normal: {areaStyle: {type: 'default'}}},
             data: [30, 333, 434, 791, 390, 30, 10]
           },
           {
-            name: '硬盘',
+            name: '硬盘(GB)',
             type: 'line',
             smooth: true,
             itemStyle: {normal: {areaStyle: {type: 'default'}}},
