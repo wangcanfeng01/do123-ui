@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <el-col :span="5" :offset="10" style="margin-top: 5em">
+    <el-col :span="5" :offset="formOffset" style="margin-top: 5em;min-width: 400px">
       <el-container>
         <el-header class="loginHeader" :style="loginHeader">账户登录</el-header>
         <el-main>
@@ -30,11 +30,17 @@
               <el-form-item style="margin-top: 25px">
                 <el-row>
                   <el-col :span="16" :offset="4">
-                    <el-button type="primary" @click="userLogin('loginForm')" class="loginButton">登录</el-button>
+                    <el-button-group>
+                      <el-button type="primary" @click="userLogin('loginForm')" class="loginButton">登录</el-button>
+                      <el-button type="warning" @click="visitorLogin" class="visitorButton">游客</el-button>
+                    </el-button-group>
                   </el-col>
                 </el-row>
                 <el-row>
-                  <router-link id="register" to="/register" class="register">注册新账号</router-link>
+                  <span><i class="el-icon-warning" style="color: #E6A23C"></i>
+                    免账号
+                    <a @click="visitorLogin" class="visitor-link">游客登录</a>
+                    或者<router-link id="register" to="/register" class="register">注册新账号</router-link></span>
                 </el-row>
               </el-form-item>
             </el-col>
@@ -64,6 +70,7 @@ export default {
       }
     }
     return {
+      formOffset: document.body.clientWidth > 450 ? 10 : 1,
       loginForm: {
         username: '',
         password: ''
@@ -88,17 +95,17 @@ export default {
     userLogin (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.loginRequest()
+          this.loginRequest(this.loginForm.username, this.loginForm.password)
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    loginRequest () {
+    loginRequest (name, pwd) {
       localStorage.removeItem('user')
-      let username = encodeURIComponent(this.loginForm.username)
-      let password = encodeURIComponent(this.loginForm.password)
+      let username = encodeURIComponent(name)
+      let password = encodeURIComponent(pwd)
       this.$http.post('/ui/user/login?username=' + username + '&password=' + password).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
@@ -118,6 +125,9 @@ export default {
           this.$message.error('用户名或密码输入错误')
         }
       })
+    },
+    visitorLogin () {
+      this.loginRequest('游客', 'visitor')
     }
   },
   mounted () {
@@ -151,10 +161,28 @@ export default {
   }
 
   .loginButton {
-    width: 100%;
+    width: 50%;
     margin: 0 auto;
     height: 45px;
     display: block;
+    min-width: 100px;
+  }
+
+  .visitorButton {
+    width: 50%;
+    margin: 0 auto;
+    height: 45px;
+    isplay: block;
+    min-width: 100px;
+  }
+
+  .visitor-link {
+    color: #E6A23C;
+  }
+
+  .visitor-link:hover {
+    color: coral;
+    cursor: pointer;
   }
 </style>
 <style>
