@@ -1,14 +1,8 @@
 <template xmlns:el-col="http://www.w3.org/1999/html">
   <div id="app">
-    <el-menu
-      :default-active="activeIndex"
-      class="el-menu--horizontal"
-      background-color="#545c64"
-      text-color="#fff"
-      :router="true"
-      active-text-color="#ffd04b">
-      <!--style="margin-top: -8px;margin-left: -8px;margin-right: -8px"-->
-      <el-col :span="1" :offset="3">
+    <el-menu :default-active="activeIndex" class="el-menu--horizontal" background-color="#545c64"
+             text-color="#fff" :router="true" active-text-color="#ffd04b" style="min-width: 410px">
+      <el-col :span="1" :offset="menuOffset" style="min-width: 60px">
         <router-link id="logo" to="/home">
           <img src="./assets/home.jpg" style="border-radius: 50%;margin-top: 0.8em">
         </router-link>
@@ -18,10 +12,10 @@
       <el-menu-item index="/video" v-show="loginUser.menuMap.video">视频</el-menu-item>
       <el-menu-item index="/about" v-show="loginUser.menuMap.about">关于本站</el-menu-item>
       <el-menu-item index="/admin/center" v-show="loginUser.menuMap.admin">管理中心</el-menu-item>
-      <el-col :span="3" :offset="5">
-        <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em"></el-input>
+      <el-col :span="inputWidth" :offset="inputOffset">
+        <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em;min-width: 30px"></el-input>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="selectWidth">
         <el-button style="margin-left:0.3em; margin-top: 0.8em">搜索</el-button>
       </el-col>
       <el-col :span="1">
@@ -55,6 +49,10 @@
 export default {
   data () {
     return {
+      menuOffset: document.body.clientWidth > 450 ? 3 : 1,
+      inputOffset: document.body.clientWidth > 450 ? 8 : 2,
+      inputWidth: document.body.clientWidth > 450 ? 3 : 10,
+      selectWidth: document.body.clientWidth > 450 ? 1 : 5,
       activeIndex: '/home',
       search: '',
       isLogin: 'false',
