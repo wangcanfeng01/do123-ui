@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <el-carousel :interval="4000" height="700px" type="card">
+    <el-carousel :interval="4000" height="700px" :type="isCard">
       <el-carousel-item v-for="(img,item) in items" :key="item">
         <img class="home_img" v-bind:src="img.url"/>
         <h2>{{ img.title }}</h2>
@@ -119,6 +119,7 @@ export default {
       }
     }
     return {
+      isCard: document.body.clientWidth > 450 ? 'card' : '',
       items: [
         {
           title: '写好代码才能玩好游戏',
