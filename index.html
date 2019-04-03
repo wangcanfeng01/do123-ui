@@ -4,9 +4,15 @@
   <meta charset="utf-8">
   <script>
   let width = window.screen.width
-  if (width > 450) {
+  if (width > 1440) {
     document.write('<meta name="viewport" content="width=device-width,initial-scale=1.0">')
-  }else {
+  }else if (width > 1024) {
+    document.write('<meta name="viewport" content="width=device-width,initial-scale=0.7,maximum-scale=1.0,user-scalable=no">')
+  } else if (width > 768) {
+    document.write('<meta name="viewport" content="width=device-width,initial-scale=0.5,maximum-scale=1.0,user-scalable=no">')
+  } else if (width > 450) {
+    document.write('<meta name="viewport" content="width=device-width,initial-scale=0.3,maximum-scale=1.0,user-scalable=no">')
+  } else {
     document.write('<meta name="viewport" content="width=device-width,initial-scale=0.2,maximum-scale=1.0,user-scalable=no">')
   }
   </script>

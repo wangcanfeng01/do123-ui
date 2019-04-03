@@ -3,7 +3,7 @@
     <el-col :span="contentWidth" id="blog-content">
       <el-row style="border-bottom: 1px solid #ebeef5;margin-bottom: 20px;padding-bottom: 20px">
         <el-col :span="categoryCol.width" :offset="categoryCol.offset">
-          <el-select v-model="currentCategory" filterable placeholder="文章分类">
+          <el-select v-model="currentCategory" filterable placeholder="文章分类" @change="queryArticles">
             <el-option v-for="category in categories" :key="category.id"
                        :label="category.name" :value="category.name">
             </el-option>

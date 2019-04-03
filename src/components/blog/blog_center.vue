@@ -49,7 +49,7 @@
         <h2 class="category-header">热门专栏</h2>
         <el-row style="margin-bottom: 30px">
           <el-card v-for="category in categories" :key="category.id" :body-style="{ padding: '0px' }"
-                   style="border-radius: 14px">
+                   style="border-radius: 14px;margin-bottom: 15px">
             <a class="image featured little" :href="'/blog/list?category='+category.name">
               <img v-if="category.cover" :src="category.cover" class="image">
               <img v-else src="../../assets/article/cover/category/default.jpg" class="image">
@@ -66,7 +66,7 @@
         <h2 class="comment-header">最近评论</h2>
         <el-row style="margin-bottom: 30px">
           <el-card v-for="comment in comments" :key="comment.id" :body-style="{ padding: '0px' }"
-                   style="border-radius: 14px">
+                   style="border-radius: 14px;margin-bottom: 15px">
             <el-row>
               <el-col :span="4" style="margin-top: 15px;margin-left: 15px">
                 <img v-if="comment.authorFace" :src="comment.authorFace" class="img-face">
