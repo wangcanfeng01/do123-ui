@@ -30,6 +30,7 @@ import blogWriter from '@/components/blog/blog_writer'
 import blogArticle from '@/components/blog/blog_article'
 import pdfRead from '@/components/common/read_pdf'
 import globalSearch from '@/components/home/global_search'
+import leaveNote from '@/components/home/leave_note'
 
 Vue.use(Router)
 
@@ -43,6 +44,11 @@ export default new Router({
         noAuth: true
       },
       component: globalSearch
+    },
+    {
+      path: '/leave/message',
+      name: 'leaveNote',
+      component: leaveNote
     },
     {
       path: '/readPDF',
