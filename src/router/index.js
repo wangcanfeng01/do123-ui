@@ -29,12 +29,21 @@ import blogManage from '@/components/blog/blog_manage'
 import blogWriter from '@/components/blog/blog_writer'
 import blogArticle from '@/components/blog/blog_article'
 import pdfRead from '@/components/common/read_pdf'
+import globalSearch from '@/components/home/global_search'
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/global/search',
+      name: 'globalSearch',
+      meta: {
+        noAuth: true
+      },
+      component: globalSearch
+    },
     {
       path: '/readPDF',
       name: 'pdfRead',

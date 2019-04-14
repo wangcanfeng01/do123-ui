@@ -16,7 +16,7 @@
         <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em;min-width: 30px"></el-input>
       </el-col>
       <el-col :span="selectWidth">
-        <el-button style="margin-left:0.3em; margin-top: 0.8em">搜索</el-button>
+        <el-button style="margin-left:0.3em; margin-top: 0.8em" @click="searchInfo">搜索</el-button>
       </el-col>
       <el-col :span="1">
         <el-dropdown trigger="click" @command="loginCommand" v-show="isLogin==='false'">
@@ -137,6 +137,9 @@ export default {
     changeStatus (isIn) {
       // 传递是否已经已经登录的值
       this.isLogin = isIn
+    },
+    searchInfo () {
+      this.$router.push({path: '/global/search', query: {'searchKey': this.search}})
     }
   },
   mounted () {

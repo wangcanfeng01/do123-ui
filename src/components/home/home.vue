@@ -113,7 +113,7 @@ export default {
     }
     var checkAddress = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('请输入地址'))
+        return callback(new Error('请输入邮箱地址'))
       } else {
         callback()
       }
