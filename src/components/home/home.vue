@@ -157,10 +157,22 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(' submit!!')
+          this.$http.post('ui/messages/leave', this.messageForm).then(response => {
+            if (response && response.data) {
+              if (response.data.code === '0') {
+                this.$message.success('留言成功')
+                this.messageForm.address = ''
+                this.messageForm.username = ''
+                this.messageForm.info = ''
+              } else {
+                this.$message.error(response.data.msg)
+              }
+            } else {
+              this.$message.error('请输入用户名和邮箱信息')
+            }
+          })
         } else {
-          console.log('error submit!!')
-          return false
+          this.$message.error('请输入用户名和邮箱信息')
         }
       })
     }

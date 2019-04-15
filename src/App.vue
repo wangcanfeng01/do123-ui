@@ -37,6 +37,9 @@
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="personInfo" v-show="loginUser.username!=='游客'">个人信息</el-dropdown-item>
             <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            <el-badge :value="messageCount" :max="99" class="item" :hidden="messageCount<=0">
+              <el-dropdown-item command="message">留言板</el-dropdown-item>
+            </el-badge>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
@@ -55,6 +58,7 @@ export default {
       selectWidth: document.body.clientWidth > 450 ? 1 : 5,
       activeIndex: '/home',
       search: '',
+      messageCount: 5,
       isLogin: 'false',
       loginUser: {
         username: '',
@@ -125,6 +129,10 @@ export default {
       switch (command) {
         case 'logout': {
           this.logout()
+          break
+        }
+        case 'message': {
+          this.$router.push('/leave/message')
           break
         }
         case 'personInfo': {
