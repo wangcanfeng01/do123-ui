@@ -31,6 +31,10 @@ import blogArticle from '@/components/blog/blog_article'
 import pdfRead from '@/components/common/read_pdf'
 import globalSearch from '@/components/home/global_search'
 import leaveNote from '@/components/home/leave_note'
+import videoTencent from '@/components/video/video_tencent'
+import videoIqiyi from '@/components/video/video_iqiyi'
+import videoYouku from '@/components/video/video_youku'
+import videoFavorite from '@/components/video/video_favorite'
 
 Vue.use(Router)
 
@@ -93,7 +97,27 @@ export default new Router({
     {
       path: '/video',
       name: 'video',
-      component: video
+      component: video,
+      children: [{
+        path: '/',
+        redirect: '/video/tencent'
+      }, {
+        path: '/video/tencent',
+        name: 'videoTencent',
+        component: videoTencent
+      }, {
+        path: '/video/iqiyi',
+        name: 'videoIqiyi',
+        component: videoIqiyi
+      }, {
+        path: '/video/youku',
+        name: 'videoYouku',
+        component: videoYouku
+      }, {
+        path: '/video/favorite',
+        name: 'videoFavorite',
+        component: videoFavorite
+      }]
     },
     {
       path: '/blog',
