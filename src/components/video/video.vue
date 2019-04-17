@@ -1,5 +1,5 @@
 <template>
-  <div id="video">
+  <div id="wcf_video">
     <!--// 插入左侧导航-->
     <video-left :left-height="leftHeight" :leftMenus="leftMenus"></video-left>
     <!--//载入右侧数据-->
@@ -11,7 +11,7 @@
 import left from '@/components/video/video_left'
 
 export default {
-  name: 'video',
+  name: 'wcf_video',
   components: {
     'videoLeft': left
   },
@@ -19,7 +19,7 @@ export default {
     return {
       leftMenus: {},
       leftHeight: {
-        minHeight: '900px',
+        minHeight: '4000px',
         height: ''
       }
     }
