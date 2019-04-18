@@ -37,15 +37,15 @@ new Vue({
   components: {App},
   template: '<App/>'
 })
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/login' || to.meta.noAuth) {
-//     next()
-//   } else if (localStorage.getItem('user')) {
-//     next()
-//   } else {
-//     next({
-//       path: '/login',
-//       query: {redirect: to.fullPath}
-//     })
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login' || to.meta.noAuth) {
+    next()
+  } else if (localStorage.getItem('user')) {
+    next()
+  } else {
+    next({
+      path: '/login',
+      query: {redirect: to.fullPath}
+    })
+  }
+})

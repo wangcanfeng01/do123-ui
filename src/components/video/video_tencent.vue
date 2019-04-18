@@ -25,8 +25,8 @@
                   <img :src="tvHot.image" style="width: 100%">
                   <!--遮罩层-->
                   <div class="mask-box">
-                    <el-button type="warning" icon="el-icon-star-off" circle
-                               style="margin-left: 80%;margin-top: 110%"></el-button>
+                    <p>{{tvHot.director}}</p>
+                    <p>{{tvHot.summary}}</p>
                   </div>
                 </div>
               </a>
@@ -53,7 +53,16 @@
           <el-col :span="4" v-for="(varietyShow,index) in videos.varietyShows" :key="varietyShow.value"
                   :offset="(index===0||index===5)?0:1" style="margin-bottom: 20px">
             <el-card :body-style="{ padding: '0px' }" class="video-card">
-              <a :href="varietyShow.value" target="_blank"><img :src="varietyShow.image" style="width: 100%"></a>
+              <a :href="varietyShow.value" target="_blank">
+                <div class="video-box">
+                  <img :src="varietyShow.image" style="width: 100%">
+                  <!--遮罩层-->
+                  <div class="mask-box">
+                    <p>{{varietyShow.director}}</p>
+                    <p>{{varietyShow.summary}}</p>
+                  </div>
+                </div>
+              </a>
               <div style="padding: 14px;min-height: 3em">
                 <a :href="varietyShow.value" target="_blank"
                    style="text-decoration: none;color: black"><span>{{varietyShow.title}}</span></a>
@@ -76,7 +85,16 @@
           <el-col :span="4" v-for="(movie,index) in videos.movies" :key="movie.value"
                   :offset="(index===0||index===5)?0:1" style="margin-bottom: 20px">
             <el-card :body-style="{ padding: '0px' }" class="video-card">
-              <a :href="movie.value" target="_blank"><img :src="movie.image" style="width: 100%"></a>
+              <a :href="movie.value" target="_blank">
+                <div class="video-box">
+                  <img :src="movie.image" style="width: 100%">
+                  <!--遮罩层-->
+                  <div class="mask-box">
+                    <p>{{movie.director}}</p>
+                    <p>{{movie.summary}}</p>
+                  </div>
+                </div>
+              </a>
               <div style="padding: 14px;min-height: 3em">
                 <a :href="movie.value" target="_blank"
                    style="text-decoration: none;color: black"><span>{{movie.title}}</span></a>
@@ -100,7 +118,16 @@
           <el-col :span="4" v-for="(cartoon,index) in videos.cartoons" :key="cartoon.value"
                   :offset="(index===0||index===5)?0:1" style="margin-bottom: 20px">
             <el-card :body-style="{ padding: '0px' }" class="video-card">
-              <a :href="cartoon.value" target="_blank"><img :src="cartoon.image" style="width: 100%"></a>
+              <a :href="cartoon.value" target="_blank">
+                <div class="video-box">
+                  <img :src="cartoon.image" style="width: 100%">
+                  <!--遮罩层-->
+                  <div class="mask-box">
+                    <p>{{cartoon.director}}</p>
+                    <p>{{cartoon.summary}}</p>
+                  </div>
+                </div>
+              </a>
               <div style="padding: 14px;min-height: 3em">
                 <a :href="cartoon.value" target="_blank"
                    style="text-decoration: none;color: black"><span>{{cartoon.title}}</span></a>
@@ -241,16 +268,18 @@ export default {
 
   .mask-box {
     position: absolute;
-    top: 0;
+    top: 180px;
     left: 0;
     bottom: 4px;
+    overflow: hidden;
     background: rgba(101, 101, 101, 0.6);
     color: #ffffff;
+    font-size: 0.5em;
     opacity: 0;
     width: 100%;
   }
 
   .video-box:hover .mask-box {
-    opacity: 1;
+    opacity: 0.8;
   }
 </style>
