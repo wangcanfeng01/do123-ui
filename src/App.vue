@@ -1,7 +1,9 @@
 <template xmlns:el-col="http://www.w3.org/1999/html">
   <div id="app">
     <el-menu :default-active="activeIndex" class="el-menu--horizontal" background-color="#545c64"
-             text-color="#fff" :router="true" active-text-color="#ffd04b" style="min-width: 410px">
+             text-color="#fff" :router="true" active-text-color="#ffd04b" style="min-width: 410px"
+             v-loading.fullscreen.lock="loading" element-loading-text="拼命登录中，不是卡死了"
+             element-loading-spinner="el-icon-loading">
       <el-col :span="1" :offset="menuOffset" style="min-width: 60px">
         <router-link id="logo" to="/home">
           <img src="./assets/home.jpg" style="border-radius: 50%;margin-top: 0.8em">
@@ -70,7 +72,8 @@ export default {
           'about': '关于本站',
           'admin': ''
         }
-      }
+      },
+      loading: false
     }
   },
   methods: {
@@ -78,6 +81,7 @@ export default {
       this.$router.push('/login')
     },
     visitorLogin () {
+      this.loading = true
       this.$http.post('/ui/user/login?username=游客&password=visitor').then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
@@ -175,3 +179,14 @@ export default {
   }
 }
 </script>
+<style>
+  .el-loading-spinner {
+    font-size: 3em;
+  }
+
+  .el-loading-spinner .el-loading-text {
+    color: #409EFF;
+    margin: 3px 0;
+    font-size: 0.5em;
+  }
+</style>
