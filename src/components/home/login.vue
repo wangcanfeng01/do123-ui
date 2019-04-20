@@ -1,7 +1,8 @@
 <template>
   <div id="login">
     <el-col :span="5" :offset="formOffset" style="margin-top: 5em;min-width: 400px">
-      <el-container>
+      <el-container v-loading="loading" element-loading-text="拼命登录中，就几秒钟"
+                    element-loading-spinner="el-icon-loading">
         <el-header class="loginHeader" :style="loginHeader">账户登录</el-header>
         <el-main>
           <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm">
@@ -88,7 +89,8 @@ export default {
         borderTopRightRadius: '9px',
         height: '6em'
       },
-      isVisitor: false
+      isVisitor: false,
+      loading: false
     }
   },
   methods: {
@@ -106,6 +108,7 @@ export default {
       localStorage.removeItem('user')
       let username = encodeURIComponent(name)
       let password = encodeURIComponent(pwd)
+      this.loading = true
       this.$http.post('/ui/user/login?username=' + username + '&password=' + password).then(response => {
         if (response && response.data) {
           if (response.data.code === '0') {
@@ -188,5 +191,13 @@ export default {
 <style>
   .loginInput input.el-input__inner {
     height: 50px !important;
+  }
+  .el-loading-spinner {
+    font-size: 3em;
+  }
+  .el-loading-spinner .el-loading-text {
+    color: #409EFF;
+    margin: 3px 0;
+    font-size: 0.5em;
   }
 </style>
