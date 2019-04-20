@@ -33,7 +33,8 @@
               <div style="padding: 14px;min-height: 3em">
                 <a :href="tvHot.value" target="_blank"
                    style="text-decoration: none;color: black"><span>{{tvHot.title}}</span></a>
-                <el-button type="warning" icon="el-icon-star-off" circle style="float: right" title="收藏"></el-button>
+                <el-button type="warning" icon="el-icon-star-off" circle style="float: right" title="收藏"
+                           @click="collectVideo(tvHot)"></el-button>
               </div>
             </el-card>
           </el-col>
@@ -170,6 +171,21 @@ export default {
           }
         } else {
           this.$message.error('腾讯视频信息查询异常')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    collectVideo (video) {
+      this.$http.post('/ui/video/action/collection', video).then(response => {
+        if (response && response.data) {
+          if (response.data.code === '0') {
+            this.$message.success('视频收藏成功')
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        } else {
+          this.$message.error('视频收藏异常')
         }
       }).catch(error => {
         console.log(error)

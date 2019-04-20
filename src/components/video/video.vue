@@ -36,3 +36,20 @@ export default {
 <style scoped>
 
 </style>
+<style>
+  #video-content {
+    margin-left: 20px;
+    margin-top: 20px;
+    min-height: 800px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+
+  .clearfix:after {
+    clear: both
+  }
+</style>
