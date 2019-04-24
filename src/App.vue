@@ -15,10 +15,12 @@
       <el-menu-item index="/about" v-show="loginUser.menuMap.about">关于本站</el-menu-item>
       <el-menu-item index="/admin/center" v-show="loginUser.menuMap.admin">管理中心</el-menu-item>
       <el-col :span="inputWidth" :offset="inputOffset">
-        <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em;min-width: 30px"></el-input>
+        <el-input v-model="search" placeholder="请输入查询内容" style="margin-top: 0.8em;min-width: 30px"
+                  :disabled="searchDisabled"></el-input>
       </el-col>
       <el-col :span="selectWidth">
-        <el-button style="margin-left:0.3em; margin-top: 0.8em" @click="searchInfo">搜索</el-button>
+        <el-button style="margin-left:0.3em; margin-top: 0.8em" @click="searchInfo" :disabled="searchDisabled">搜索
+        </el-button>
       </el-col>
       <el-col :span="1">
         <el-dropdown trigger="click" @command="loginCommand" v-show="isLogin==='false'">
@@ -73,7 +75,8 @@ export default {
           'admin': ''
         }
       },
-      loading: false
+      loading: false,
+      searchDisabled: false
     }
   },
   methods: {
@@ -152,10 +155,14 @@ export default {
     },
     searchInfo () {
       this.$router.push({path: '/global/search', query: {'searchKey': this.search}})
+      this.searchDisabled = false
     }
   },
   mounted () {
     this.activeIndex = this.$route.path
+    if (this.activeIndex === '/global/search') {
+      this.searchDisabled = true
+    }
     localStorage.removeItem('user')
     this.$http.get('/ui/user/get/login').then(response => {
       if (response && response.data && response.data.code === '0') {

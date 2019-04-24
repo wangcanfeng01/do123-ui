@@ -9,40 +9,61 @@
           <el-button @click="getInfo">搜索一下</el-button>
         </el-col>
       </el-row>
-      <el-row style="min-height: 400px">
+      <el-row style="min-height: 400px;margin-top: 30px">
         <el-col :span="6" :offset="1" style="margin-bottom: 40px">
-          <div v-for="blog in blogs" :key="blog.title">
-            <el-card :body-style="{ padding: '0px' }" class="video-card">
-              <el-col :span="11">
-                <img :src="blog.image" style="width: 100%">
-              </el-col>
-              <el-col :span="11">
-                <img :src="blog.image" style="width: 100%">
-              </el-col>
-              <!--<a :href="blog.url" target="_blank">-->
-                <!--<div class="video-box">-->
-                  <!--<img :src="blog.image" style="width: 100%">-->
-                  <!--&lt;!&ndash;遮罩层&ndash;&gt;-->
-                  <!--<div class="mask-box">-->
-                    <!--<p>{{blog.director}}</p>-->
-                    <!--<p>{{blog.summary}}</p>-->
-                  <!--</div>-->
-                <!--</div>-->
-              <!--</a>-->
-              <!--<div style="padding: 14px;min-height: 3em">-->
-                <!--<a :href="blog.url" target="_blank"-->
-                   <!--style="text-decoration: none;color: black"><span>{{blog.title+'-'+blog.type}}</span></a>-->
-                <!--<el-button type="warning" icon="el-icon-star-off" circle style="float: right" title="收藏"></el-button>-->
-              <!--</div>-->
-            </el-card>
+          <div v-if="videos.length===0">
+            <h2 class="no-info">搜索到0条相关博客信息</h2>
+          </div>
+          <div v-else>
+            <h2 class="no-info">{{'搜索到条'+blogs.length+'相关博客信息'}}</h2>
+            <div v-for="blog in blogs" :key="blog.title">
+              <el-card :body-style="{ padding: '0px' }" class="video-card">
+                <el-col :span="10">
+                  <a :href="blog.url" target="_blank"> <img :src="blog.image" style="width: 180px;height: 240px"
+                                                            alt="很糟糕，图片加载失败"></a>
+                </el-col>
+                <el-col :span="14" style="max-height: 240px">
+                  <el-row>
+                    <a :href="blog.url" target="_blank"
+                       style="text-decoration: none;color: black"><h2>{{blog.title}}</h2></a>
+                  </el-row>
+                  <el-row>
+                    <small>{{blog.director}}</small>
+                  </el-row>
+                  <el-row>
+                    <small>{{blog.summary}}</small>
+                  </el-row>
+                </el-col>
+              </el-card>
+            </div>
           </div>
         </el-col>
         <el-col :span="6" :offset="1">
-          <div v-for="video in videos" :key="video.title">
-            <h1>{{video.title+'-'+video.type}}</h1>
-            <span>{{video.director}}</span>
-            <img :src="video.image" style="width: 180px;height: 240px">
-            <span>{{video.summary}}</span>
+          <div v-if="videos.length===0">
+            <h2 class="no-info">搜索到0条相关视频信息</h2>
+          </div>
+          <div v-else>
+            <h2 class="no-info">{{'搜索到条'+videos.length+'相关视频信息'}}</h2>
+            <div v-for="video in videos" :key="video.title">
+              <el-card :body-style="{ padding: '0px' }" class="video-card">
+                <el-col :span="10">
+                  <a :href="video.url" target="_blank"> <img :src="video.image" style="width: 180px;height: 240px"
+                                                             alt="很糟糕，图片加载失败"></a>
+                </el-col>
+                <el-col :span="14" style="max-height: 240px">
+                  <el-row>
+                    <a :href="video.url" target="_blank"
+                       style="text-decoration: none;color: black"><h2>{{video.title}}</h2></a>
+                  </el-row>
+                  <el-row>
+                    <small>{{video.director}}</small>
+                  </el-row>
+                  <el-row>
+                    <small>{{video.summary}}</small>
+                  </el-row>
+                </el-col>
+              </el-card>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -58,7 +79,7 @@
           <el-input placeholder="请输入内容" v-model="searchKey" clearable></el-input>
         </el-col>
         <el-col :span="3">
-          <el-button>搜索一下</el-button>
+          <el-button @click="getInfo">搜索一下</el-button>
         </el-col>
       </el-row>
     </div>
@@ -97,6 +118,7 @@ export default {
       this.getVideos(this.searchKey)
       this.getBlogs(this.searchKey)
       this.initialization = false
+      this.$router.push({path: '/global/search', query: {'searchKey': this.searchKey}})
     },
     getBlogs (keyword) {
       this.$http.get('/ui/search/blogs?keyword=' + keyword).then(response => {
@@ -138,6 +160,13 @@ export default {
     } else {
       this.searchKey = ''
     }
+  },
+  watch: {
+    searchKey (curVal, oldVal) {
+      if (curVal !== '') {
+        this.initialization = false
+      }
+    }
   }
 }
 </script>
@@ -156,30 +185,21 @@ export default {
 
   .video-card {
     transition: all 0.3s;
+    margin-bottom: 20px;
   }
 
   .video-card:hover {
     transform: scale(1.1);
   }
 
-  .video-box {
-    position: relative;
-  }
-
-  .mask-box {
-    position: absolute;
-    top: 180px;
-    left: 0;
-    bottom: 4px;
-    overflow: hidden;
-    background: rgba(101, 101, 101, 0.6);
-    color: #ffffff;
-    font-size: 0.5em;
-    opacity: 0;
-    width: 100%;
-  }
-
-  .video-box:hover .mask-box {
-    opacity: 0.8;
+  .no-info {
+    font-size: 1.5em;
+    letter-spacing: 13px;
+    font-family: 'Arvo';
+    font-weight: 700;
+    color: #ed786a;
+    text-shadow: 0.05em 0.075em 0 rgba(0, 0, 0, 0.1);
+    border: 0;
+    text-align: center;
   }
 </style>
