@@ -155,14 +155,16 @@ export default {
     },
     searchInfo () {
       this.$router.push({path: '/global/search', query: {'searchKey': this.search}})
-      this.searchDisabled = false
+      // this.searchDisabled = false
     }
   },
   mounted () {
-    this.activeIndex = this.$route.path
-    if (this.activeIndex === '/global/search') {
-      this.searchDisabled = true
-    }
+    // this.activeIndex = this.$route.path
+    // if (this.activeIndex === '/global/search') {
+    //   this.searchDisabled = true
+    // } else {
+    //   this.searchDisabled = false
+    // }
     localStorage.removeItem('user')
     this.$http.get('/ui/user/get/login').then(response => {
       if (response && response.data && response.data.code === '0') {

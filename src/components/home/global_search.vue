@@ -66,6 +66,11 @@
             </div>
           </div>
         </el-col>
+        <el-col :span="6" :offset="1">
+          <div>
+            <h2 class="no-info">暂无相关的文件信息</h2>
+          </div>
+        </el-col>
       </el-row>
     </div>
     <div :style="searchBackground" v-else>
