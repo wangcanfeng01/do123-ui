@@ -90,18 +90,6 @@ module.exports = {
     child_process: 'empty'
   },
   plugins: [
-    new CopyWebpackPlugin([{
-      from: path.resolve(__dirname, '../node_modules/mavon-editor/dist/highlightjs'),
-      to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/highlightjs')
-    }, {
-      from: path.resolve(__dirname, '../node_modules/mavon-editor/dist/markdown'),
-      to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/markdown')
-    }, {
-      from: path.resolve(__dirname, '../node_modules/mavon-editor/dist/katex'),
-      to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/katex')
-    },{
-      from: path.resolve(__dirname, '../static/pdfjs'),
-      to: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/pdfjs')
-    }])
+    new CopyWebpackPlugin([])
   ]
 }

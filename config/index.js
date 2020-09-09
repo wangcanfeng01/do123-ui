@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/ui': {
-        target: 'http://localhost/',
+        target: 'http://www.canfeng.xyz/',
         changeOrigin: true,
         pathReWrite: {
           '^/ui': ''
@@ -57,13 +57,13 @@ module.exports = {
 
     cssSourceMap: true
   },
-
+// TODO 修改打包路径
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/templates/index.html'),
+    index: path.resolve(__dirname, 'D:/github/do123/do123/front-ui/src/main/resources/templates/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, 'E:/github/do123/do123/front-ui/src/main/resources/'),
+    assetsRoot: path.resolve(__dirname, 'D:/github/do123/do123/front-ui/src/main/resources/'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 

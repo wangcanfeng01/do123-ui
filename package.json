@@ -1,5 +1,5 @@
 {
-  "name": "do123-ui",
+  "name": "vue-faster-starter",
   "version": "1.0.0",
   "description": "just do something for fun",
   "author": "wangcanfeng01 <373811598@qq.com>",
@@ -18,7 +18,7 @@
     "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.4.11",
     "js-base64": "^2.5.1",
-    "mavon-editor": "^2.6.17",
+    "js-md5": "^0.7.3",
     "vue": "^2.5.2",
     "vue-echarts": "^4.0.1",
     "vue-router": "^3.0.1"
